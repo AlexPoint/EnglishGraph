@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnglishGraph
+namespace EnglishGraph.Models
 {
-    public class Class1
+    public class Word
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
