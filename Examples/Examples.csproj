@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201503131432316_AddSynsetsAndLinksToDictionaryEntries.Designer.cs">
       <DependentUpon>201503131432316_AddSynsetsAndLinksToDictionaryEntries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503131732215_RedefinePartOfSpeechCodes.cs" />
+    <Compile Include="Migrations\201503131732215_RedefinePartOfSpeechCodes.Designer.cs">
+      <DependentUpon>201503131732215_RedefinePartOfSpeechCodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,6 +97,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503131432316_AddSynsetsAndLinksToDictionaryEntries.resx">
       <DependentUpon>201503131432316_AddSynsetsAndLinksToDictionaryEntries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503131732215_RedefinePartOfSpeechCodes.resx">
+      <DependentUpon>201503131732215_RedefinePartOfSpeechCodes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
