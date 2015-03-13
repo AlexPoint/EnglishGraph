@@ -17,7 +17,7 @@ namespace Examples
             
             /*context.Words.Add(new Word() {Name = "test"});
             context.SaveChanges();*/
-            Console.WriteLine(context.Words.Count());
+            Console.WriteLine(context.DictionaryEntries.Count());
 
 
             Console.WriteLine("OK");

@@ -19,7 +19,7 @@ namespace Examples.Classes
         // Add a DbSet for each entity type that you want to include in your model. For more information 
         // on configuring and using a Code First model, see http://go.microsoft.com/fwlink/?LinkId=390109.
 
-        public virtual DbSet<Word> Words { get; set; }
+        public virtual DbSet<DictionaryEntry> DictionaryEntries { get; set; }
     }
 
     //public class MyEntity

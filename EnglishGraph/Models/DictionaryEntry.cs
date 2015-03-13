@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace EnglishGraph.Models
 {
-    public class Word
+    public class DictionaryEntry
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Word { get; set; }
+        public byte PartOfSpeech { get; set; }
+
     }
 }

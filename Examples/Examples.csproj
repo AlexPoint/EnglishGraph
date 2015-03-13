@@ -52,6 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\EnglishGraphContext.cs" />
+    <Compile Include="Migrations\201503131010448_InitialCreate.cs" />
+    <Compile Include="Migrations\201503131010448_InitialCreate.Designer.cs">
+      <DependentUpon>201503131010448_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503131025072_AddPartOfSpeechToDictionaryEntry.cs" />
+    <Compile Include="Migrations\201503131025072_AddPartOfSpeechToDictionaryEntry.Designer.cs">
+      <DependentUpon>201503131025072_AddPartOfSpeechToDictionaryEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,6 +76,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201503131010448_InitialCreate.resx">
+      <DependentUpon>201503131010448_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503131025072_AddPartOfSpeechToDictionaryEntry.resx">
+      <DependentUpon>201503131025072_AddPartOfSpeechToDictionaryEntry.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
