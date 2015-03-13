@@ -16,21 +16,56 @@ namespace Examples
 
         static void Main(string[] args)
         {
-            var parser = new WordNetParser();
+            var db = new EnglishGraphContext();
 
             var pathToWordnetFile = PathToProject + "Input/wordnet_words_with_def.txt";
-            var entries = parser.ParseEntries(pathToWordnetFile, true);
-
-            Console.WriteLine("{0} entries parsed:", entries.Count);
-            foreach (var grp in entries.GroupBy(e => e.PartOfSpeech))
-            {
-                Console.WriteLine("{0} --> {1}", grp.Key, grp.Count());
-            }
+            ParseAndPersistWordnetEntries(pathToWordnetFile, true, db);
 
 
             Console.WriteLine("OK");
             Console.ReadLine();
         }
 
+
+        private static void ParseAndPersistWordnetEntries(string filePath, bool excludeMwes, EnglishGraphContext db)
+        {
+            var parser = new WordNetParser();
+            var parsedEntries = parser.ParseEntries(filePath, excludeMwes);
+
+            var wordsAndPos = parsedEntries
+                .Select(e => new Tuple<string, byte>(e.Word, e.PartOfSpeech))
+                .ToList();
+            var definitions = parsedEntries
+                .SelectMany(e => e.Synsets)
+                .Select(syn => syn.Definition)
+                .ToList();
+
+            var batchSize = 1000;
+            var entries = wordsAndPos
+                .Select((wp, i) => new {Index = i, Wp = wp})
+                .GroupBy(a => a.Index / batchSize)
+                .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Wp).ToList(), db, true))
+                .ToList();
+            var synsets = definitions
+                .Select((d, i) => new { Index = i, Def = d })
+                .GroupBy(a => a.Index / batchSize)
+                .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Def).ToList(), db))
+                .ToList();
+
+            foreach (var entry in entries)
+            {
+                var associatedSynsets = parsedEntries
+                    .Where(pe => pe.Word == entry.Word && pe.PartOfSpeech == entry.PartOfSpeech)
+                    .SelectMany(pe => pe.Synsets)
+                    .SelectMany(syn => synsets.Where(s => s.Definition == syn.Definition))
+                    .ToList();
+                if (!associatedSynsets.Any())
+                {
+                    Console.WriteLine("No definition associated to '{0}'", entry.Word);
+                }
+                entry.Synsets = associatedSynsets;
+            }
+            db.SaveChanges();
+        }
     }
 }

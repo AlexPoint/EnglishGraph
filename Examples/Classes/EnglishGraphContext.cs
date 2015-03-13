@@ -20,6 +20,7 @@ namespace Examples.Classes
         // on configuring and using a Code First model, see http://go.microsoft.com/fwlink/?LinkId=390109.
 
         public virtual DbSet<DictionaryEntry> DictionaryEntries { get; set; }
+        public virtual DbSet<Synset> Synsets { get; set; }
     }
 
     //public class MyEntity

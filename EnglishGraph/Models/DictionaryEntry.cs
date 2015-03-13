@@ -13,5 +13,6 @@ namespace EnglishGraph.Models
         public byte PartOfSpeech { get; set; }
         public List<Synset> Synsets { get; set; }
 
+
     }
 }
