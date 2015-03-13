@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\EnglishGraphContext.cs" />
+    <Compile Include="Classes\WordNetParser.cs" />
     <Compile Include="Migrations\201503131010448_InitialCreate.cs" />
     <Compile Include="Migrations\201503131010448_InitialCreate.Designer.cs">
       <DependentUpon>201503131010448_InitialCreate.cs</DependentUpon>
@@ -76,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Input\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201503131010448_InitialCreate.resx">

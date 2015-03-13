@@ -11,6 +11,7 @@ namespace EnglishGraph.Models
         public int Id { get; set; }
         public string Word { get; set; }
         public byte PartOfSpeech { get; set; }
+        public List<Synset> Synsets { get; set; }
 
     }
 }
