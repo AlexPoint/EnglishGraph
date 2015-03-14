@@ -1,5 +1,4 @@
-be [ am, is, are]	was, were	been
-
+be	was/were	been
 abide	abided/abode	abided
 alight	alighted/alit	alighted/alit
 arise	arose	arisen

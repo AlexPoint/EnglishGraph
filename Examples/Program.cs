@@ -18,9 +18,15 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            var pathToWordnetFile = PathToProject + "Input/wordnet_words_with_def.txt";
-            ParseAndPersistWordnetEntries(pathToWordnetFile, true, db);
-
+            var infitives = db.DictionaryEntries
+                .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)
+                .Select(de => de.Word)
+                .ToList();
+            var conjugator = new VerbConjugator();
+            foreach (var infitive in infitives)
+            {
+                Console.WriteLine("{0} -> {1}", infitive, string.Join("/", conjugator.GetForm(infitive, VerbConjugator.VerbForm.ThirdPersonSingularPresent)));
+            }
 
             Console.WriteLine("OK");
             Console.ReadLine();
