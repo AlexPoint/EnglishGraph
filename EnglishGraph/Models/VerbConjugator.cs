@@ -62,7 +62,7 @@ namespace EnglishGraph.Models
             }
         }
 
-        private static Regex ConsonantVowelConsonantEnding = new Regex(string.Format("({0})({1})({2})$", 
+        public static Regex ConsonantVowelConsonantEnding = new Regex(string.Format("({0})({1})({2})$", 
             string.Join("|", consonants), string.Join("|", vowels), string.Join("|", consonants)));
         private List<string> GetSimplePastForm(string infinitive)
         {

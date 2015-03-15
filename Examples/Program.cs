@@ -18,18 +18,32 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            var infitives = db.DictionaryEntries
+            /*var infitives = db.DictionaryEntries
                 .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)
                 .Select(de => de.Word)
                 .ToList();
-            var conjugator = new VerbConjugator();
+            var specificInfinitives = infitives
+                .Where(i => VerbConjugator.ConsonantVowelConsonantEnding.IsMatch(i))
+                .ToList();
+            Console.WriteLine("{0} specific cases (out of {1} infinitives):", specificInfinitives.Count, infitives.Count);
+            foreach (var specificInfinitive in specificInfinitives)
+            {
+                Console.WriteLine(specificInfinitive);
+            }*/
+            /*var conjugator = new VerbConjugator();
             foreach (var infitive in infitives)
             {
                 Console.WriteLine("{0} -> {1}", infitive, string.Join("/", conjugator.GetForm(infitive, VerbConjugator.VerbForm.ThirdPersonSingularPresent)));
-            }
+            }*/
 
             Console.WriteLine("OK");
             Console.ReadLine();
+        }
+
+
+        private static void ParseAndPersistWordPronunciations(string filePath, bool excludeMwes, EnglishGraphContext db)
+        {
+            
         }
 
 
