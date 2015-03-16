@@ -20,6 +20,7 @@ namespace EnglishGraph.Models
 
         // Nouns ------------------------------
         public const byte Noun = 20;
+        public const byte ProperNoun = 21;
 
 
         // Adjectives -------------------------
@@ -28,5 +29,33 @@ namespace EnglishGraph.Models
 
         // Adverbs ----------------------------
         public const byte Adverb = 40;
+
+
+        public static string Abbrev(byte pos)
+        {
+            switch (pos)
+            {
+                case Verb:
+                    return "v.";
+                case Verb3RdPersSingular:
+                    return "v3.";
+                case VerbSimplePast:
+                    return "vsp";
+                case VerbPastParticiple:
+                    return "vpp";
+                case Gerundive:
+                    return "ger";
+                case Noun:
+                    return "n.";
+                case ProperNoun:
+                    return "pn.";
+                case Adjective:
+                    return "adj.";
+                case Adverb:
+                    return "adv.";
+                default:
+                    return "unk.";
+            }
+        }
     }
 }

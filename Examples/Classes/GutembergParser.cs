@@ -14,7 +14,7 @@ namespace Examples.Classes
             var lines = File.ReadAllLines(filePath);
             var wps = lines
                 .Select(l => l.Split(' '))
-                .Where(p => !excludeMwes || p[0].Contains('_'))
+                .Where(p => excludeMwes && !p[0].Contains('_'))
                 .Select(p => new WordAndPronunciation()
                 {
                     Word = p[0],
@@ -28,6 +28,6 @@ namespace Examples.Classes
     public class WordAndPronunciation
     {
         public string Word { get; set; }
-        public string Pronunication { get; set;1 }
+        public string Pronunication { get; set; }
     }
 }

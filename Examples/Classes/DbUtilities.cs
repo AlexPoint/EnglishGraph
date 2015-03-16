@@ -9,6 +9,14 @@ namespace Examples.Classes
 {
     static class DbUtilities
     {
+        public static List<DictionaryEntry> Get(List<string> words, EnglishGraphContext db)
+        {
+            var entries = db.DictionaryEntries
+                .Where(de => words.Contains(de.Word))
+                .ToList();
+            return entries;
+        }
+
         public static List<DictionaryEntry> GetOrCreate(List<Tuple<string, byte>> wordAndPos, EnglishGraphContext db,
             bool caseSensitive = true)
         {
@@ -27,14 +35,20 @@ namespace Examples.Classes
                 .ToList();
             if (missingWordAndPos.Any())
             {
-                var newEntries = missingWordAndPos.Select(tup => new DictionaryEntry()
-                {
-                    Word = tup.Item1,
-                    PartOfSpeech = tup.Item2
-                })
-                .ToList();
+                var newEntries = missingWordAndPos
+                    .Select(tup => new DictionaryEntry()
+                    {
+                        Word = tup.Item1,
+                        PartOfSpeech = tup.Item2
+                    })
+                    .ToList();
                 db.DictionaryEntries.AddRange(newEntries);
                 db.SaveChanges();
+
+                foreach (var newEntry in newEntries)
+                {
+                    Console.WriteLine("Created entry {0}", newEntry);
+                }
 
                 existingEntries.AddRange(newEntries);
             }

@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="Classes\DbUtilities.cs" />
     <Compile Include="Classes\EnglishGraphContext.cs" />
+    <Compile Include="Classes\GutembergParser.cs" />
+    <Compile Include="Classes\Routines.cs" />
     <Compile Include="Classes\WordNetParser.cs" />
     <Compile Include="Migrations\201503131010448_InitialCreate.cs" />
     <Compile Include="Migrations\201503131010448_InitialCreate.Designer.cs">
@@ -69,6 +71,10 @@
     <Compile Include="Migrations\201503131732215_RedefinePartOfSpeechCodes.cs" />
     <Compile Include="Migrations\201503131732215_RedefinePartOfSpeechCodes.Designer.cs">
       <DependentUpon>201503131732215_RedefinePartOfSpeechCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503161731467_AddPronunciationToDictionaryEntries.cs" />
+    <Compile Include="Migrations\201503161731467_AddPronunciationToDictionaryEntries.Designer.cs">
+      <DependentUpon>201503161731467_AddPronunciationToDictionaryEntries.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
@@ -99,6 +105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503131732215_RedefinePartOfSpeechCodes.resx">
       <DependentUpon>201503131732215_RedefinePartOfSpeechCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503161731467_AddPronunciationToDictionaryEntries.resx">
+      <DependentUpon>201503161731467_AddPronunciationToDictionaryEntries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

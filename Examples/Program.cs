@@ -18,6 +18,12 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
+            // load wordnet entries
+            Routines.LoadWordnetEntries(db, PathToProject);
+
+            // load pronunciations
+            //Routines.LoadGutembergPronunciations(db, PathToProject);
+
             /*var infitives = db.DictionaryEntries
                 .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)
                 .Select(de => de.Word)
@@ -41,51 +47,5 @@ namespace Examples
         }
 
 
-        private static void ParseAndPersistWordPronunciations(string filePath, bool excludeMwes, EnglishGraphContext db)
-        {
-            
-        }
-
-
-        private static void ParseAndPersistWordnetEntries(string filePath, bool excludeMwes, EnglishGraphContext db)
-        {
-            var parser = new WordNetParser();
-            var parsedEntries = parser.ParseEntries(filePath, excludeMwes);
-
-            var wordsAndPos = parsedEntries
-                .Select(e => new Tuple<string, byte>(e.Word, e.PartOfSpeech))
-                .ToList();
-            var definitions = parsedEntries
-                .SelectMany(e => e.Synsets)
-                .Select(syn => syn.Definition)
-                .ToList();
-
-            var batchSize = 1000;
-            var entries = wordsAndPos
-                .Select((wp, i) => new {Index = i, Wp = wp})
-                .GroupBy(a => a.Index / batchSize)
-                .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Wp).ToList(), db, true))
-                .ToList();
-            var synsets = definitions
-                .Select((d, i) => new { Index = i, Def = d })
-                .GroupBy(a => a.Index / batchSize)
-                .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Def).ToList(), db))
-                .ToList();
-
-            foreach (var entry in entries)
-            {
-                var associatedSynsets = parsedEntries
-                    .Where(pe => pe.Word == entry.Word && pe.PartOfSpeech == entry.PartOfSpeech)
-                    .SelectMany(pe => pe.Synsets)
-                    .SelectMany(syn => synsets.Where(s => s.Definition == syn.Definition))
-                    .ToList();
-                if (!associatedSynsets.Any())
-                {
-                    Console.WriteLine("No definition associated to '{0}'", entry.Word);
-                }
-                entry.Synsets = associatedSynsets;
-            }
-            db.SaveChanges();
-        }
     }
 }
