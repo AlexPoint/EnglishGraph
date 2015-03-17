@@ -98,6 +98,7 @@ namespace Examples.Classes
                 .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Def).ToList(), db))
                 .ToList();
 
+            var newEntryAndSynsetIds = new List<Tuple<int, int>>();
             foreach (var entry in entries)
             {
                 var associatedSynsets = parsedEntries
@@ -115,10 +116,17 @@ namespace Examples.Classes
                     var entryAndSynsetIds = associatedSynsets
                         .Select(syn => new Tuple<int, int>(entry.Id, syn.Id))
                         .ToList();
-                    DbUtilities.GetOrCreate(entryAndSynsetIds, db);
+                    newEntryAndSynsetIds.AddRange(entryAndSynsetIds);
+                }
+
+                if (newEntryAndSynsetIds.Count >= batchSize)
+                {
+                    DbUtilities.GetOrCreate(newEntryAndSynsetIds, db);
+                    newEntryAndSynsetIds = new List<Tuple<int, int>>();
                 }
             }
-            db.SaveChanges();
+
+            DbUtilities.GetOrCreate(newEntryAndSynsetIds, db);
         }
     }
 }
