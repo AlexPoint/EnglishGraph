@@ -16,13 +16,35 @@ namespace Examples
 
         static void Main(string[] args)
         {
+            Pronunciations.IsStressOnLastVowel("'w/[@]/rs/@/n");
+
             var db = new EnglishGraphContext();
+
+            var allVerbs = db.DictionaryEntries
+                .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)
+                .ToList();
+            var verbsWithStressOnLastVowel = allVerbs
+                .Select(v => new Tuple<string, bool>(v.Word, Pronunciations.IsStressOnLastVowel(v.Pronunciation)))
+                .ToList();
+
+            Console.WriteLine("{0} verbs with stress on last vowel (total of {1} verbs):", 
+                verbsWithStressOnLastVowel.Count(tup => tup.Item2), verbsWithStressOnLastVowel.Count);
+            foreach (var tuple in verbsWithStressOnLastVowel.Where(tup => tup.Item2))
+            {
+                Console.WriteLine(tuple.Item1);
+            }
+
+            Console.WriteLine("----------------");
+            foreach (var tuple in verbsWithStressOnLastVowel.Where(tup => !tup.Item2))
+            {
+                Console.WriteLine(tuple.Item1);
+            }
 
             // load wordnet entries
             //Routines.LoadWordnetEntries(db, PathToProject);
 
             // load pronunciations
-            Routines.LoadGutembergPronunciations(db, PathToProject);
+            //Routines.LoadGutembergPronunciations(db, PathToProject);
 
             /*var infitives = db.DictionaryEntries
                 .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)

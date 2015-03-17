@@ -46,6 +46,7 @@
     <Compile Include="Models\IrregularVerbs.cs" />
     <Compile Include="Models\PartsOfSpeech.cs" />
     <Compile Include="Models\DictionaryEntry.cs" />
+    <Compile Include="Models\Pronunciations.cs" />
     <Compile Include="Models\Synset.cs" />
     <Compile Include="Models\SynsetDictionaryEntry.cs" />
     <Compile Include="Models\VerbConjugator.cs" />
