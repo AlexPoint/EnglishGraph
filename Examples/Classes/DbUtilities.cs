@@ -9,12 +9,65 @@ namespace Examples.Classes
 {
     static class DbUtilities
     {
-        public static List<DictionaryEntry> Get(List<string> words, EnglishGraphContext db)
+        public static List<DictionaryEntry> GetEntries(List<string> words, EnglishGraphContext db)
         {
             var entries = db.DictionaryEntries
                 .Where(de => words.Contains(de.Word))
                 .ToList();
             return entries;
+        }
+
+        public static List<DictionaryEntry> GetEntries(List<int> ids, EnglishGraphContext db)
+        {
+            var entries = db.DictionaryEntries
+                .Where(de => ids.Contains(de.Id))
+                .ToList();
+            return entries;
+        }
+
+        public static List<Synset> GetSynsets(List<int> ids, EnglishGraphContext db)
+        {
+            var entries = db.Synsets
+                .Where(syn => ids.Contains(syn.Id))
+                .ToList();
+            return entries;
+        }
+
+        public static List<SynsetDictionaryEntry> GetOrCreate(List<Tuple<int, int>> entryAndSynsetIds, EnglishGraphContext db)
+        {
+            var distinctEntryAndSynsetIds = entryAndSynsetIds.Distinct().ToList();
+            var entryIds = distinctEntryAndSynsetIds.Select(tup => tup.Item1).ToList();
+            var synsetIds = distinctEntryAndSynsetIds.Select(tup => tup.Item2).ToList();
+            var existingSynsetAndEntries = db.SynsetsAndDictionaryEntries
+                // take more than necessary and filter later
+                .Where(se => entryIds.Contains(se.DictionaryEntry.Id) && synsetIds.Contains(se.Synset.Id))
+                .ToList()
+                .Where(se => distinctEntryAndSynsetIds.Any(dsid => dsid.Item1 == se.DictionaryEntry.Id && dsid.Item2 == se.Synset.Id))
+                .ToList();
+
+            var missingSynsetAndEntryIds = distinctEntryAndSynsetIds
+                .Where(tup => !existingSynsetAndEntries.Any(e => tup.Item1 == e.DictionaryEntry.Id && tup.Item2 == e.Synset.Id))
+                .ToList();
+            if (missingSynsetAndEntryIds.Any())
+            {
+                var missingEntryIds = missingSynsetAndEntryIds.Select(tup => tup.Item1).ToList();
+                var missingSynsets = missingSynsetAndEntryIds.Select(tup => tup.Item2).ToList();
+                var entries = GetEntries(missingEntryIds, db);
+                var synsets = GetSynsets(missingSynsets, db);
+                var newSynsetAndEntries = missingSynsetAndEntryIds
+                    .Select(tup => new SynsetDictionaryEntry()
+                    {
+                        DictionaryEntry = entries.FirstOrDefault(de => de.Id == tup.Item1),
+                        Synset = synsets.FirstOrDefault(syn => syn.Id == tup.Item2)
+                    })
+                    .ToList();
+                db.SynsetsAndDictionaryEntries.AddRange(newSynsetAndEntries);
+                db.SaveChanges();
+
+                existingSynsetAndEntries.AddRange(newSynsetAndEntries);
+            }
+
+            return existingSynsetAndEntries;
         }
 
         public static List<DictionaryEntry> GetOrCreate(List<Tuple<string, byte>> wordAndPos, EnglishGraphContext db,

@@ -29,7 +29,13 @@ namespace Examples.Classes
                 {
                     Word = grp.Key.Word,
                     PartOfSpeech = grp.Key.PartOfSpeech,
-                    Synsets = grp.Select(e => new Synset() {Definition = e.Definition}).ToList()
+                    Synsets = grp.Select(e => new SynsetDictionaryEntry()
+                    {
+                        Synset = new Synset()
+                        {
+                            Definition = e.Definition
+                        }
+                    }).ToList()
                 })
                 .ToList();
 

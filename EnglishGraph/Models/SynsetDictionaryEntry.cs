@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace EnglishGraph.Models
 {
-    public class Synset
+    public class SynsetDictionaryEntry
     {
         public int Id { get; set; }
-        public string Definition { get; set; }
-        public List<SynsetDictionaryEntry> DictionaryEntries { get; set; }
+        public virtual Synset Synset { get; set; }
+        public virtual DictionaryEntry DictionaryEntry { get; set; }
     }
 }

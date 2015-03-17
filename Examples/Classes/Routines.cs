@@ -22,7 +22,7 @@ namespace Examples.Classes
             foreach (var grp in groups)
             {
                 var words = grp.Select(a => a.WordAndPronunciation.Word).ToList();
-                var entries = DbUtilities.Get(words, db);
+                var entries = DbUtilities.GetEntries(words, db);
                 nbOfEntriesFound += entries.Count;
                 foreach (var entry in entries)
                 {
@@ -82,7 +82,7 @@ namespace Examples.Classes
                 .Select(e => new Tuple<string, byte>(e.Word, e.PartOfSpeech))
                 .ToList();
             var definitions = parsedEntries
-                .SelectMany(e => e.Synsets)
+                .SelectMany(e => e.Synsets.Select(se => se.Synset))
                 .Select(syn => syn.Definition)
                 .ToList();
 
@@ -103,13 +103,20 @@ namespace Examples.Classes
                 var associatedSynsets = parsedEntries
                     .Where(pe => pe.Word == entry.Word && pe.PartOfSpeech == entry.PartOfSpeech)
                     .SelectMany(pe => pe.Synsets)
-                    .SelectMany(syn => synsets.Where(s => s.Definition == syn.Definition))
+                    .SelectMany(syn => synsets.Where(s => s.Definition == syn.Synset.Definition))
                     .ToList();
                 if (!associatedSynsets.Any())
                 {
                     Console.WriteLine("No definition associated to '{0}'", entry.Word);
                 }
-                entry.Synsets = associatedSynsets;
+                else
+                {
+                    // create the links between synsets and dictionary entries
+                    var entryAndSynsetIds = associatedSynsets
+                        .Select(syn => new Tuple<int, int>(entry.Id, syn.Id))
+                        .ToList();
+                    DbUtilities.GetOrCreate(entryAndSynsetIds, db);
+                }
             }
             db.SaveChanges();
         }

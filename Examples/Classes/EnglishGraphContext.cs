@@ -21,6 +21,7 @@ namespace Examples.Classes
 
         public virtual DbSet<DictionaryEntry> DictionaryEntries { get; set; }
         public virtual DbSet<Synset> Synsets { get; set; }
+        public virtual DbSet<SynsetDictionaryEntry> SynsetsAndDictionaryEntries { get; set; }
     }
 
     //public class MyEntity
