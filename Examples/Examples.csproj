@@ -80,6 +80,10 @@
     <Compile Include="Migrations\201503170852312_ModelRelationshipsBetweenDictionaryEntriesAndSynsets.Designer.cs">
       <DependentUpon>201503170852312_ModelRelationshipsBetweenDictionaryEntriesAndSynsets.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503171408435_AddCascadeOnDeleteConstraintsForSynsetDictionaryEntryTable.cs" />
+    <Compile Include="Migrations\201503171408435_AddCascadeOnDeleteConstraintsForSynsetDictionaryEntryTable.Designer.cs">
+      <DependentUpon>201503171408435_AddCascadeOnDeleteConstraintsForSynsetDictionaryEntryTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,6 +119,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503170852312_ModelRelationshipsBetweenDictionaryEntriesAndSynsets.resx">
       <DependentUpon>201503170852312_ModelRelationshipsBetweenDictionaryEntriesAndSynsets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503171408435_AddCascadeOnDeleteConstraintsForSynsetDictionaryEntryTable.resx">
+      <DependentUpon>201503171408435_AddCascadeOnDeleteConstraintsForSynsetDictionaryEntryTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

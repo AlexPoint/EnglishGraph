@@ -22,11 +22,24 @@ namespace Examples.Classes
         public virtual DbSet<DictionaryEntry> DictionaryEntries { get; set; }
         public virtual DbSet<Synset> Synsets { get; set; }
         public virtual DbSet<SynsetDictionaryEntry> SynsetsAndDictionaryEntries { get; set; }
-    }
 
-    //public class MyEntity
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //}
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            //base.OnModelCreating(modelBuilder);
+            
+            // DictionaryEntry
+            modelBuilder.Entity<DictionaryEntry>()
+                .HasMany(e => e.Synsets)
+                .WithRequired(sde => sde.DictionaryEntry)
+                .WillCascadeOnDelete(true);
+
+            // Synsets
+            modelBuilder.Entity<Synset>()
+                .HasMany(e => e.DictionaryEntries)
+                .WithRequired(sde => sde.Synset)
+                .WillCascadeOnDelete(true);
+
+
+        }
+    }
 }
