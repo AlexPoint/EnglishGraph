@@ -19,10 +19,10 @@ namespace Examples
             var db = new EnglishGraphContext();
 
             // load wordnet entries
-            Routines.LoadWordnetEntries(db, PathToProject);
+            //Routines.LoadWordnetEntries(db, PathToProject);
 
             // load pronunciations
-            //Routines.LoadGutembergPronunciations(db, PathToProject);
+            Routines.LoadGutembergPronunciations(db, PathToProject);
 
             /*var infitives = db.DictionaryEntries
                 .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)

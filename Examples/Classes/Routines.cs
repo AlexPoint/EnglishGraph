@@ -26,7 +26,7 @@ namespace Examples.Classes
                 nbOfEntriesFound += entries.Count;
                 foreach (var entry in entries)
                 {
-                    var pronunciation = grp.Where(a => a.WordAndPronunciation.Word == entry.Word)
+                    var pronunciation = grp.Where(a => string.Equals(a.WordAndPronunciation.Word, entry.Word, StringComparison.InvariantCultureIgnoreCase))
                         .Select(a => a.WordAndPronunciation.Pronunication)
                         .FirstOrDefault();
                     if (!string.IsNullOrEmpty(pronunciation))
