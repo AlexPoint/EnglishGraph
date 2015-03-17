@@ -9,22 +9,8 @@ namespace Examples.Classes
 {
     static class DbUtilities
     {
-        public static List<DictionaryEntry> GetEntries(List<string> words, EnglishGraphContext db)
-        {
-            var entries = db.DictionaryEntries
-                .Where(de => words.Contains(de.Word))
-                .ToList();
-            return entries;
-        }
-
-        public static List<DictionaryEntry> GetEntries(List<int> ids, EnglishGraphContext db)
-        {
-            var entries = db.DictionaryEntries
-                .Where(de => ids.Contains(de.Id))
-                .ToList();
-            return entries;
-        }
-
+        
+        // SynsetDictionaryEntry -----------------------------------
         public static List<Synset> GetSynsets(List<int> ids, EnglishGraphContext db)
         {
             var entries = db.Synsets
@@ -32,6 +18,8 @@ namespace Examples.Classes
                 .ToList();
             return entries;
         }
+
+        private static readonly object SynsetDictionaryEntryCreationLock = new object();
 
         public static List<SynsetDictionaryEntry> GetOrCreate(List<Tuple<int, int>> entryAndSynsetIds, EnglishGraphContext db)
         {
@@ -50,26 +38,54 @@ namespace Examples.Classes
                 .ToList();
             if (missingSynsetAndEntryIds.Any())
             {
-                var missingEntryIds = missingSynsetAndEntryIds.Select(tup => tup.Item1).ToList();
-                var missingSynsets = missingSynsetAndEntryIds.Select(tup => tup.Item2).ToList();
-                var entries = GetEntries(missingEntryIds, db);
-                var synsets = GetSynsets(missingSynsets, db);
-                var newSynsetAndEntries = missingSynsetAndEntryIds
-                    .Select(tup => new SynsetDictionaryEntry()
-                    {
-                        DictionaryEntry = entries.FirstOrDefault(de => de.Id == tup.Item1),
-                        Synset = synsets.FirstOrDefault(syn => syn.Id == tup.Item2)
-                    })
-                    .ToList();
-                db.SynsetsAndDictionaryEntries.AddRange(newSynsetAndEntries);
-                db.SaveChanges();
+                lock (SynsetDictionaryEntryCreationLock)
+                {
+                    existingSynsetAndEntries = db.SynsetsAndDictionaryEntries
+                        // take more than necessary and filter later
+                        .Where(se => entryIds.Contains(se.DictionaryEntry.Id) && synsetIds.Contains(se.Synset.Id))
+                        .ToList()
+                        .Where(
+                            se =>
+                                distinctEntryAndSynsetIds.Any(
+                                    dsid => dsid.Item1 == se.DictionaryEntry.Id && dsid.Item2 == se.Synset.Id))
+                        .ToList();
+                    missingSynsetAndEntryIds = distinctEntryAndSynsetIds
+                        .Where(tup => !existingSynsetAndEntries.Any(e => tup.Item1 == e.DictionaryEntry.Id && tup.Item2 == e.Synset.Id))
+                        .ToList();
 
-                existingSynsetAndEntries.AddRange(newSynsetAndEntries);
+                    var missingEntryIds = missingSynsetAndEntryIds.Select(tup => tup.Item1).ToList();
+                    var missingSynsets = missingSynsetAndEntryIds.Select(tup => tup.Item2).ToList();
+                    var entries = GetEntries(missingEntryIds, db);
+                    var synsets = GetSynsets(missingSynsets, db);
+                    var newSynsetAndEntries = missingSynsetAndEntryIds
+                        .Select(tup => new SynsetDictionaryEntry()
+                        {
+                            DictionaryEntry = entries.FirstOrDefault(de => de.Id == tup.Item1),
+                            Synset = synsets.FirstOrDefault(syn => syn.Id == tup.Item2)
+                        })
+                        .ToList();
+                    db.SynsetsAndDictionaryEntries.AddRange(newSynsetAndEntries);
+                    db.SaveChanges();
+
+                    existingSynsetAndEntries.AddRange(newSynsetAndEntries);
+                }
             }
 
             return existingSynsetAndEntries;
         }
 
+
+        // DictionaryEntries ------------------------------------------------
+        
+        public static List<DictionaryEntry> GetEntries(List<string> words, EnglishGraphContext db)
+        {
+            var entries = db.DictionaryEntries
+                .Where(de => words.Contains(de.Word))
+                .ToList();
+            return entries;
+        }
+
+        private static readonly object WordCreationLock = new object();
         public static List<DictionaryEntry> GetOrCreate(List<Tuple<string, byte>> wordAndPos, EnglishGraphContext db,
             bool caseSensitive = true)
         {
@@ -88,27 +104,54 @@ namespace Examples.Classes
                 .ToList();
             if (missingWordAndPos.Any())
             {
-                var newEntries = missingWordAndPos
-                    .Select(tup => new DictionaryEntry()
-                    {
-                        Word = tup.Item1,
-                        PartOfSpeech = tup.Item2
-                    })
-                    .ToList();
-                db.DictionaryEntries.AddRange(newEntries);
-                db.SaveChanges();
-
-                foreach (var newEntry in newEntries)
+                lock (WordCreationLock)
                 {
-                    Console.WriteLine("Created entry {0}", newEntry);
-                }
+                    existingEntries = db.DictionaryEntries
+                        .Where(e => distinctWordNames.Contains(e.Word))
+                        .ToList()
+                        .Where(e => distinctWordsAndPos
+                            .Any(wp => string.Equals(wp.Item1, e.Word,
+                                        caseSensitive ? StringComparison.InvariantCulture: StringComparison.InvariantCultureIgnoreCase)
+                                    && wp.Item2 == e.PartOfSpeech))
+                        .ToList();
+                    missingWordAndPos = distinctWordsAndPos
+                        .Where(tup => !existingEntries.Any(e => tup.Item1 == e.Word && tup.Item2 == e.PartOfSpeech))
+                        .ToList();
 
-                existingEntries.AddRange(newEntries);
+                    var newEntries = missingWordAndPos
+                        .Select(tup => new DictionaryEntry()
+                        {
+                            Word = tup.Item1,
+                            PartOfSpeech = tup.Item2
+                        })
+                        .ToList();
+                    db.DictionaryEntries.AddRange(newEntries);
+                    db.SaveChanges();
+
+                    foreach (var newEntry in newEntries)
+                    {
+                        Console.WriteLine("Created entry {0}", newEntry);
+                    }
+
+                    existingEntries.AddRange(newEntries); 
+                }
             }
 
             return existingEntries;
         }
 
+
+        // Synsets --------------------------------------------------------
+        
+        public static List<DictionaryEntry> GetEntries(List<int> ids, EnglishGraphContext db)
+        {
+            var entries = db.DictionaryEntries
+                .Where(de => ids.Contains(de.Id))
+                .ToList();
+            return entries;
+        }
+
+        private static readonly object SynsetCreationLock = new object();
         public static List<Synset> GetOrCreate(List<string> defintions, EnglishGraphContext db)
         {
             var distinctDefinitions = defintions.Distinct().ToList();
@@ -121,16 +164,26 @@ namespace Examples.Classes
                 .ToList();
             if (missingDefinitions.Any())
             {
-                var newSynsets = missingDefinitions
-                    .Select(def => new Synset()
-                    {
-                        Definition = def
-                    })
-                    .ToList();
-                db.Synsets.AddRange(newSynsets);
-                db.SaveChanges();
+                lock (SynsetCreationLock)
+                {
+                    existingSynsets = db.Synsets
+                        .Where(syn => distinctDefinitions.Contains(syn.Definition))
+                        .ToList();
+                    missingDefinitions = distinctDefinitions
+                        .Where(def => existingSynsets.All(syn => syn.Definition != def))
+                        .ToList();
 
-                existingSynsets.AddRange(newSynsets);
+                    var newSynsets = missingDefinitions
+                        .Select(def => new Synset()
+                        {
+                            Definition = def
+                        })
+                        .ToList();
+                    db.Synsets.AddRange(newSynsets);
+                    db.SaveChanges();
+
+                    existingSynsets.AddRange(newSynsets);
+                }
             }
 
             return existingSynsets;
