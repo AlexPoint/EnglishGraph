@@ -15,11 +15,17 @@ namespace EnglishGraph.Models
         public enum VerbForm { ThirdPersonSingularPresent, SimplePast, PastParticiple, Gerundive }
 
         private static readonly List<char> consonants = new List<char>(){'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
+
+        // Not a general case: revved, wowwed, and bookkeeper
+        private static readonly List<char> rarelyDoubledConsonants = new List<char>() { 'h', 'j', 'q', 'v', 'w', 'x', 'y' };
+
+        private static readonly List<char> doubledConsonants = consonants.Except(rarelyDoubledConsonants).ToList();
+
         private static readonly List<char> vowels = new List<char>(){'a', 'e', 'i', 'o', 'u'};
 
-        public List<string> GetForm(string infinitive, VerbForm verbForm)
+        public List<string> GetVerbForm(DictionaryEntry verb, VerbForm verbForm)
         {
-            if (string.IsNullOrEmpty(infinitive))
+            if (verb.PartOfSpeech != PartsOfSpeech.Verb || string.IsNullOrEmpty(verb.Word))
             {
                 // TODO: log something
                 return new List<string>(){""};
@@ -28,22 +34,23 @@ namespace EnglishGraph.Models
             switch (verbForm)
             {
                 case VerbForm.ThirdPersonSingularPresent:
-                    return new List<string>() {GetThirdPersonSingularPresentForm(infinitive)};
+                    return new List<string>() {GetThirdPersonSingularPresentForm(verb)};
                 case VerbForm.SimplePast:
-                    return GetSimplePastForm(infinitive);
+                    return GetSimplePastForm(verb);
                 case VerbForm.PastParticiple:
-                    return GetPastParticipleForm(infinitive);
+                    return GetPastParticipleForm(verb);
                     case VerbForm.Gerundive:
-                    return new List<string>() {GetGerundiveForm(infinitive)};
+                    return new List<string>() {GetGerundiveForm(verb)};
                 default:
                     return new List<string>(){""};
             }
         }
 
         private static readonly List<string> thirdPersonIrregularVerbSuffixes = new List<string>() { "SS", "X", "CH", "SH", "O" };
-        private static readonly Regex thirdPersonIrregularVerbSuffixesRegex = new Regex(string.Format("({0})$", string.Join("|", thirdPersonIrregularVerbSuffixes)));
-        private string GetThirdPersonSingularPresentForm(string infinitive)
+        private static readonly Regex thirdPersonIrregularVerbSuffixesRegex = new Regex(string.Format("({0})$", string.Join("|", thirdPersonIrregularVerbSuffixes)), RegexOptions.IgnoreCase);
+        private string GetThirdPersonSingularPresentForm(DictionaryEntry verb)
         {
+            var infinitive = verb.Word;
             if (infinitive == "be")
             {
                 return "is";
@@ -63,9 +70,10 @@ namespace EnglishGraph.Models
         }
 
         public static Regex ConsonantVowelConsonantEnding = new Regex(string.Format("({0})({1})({2})$", 
-            string.Join("|", consonants), string.Join("|", vowels), string.Join("|", consonants)));
-        private List<string> GetSimplePastForm(string infinitive)
+            string.Join("|", consonants), string.Join("|", vowels), string.Join("|", doubledConsonants)));
+        private List<string> GetSimplePastForm(DictionaryEntry verb)
         {
+            var infinitive = verb.Word;
             var correspondingIrregularVerb = IrregularVerbs.Instance
                 .AllIrregularVerbs
                 .FirstOrDefault(iv => iv.Infinitive == infinitive);
@@ -73,7 +81,7 @@ namespace EnglishGraph.Models
             {
                 return correspondingIrregularVerb.SimplePastForms;
             }
-            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive)) //and stress on last vowel
+            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && Pronunciations.IsStressOnLastVowel(verb.Pronunciation))
             {
                 return new List<string>() {infinitive + infinitive.Last() + "ed"};
             }
@@ -87,8 +95,9 @@ namespace EnglishGraph.Models
             }
         }
         
-        private List<string> GetPastParticipleForm(string infinitive)
+        private List<string> GetPastParticipleForm(DictionaryEntry verb)
         {
+            var infinitive = verb.Word;
             var correspondingIrregularVerb = IrregularVerbs.Instance
                 .AllIrregularVerbs
                 .FirstOrDefault(iv => iv.Infinitive == infinitive);
@@ -96,7 +105,7 @@ namespace EnglishGraph.Models
             {
                 return correspondingIrregularVerb.PastParticipleForms;
             }
-            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive)) //and stress on last vowel
+            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && Pronunciations.IsStressOnLastVowel(verb.Pronunciation))
             {
                 return new List<string>() {infinitive + infinitive.Last() + "ed"};
             }
@@ -109,10 +118,22 @@ namespace EnglishGraph.Models
                 return new List<string>(){infinitive + "ed"};
             }
         }
-        private string GetGerundiveForm(string infinitive)
+        private string GetGerundiveForm(DictionaryEntry verb)
         {
-            if (ConsonantVowelConsonantEnding.IsMatch(infinitive)) //+ stress on last vowel
+            var infinitive = verb.Word;
+            // cancel and travel are two exceptions
+            if (infinitive == "cancel")
             {
+                return "cancelling";
+            }
+            else if (infinitive == "travel")
+            {
+                return "travelling";
+            }
+            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && 
+                (Pronunciations.IsStressOnLastVowel(verb.Pronunciation) || Pronunciations.CountNbOfSyllables(verb.Pronunciation) == 1))
+            {
+                // double last consonant
                 return infinitive + infinitive.Last() + "ing";
             }
             else if (infinitive.EndsWith("ie"))

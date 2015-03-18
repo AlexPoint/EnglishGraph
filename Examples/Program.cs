@@ -16,29 +16,24 @@ namespace Examples
 
         static void Main(string[] args)
         {
-            Pronunciations.IsStressOnLastVowel("'w/[@]/rs/@/n");
+            //Pronunciations.IsStressOnLastVowel("'w/[@]/rs/@/n");
 
             var db = new EnglishGraphContext();
 
+            var verbShortList = new List<string>()
+            {
+                "stop", "refer", "visit", "rob", "sit", "begin", "prefer", "listen", "happen", "travel", "cancel", "start", "burn", "remain", "play", "snow"
+            };
             var allVerbs = db.DictionaryEntries
-                .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)
-                .ToList();
-            var verbsWithStressOnLastVowel = allVerbs
-                .Select(v => new Tuple<string, bool>(v.Word, Pronunciations.IsStressOnLastVowel(v.Pronunciation)))
+                .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb && verbShortList.Contains(de.Word))
                 .ToList();
 
-            Console.WriteLine("{0} verbs with stress on last vowel (total of {1} verbs):", 
-                verbsWithStressOnLastVowel.Count(tup => tup.Item2), verbsWithStressOnLastVowel.Count);
-            foreach (var tuple in verbsWithStressOnLastVowel.Where(tup => tup.Item2))
+            var conjugator = new VerbConjugator();
+            foreach (var verb in allVerbs)
             {
-                Console.WriteLine(tuple.Item1);
+                Console.WriteLine("{0} --> {1}", verb.Word, string.Join("|", conjugator.GetVerbForm(verb, VerbConjugator.VerbForm.Gerundive)));
             }
 
-            Console.WriteLine("----------------");
-            foreach (var tuple in verbsWithStressOnLastVowel.Where(tup => !tup.Item2))
-            {
-                Console.WriteLine(tuple.Item1);
-            }
 
             // load wordnet entries
             //Routines.LoadWordnetEntries(db, PathToProject);

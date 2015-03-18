@@ -34,5 +34,17 @@ namespace EnglishGraph.Models
 
             return false;
         }
+
+        public static int CountNbOfSyllables(string pronunciation)
+        {
+            if (string.IsNullOrEmpty(pronunciation))
+            {
+                return 0;
+            }
+            else
+            {
+                return pronunciation.Split(VowelSounds.ToArray(), StringSplitOptions.None).Length - 1;
+            }
+        }
     }
 }
