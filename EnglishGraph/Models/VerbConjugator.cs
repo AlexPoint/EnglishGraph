@@ -46,11 +46,31 @@ namespace EnglishGraph.Models
             }
         }
 
-        private static readonly List<string> thirdPersonIrregularVerbSuffixes = new List<string>() { "SS", "X", "CH", "SH", "O" };
-        private static readonly Regex thirdPersonIrregularVerbSuffixesRegex = new Regex(string.Format("({0})$", string.Join("|", thirdPersonIrregularVerbSuffixes)), RegexOptions.IgnoreCase);
+        private static readonly List<string> thirdPersonIrregularVerbSuffixes = new List<string>() { "ss", "x", "ch", "sh", "o" };
+        private static readonly Regex thirdPersonIrregularVerbSuffixesRegex = new Regex(string.Format("({0})$", string.Join("|", thirdPersonIrregularVerbSuffixes)));
+        private static readonly Regex endsWithConsonantPlusY = new Regex(string.Format("({0})y$", string.Join("|", consonants)));
+
+        private static readonly List<GrammarTransformation> ThirdPersonPresentRules = new List<GrammarTransformation>()
+        {
+            new GrammarTransformation()
+            {
+                Condition = thirdPersonIrregularVerbSuffixesRegex.IsMatch,
+                Transform = s => s + "es"
+            },
+            new GrammarTransformation()
+            {
+                Condition = endsWithConsonantPlusY.IsMatch,
+                Transform = s => s.Remove(s.Length - 1) + "ies"
+            },
+            new GrammarTransformation()
+            {
+                Condition = s => true,
+                Transform = verb => verb + "s"
+            }
+        };
         private string GetThirdPersonSingularPresentForm(DictionaryEntry verb)
         {
-            var infinitive = verb.Word;
+            /*var infinitive = verb.Word;
             if (infinitive == "be")
             {
                 return "is";
@@ -66,7 +86,18 @@ namespace EnglishGraph.Models
             else
             {
                 return infinitive + "s";
+            }*/
+            var infinitive = verb.Word;
+            foreach (var thirdPersonPresentRule in ThirdPersonPresentRules)
+            {
+                if (thirdPersonPresentRule.Condition(infinitive))
+                {
+                    return thirdPersonPresentRule.Transform(infinitive);
+                }
             }
+
+            // no matching rule
+            return "";
         }
 
         public static Regex ConsonantVowelConsonantEnding = new Regex(string.Format("({0})({1})({2})$", 

@@ -22,7 +22,8 @@ namespace Examples
 
             var verbShortList = new List<string>()
             {
-                "stop", "refer", "visit", "rob", "sit", "begin", "prefer", "listen", "happen", "travel", "cancel", "start", "burn", "remain", "play", "snow"
+                "stop", "refer", "visit", "rob", "sit", "begin", "prefer", "listen", "happen", "travel", "cancel", "start", "burn", "remain", "play", "snow",
+                "carry", "marry", "kiss", "fix", "watch", "crash", "go"
             };
             var allVerbs = db.DictionaryEntries
                 .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb && verbShortList.Contains(de.Word))
@@ -31,7 +32,7 @@ namespace Examples
             var conjugator = new VerbConjugator();
             foreach (var verb in allVerbs)
             {
-                Console.WriteLine("{0} --> {1}", verb.Word, string.Join("|", conjugator.GetVerbForm(verb, VerbConjugator.VerbForm.Gerundive)));
+                Console.WriteLine("{0} --> {1}", verb.Word, string.Join("|", conjugator.GetVerbForm(verb, VerbConjugator.VerbForm.ThirdPersonSingularPresent)));
             }
 
 
