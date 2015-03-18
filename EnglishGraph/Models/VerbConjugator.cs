@@ -17,7 +17,7 @@ namespace EnglishGraph.Models
         private static readonly List<char> consonants = new List<char>(){'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 
         // Not a general case: revved, wowwed, and bookkeeper
-        private static readonly List<char> rarelyDoubledConsonants = new List<char>() { 'h', 'j', 'q', 'v', 'w', 'x', 'y' };
+        private static readonly List<char> rarelyDoubledConsonants = new List<char>() { 'h', 'w', 'x', 'y', 'j', 'q', /*'v'*/ };
 
         private static readonly List<char> doubledConsonants = consonants.Except(rarelyDoubledConsonants).ToList();
 
@@ -70,7 +70,9 @@ namespace EnglishGraph.Models
         }
 
         public static Regex ConsonantVowelConsonantEnding = new Regex(string.Format("({0})({1})({2})$", 
-            string.Join("|", consonants), string.Join("|", vowels), string.Join("|", doubledConsonants)));
+            string.Format("{0}|{1}", string.Join("|", consonants), "qu"), 
+            string.Join("|", vowels), 
+            string.Join("|", doubledConsonants)));
         private List<string> GetSimplePastForm(DictionaryEntry verb)
         {
             var infinitive = verb.Word;
@@ -130,17 +132,34 @@ namespace EnglishGraph.Models
             {
                 return "travelling";
             }
+            else if (infinitive == "be")
+            {
+                return "being";
+            }
+            else if (infinitive == "input")
+            {
+                return "inputting";
+            }
             else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && 
                 (Pronunciations.IsStressOnLastVowel(verb.Pronunciation) || Pronunciations.CountNbOfSyllables(verb.Pronunciation) == 1))
             {
                 // double last consonant
                 return infinitive + infinitive.Last() + "ing";
             }
+            else if (infinitive.EndsWith("c"))
+            {
+                // traffic -> trafficking
+                return infinitive + "king";
+            }
             else if (infinitive.EndsWith("ie"))
             {
                 return infinitive.Remove(infinitive.Length - 2) + "ying";
             }
-            else if (infinitive.EndsWith("e"))
+            else if (infinitive.EndsWith("e") 
+                && !infinitive.EndsWith("ee")
+                && !infinitive.EndsWith("nge")
+                && infinitive != "dye"
+                && infinitive != "shoe")
             {
                 return infinitive.Remove(infinitive.Length - 1) + "ing";
             }
