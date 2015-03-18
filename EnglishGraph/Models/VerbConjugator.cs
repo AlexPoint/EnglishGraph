@@ -120,30 +120,25 @@ namespace EnglishGraph.Models
                 return new List<string>(){infinitive + "ed"};
             }
         }
+
+        public static List<Tuple<string,string>> GerundiveExceptions = new List<Tuple<string, string>>()
+        {
+            new Tuple<string, string>("cancel", "cancelling"),
+            new Tuple<string, string>("travel", "travelling"),
+            new Tuple<string, string>("input", "inputting")
+        };
         private string GetGerundiveForm(DictionaryEntry verb)
         {
             var infinitive = verb.Word;
-            // cancel and travel are two exceptions
-            if (infinitive == "cancel")
+            var gerundiveException = GerundiveExceptions.FirstOrDefault(tup => tup.Item1 == infinitive);
+            if (gerundiveException != null)
             {
-                return "cancelling";
-            }
-            else if (infinitive == "travel")
-            {
-                return "travelling";
-            }
-            else if (infinitive == "be")
-            {
-                return "being";
-            }
-            else if (infinitive == "input")
-            {
-                return "inputting";
+                return gerundiveException.Item2;
             }
             else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && 
                 (Pronunciations.IsStressOnLastVowel(verb.Pronunciation) || Pronunciations.CountNbOfSyllables(verb.Pronunciation) == 1))
             {
-                // double last consonant
+                // run -> running
                 return infinitive + infinitive.Last() + "ing";
             }
             else if (infinitive.EndsWith("c"))
@@ -153,20 +148,88 @@ namespace EnglishGraph.Models
             }
             else if (infinitive.EndsWith("ie"))
             {
+                // die -> dying
                 return infinitive.Remove(infinitive.Length - 2) + "ying";
             }
             else if (infinitive.EndsWith("e") 
                 && !infinitive.EndsWith("ee")
                 && !infinitive.EndsWith("nge")
                 && infinitive != "dye"
-                && infinitive != "shoe")
+                && infinitive != "shoe"
+                && infinitive != "be")
             {
+                // take -> taking
                 return infinitive.Remove(infinitive.Length - 1) + "ing";
             }
             else
             {
                 return infinitive + "ing";
             }
+        }
+
+        public List<string> GetPotentialInfinitiveFormsFromGerundive(string gerundive)
+        {
+            if (string.IsNullOrEmpty(gerundive)) { return new List<string>(){""};}
+
+            var gerundiveException = GerundiveExceptions.FirstOrDefault(tup => tup.Item2 == gerundive);
+            if (gerundiveException != null)
+            {
+                return new List<string>() {gerundiveException.Item1};
+            }
+            else
+            {
+                if (gerundive.EndsWith("ing"))
+	            {
+		            // trim ing at the end
+	                var withoutIngTermination = gerundive.Remove(gerundive.Length - 3);
+	                if (withoutIngTermination.EndsWith("ck"))
+	                {
+                        // sticking -> stick // trafficking -> traffic
+	                    return new List<string>()
+	                    {
+                            withoutIngTermination,
+	                        withoutIngTermination.Remove(withoutIngTermination.Length - 1)
+	                    };
+	                }
+                    else if (withoutIngTermination.Last() == 'y')
+                    {
+                        // playing -> play // dying -> die
+                        return new List<string>()
+                        {
+                            withoutIngTermination, 
+                            withoutIngTermination.Remove(withoutIngTermination.Length - 1) + "ie"
+                        };
+                    }
+                    else if (withoutIngTermination[withoutIngTermination.Length - 1] == withoutIngTermination[withoutIngTermination.Length - 2]
+                        && consonants.Contains(withoutIngTermination[withoutIngTermination.Length - 1]))
+                    {
+                        // dwelling -> dwell // running -> run
+                        return new List<string>()
+                        {
+                            withoutIngTermination,
+                            withoutIngTermination.Remove(withoutIngTermination.Length - 1)
+                        };
+                    }
+                    else if (consonants.Contains(withoutIngTermination.Last()))
+                    {
+                        // taking -> take // fucking -> fuck
+                        return new List<string>()
+                        {
+                            withoutIngTermination,
+                            withoutIngTermination + "e"
+                        };
+                    }
+                    else
+                    {
+                        // ends with a vowel
+                        // doing -> do
+                        return new List<string>(){ withoutIngTermination };
+                    }
+	            }
+            }
+
+            // if we get here, log a warning
+            return new List<string>(){""};
         }
 
     }
