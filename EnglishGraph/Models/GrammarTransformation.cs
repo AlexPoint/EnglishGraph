@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EnglishGraph.Models
 {
-    public class GrammarTransformation
+    public class GrammarTransformation<T, U>
     {
-        public Predicate<string> Condition { get; set; }
-        public Func<string, string> Transform { get; set; }
+        public Predicate<T> Condition { get; set; }
+        public Func<T, U> Transform { get; set; }
     }
 }

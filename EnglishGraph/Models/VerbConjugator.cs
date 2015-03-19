@@ -34,71 +34,60 @@ namespace EnglishGraph.Models
             switch (verbForm)
             {
                 case VerbForm.ThirdPersonSingularPresent:
-                    return new List<string>() {GetThirdPersonSingularPresentForm(verb)};
+                    return new List<string>()
+                    {
+                        ApplyRules(verb.Word, InfinitiveToThirdPersonPresentRules)
+                    };
                 case VerbForm.SimplePast:
                     return GetSimplePastForm(verb);
                 case VerbForm.PastParticiple:
                     return GetPastParticipleForm(verb);
-                    case VerbForm.Gerundive:
-                    return new List<string>() {GetGerundiveForm(verb)};
+                case VerbForm.Gerundive:
+                    return new List<string>()
+                    {
+                        ApplyRules(verb, InfintiveToGerundiveRules)
+                    };
                 default:
                     return new List<string>(){""};
             }
+        }
+
+        private U ApplyRules<T, U>(T input, IEnumerable<GrammarTransformation<T, U>> transformations)
+        {
+            foreach (var transformation in transformations)
+            {
+                if (transformation.Condition(input))
+                {
+                    return transformation.Transform(input);
+                }
+            }
+
+            // should never get here
+            return default(U);
         }
 
         private static readonly List<string> thirdPersonIrregularVerbSuffixes = new List<string>() { "ss", "x", "ch", "sh", "o" };
         private static readonly Regex thirdPersonIrregularVerbSuffixesRegex = new Regex(string.Format("({0})$", string.Join("|", thirdPersonIrregularVerbSuffixes)));
         private static readonly Regex endsWithConsonantPlusY = new Regex(string.Format("({0})y$", string.Join("|", consonants)));
 
-        private static readonly List<GrammarTransformation> ThirdPersonPresentRules = new List<GrammarTransformation>()
+        private static readonly List<GrammarTransformation<string,string>> InfinitiveToThirdPersonPresentRules = new List<GrammarTransformation<string,string>>()
         {
-            new GrammarTransformation()
+            new GrammarTransformation<string,string>()
             {
                 Condition = thirdPersonIrregularVerbSuffixesRegex.IsMatch,
                 Transform = s => s + "es"
             },
-            new GrammarTransformation()
+            new GrammarTransformation<string,string>()
             {
                 Condition = endsWithConsonantPlusY.IsMatch,
                 Transform = s => s.Remove(s.Length - 1) + "ies"
             },
-            new GrammarTransformation()
+            new GrammarTransformation<string,string>()
             {
                 Condition = s => true,
                 Transform = verb => verb + "s"
             }
         };
-        private string GetThirdPersonSingularPresentForm(DictionaryEntry verb)
-        {
-            /*var infinitive = verb.Word;
-            if (infinitive == "be")
-            {
-                return "is";
-            }
-            else if (thirdPersonIrregularVerbSuffixesRegex.IsMatch(infinitive))
-            {
-                return infinitive + "es";
-            }
-            else if (infinitive.Last() == 'y' && consonants.Contains(infinitive[infinitive.Length - 2]))
-            {
-                return infinitive.TrimEnd('y') + "ies";
-            }
-            else
-            {
-                return infinitive + "s";
-            }*/
-            var infinitive = verb.Word;
-            foreach (var thirdPersonPresentRule in ThirdPersonPresentRules)
-            {
-                if (thirdPersonPresentRule.Condition(infinitive))
-                {
-                    return thirdPersonPresentRule.Transform(infinitive);
-                }
-            }
-
-            // no matching rule
-            return "";
-        }
 
         public static Regex ConsonantVowelConsonantEnding = new Regex(string.Format("({0})({1})({2})$", 
             string.Format("{0}|{1}", string.Join("|", consonants), "qu"), 
@@ -158,45 +147,53 @@ namespace EnglishGraph.Models
             new Tuple<string, string>("travel", "travelling"),
             new Tuple<string, string>("input", "inputting")
         };
-        private string GetGerundiveForm(DictionaryEntry verb)
+
+        private static readonly List<GrammarTransformation<DictionaryEntry, string>> InfintiveToGerundiveRules = new List<GrammarTransformation<DictionaryEntry, string>>()
         {
-            var infinitive = verb.Word;
-            var gerundiveException = GerundiveExceptions.FirstOrDefault(tup => tup.Item1 == infinitive);
-            if (gerundiveException != null)
+            // Exceptions (travel, cancel, input)
+            new GrammarTransformation<DictionaryEntry, string>()
             {
-                return gerundiveException.Item2;
-            }
-            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && 
-                (Pronunciations.IsStressOnLastVowel(verb.Pronunciation) || Pronunciations.CountNbOfSyllables(verb.Pronunciation) == 1))
+                Condition = de => GerundiveExceptions.Any(g => g.Item1 == de.Word),
+                Transform = de => GerundiveExceptions.First(tup => tup.Item1 == de.Word).Item2
+            },
+            // run -> running
+            new GrammarTransformation<DictionaryEntry, string>()
             {
-                // run -> running
-                return infinitive + infinitive.Last() + "ing";
-            }
-            else if (infinitive.EndsWith("c"))
+                Condition = de => ConsonantVowelConsonantEnding.IsMatch(de.Word) 
+                    && (Pronunciations.IsStressOnLastVowel(de.Pronunciation) || Pronunciations.CountNbOfSyllables(de.Pronunciation) == 1),
+                Transform = de => de.Word + de.Word.Last() + "ing"
+            },
+            // traffic -> trafficking
+            new GrammarTransformation<DictionaryEntry, string>()
             {
-                // traffic -> trafficking
-                return infinitive + "king";
-            }
-            else if (infinitive.EndsWith("ie"))
+                Condition = de => de.Word.EndsWith("c"),
+                Transform = de => de.Word + "king"
+            },
+            // die -> dying
+            new GrammarTransformation<DictionaryEntry, string>()
             {
-                // die -> dying
-                return infinitive.Remove(infinitive.Length - 2) + "ying";
-            }
-            else if (infinitive.EndsWith("e") 
-                && !infinitive.EndsWith("ee")
-                && !infinitive.EndsWith("nge")
-                && infinitive != "dye"
-                && infinitive != "shoe"
-                && infinitive != "be")
+                Condition = de => de.Word.EndsWith("ie"),
+                Transform = de => de.Word.Remove(de.Word.Length - 2) + "ying"
+            },
+            // take -> taking
+            new GrammarTransformation<DictionaryEntry, string>()
             {
-                // take -> taking
-                return infinitive.Remove(infinitive.Length - 1) + "ing";
-            }
-            else
+                Condition = de => de.Word.EndsWith("e") 
+                    && !de.Word.EndsWith("ee")
+                    && !de.Word.EndsWith("nge")
+                    && de.Word != "dye"
+                    && de.Word != "shoe"
+                    && de.Word!= "be",
+                Transform = de => de.Word.Remove(de.Word.Length - 1) + "ing"
+            },
+            // default rule -> add "ing"
+            new GrammarTransformation<DictionaryEntry, string>()
             {
-                return infinitive + "ing";
+                Condition = de => true,
+                Transform = de => de.Word + "ing"
             }
-        }
+        };
+
 
         public List<string> GetPotentialInfinitiveFormsFromGerundive(string gerundive)
         {
