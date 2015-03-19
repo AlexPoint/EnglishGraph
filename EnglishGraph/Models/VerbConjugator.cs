@@ -39,9 +39,9 @@ namespace EnglishGraph.Models
                         ApplyRules(verb.Word, InfinitiveToThirdPersonPresentRules)
                     };
                 case VerbForm.SimplePast:
-                    return GetSimplePastForm(verb);
+                    return ApplyRules(verb, InfintiveToSimplePastRules);
                 case VerbForm.PastParticiple:
-                    return GetPastParticipleForm(verb);
+                    return ApplyRules(verb, InfintiveToPastParticpleRules);
                 case VerbForm.Gerundive:
                     return new List<string>()
                     {
@@ -93,54 +93,64 @@ namespace EnglishGraph.Models
             string.Format("{0}|{1}", string.Join("|", consonants), "qu"), 
             string.Join("|", vowels), 
             string.Join("|", doubledConsonants)));
-        private List<string> GetSimplePastForm(DictionaryEntry verb)
-        {
-            var infinitive = verb.Word;
-            var correspondingIrregularVerb = IrregularVerbs.Instance
-                .AllIrregularVerbs
-                .FirstOrDefault(iv => iv.Infinitive == infinitive);
-            if (correspondingIrregularVerb != null)
-            {
-                return correspondingIrregularVerb.SimplePastForms;
-            }
-            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && Pronunciations.IsStressOnLastVowel(verb.Pronunciation))
-            {
-                return new List<string>() {infinitive + infinitive.Last() + "ed"};
-            }
-            else if (infinitive.EndsWith("e"))
-            {
-                return new List<string>() {infinitive + "d"};
-            }
-            else
-            {
-                return new List<string>(){infinitive + "ed"};
-            }
-        }
-        
-        private List<string> GetPastParticipleForm(DictionaryEntry verb)
-        {
-            var infinitive = verb.Word;
-            var correspondingIrregularVerb = IrregularVerbs.Instance
-                .AllIrregularVerbs
-                .FirstOrDefault(iv => iv.Infinitive == infinitive);
-            if (correspondingIrregularVerb != null)
-            {
-                return correspondingIrregularVerb.PastParticipleForms;
-            }
-            else if (ConsonantVowelConsonantEnding.IsMatch(infinitive) && Pronunciations.IsStressOnLastVowel(verb.Pronunciation))
-            {
-                return new List<string>() {infinitive + infinitive.Last() + "ed"};
-            }
-            else if (infinitive.EndsWith("e"))
-            {
-                return new List<string>() {infinitive + "d"};
-            }
-            else
-            {
-                return new List<string>(){infinitive + "ed"};
-            }
-        }
 
+        private static readonly List<GrammarTransformation<DictionaryEntry, List<string>>> InfintiveToSimplePastRules = new List<GrammarTransformation<DictionaryEntry, List<string>>>()
+        {
+            // irregular verbs (take, abide etc.)
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => IrregularVerbs.Instance.AllIrregularVerbs.Any(iv => iv.Infinitive == de.Word),
+                Transform = de => IrregularVerbs.Instance.AllIrregularVerbs.First(iv => iv.Infinitive == de.Word).SimplePastForms
+            },
+            // stop -> stopped
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => ConsonantVowelConsonantEnding.IsMatch(de.Word) 
+                    && (Pronunciations.IsStressOnLastVowel(de.Pronunciation) || Pronunciations.CountNbOfSyllables(de.Pronunciation) == 1),
+                Transform = de => new List<string>(){de.Word + de.Word.Last() + "ed"}
+            },
+            // charge -> charged
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => de.Word.EndsWith("e"),
+                Transform = de => new List<string>(){de.Word + "d"}
+            },
+            // default rule -> add "ed"
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => true,
+                Transform = de => new List<string>(){de.Word + "ed"}
+            }
+        };
+        private static readonly List<GrammarTransformation<DictionaryEntry, List<string>>> InfintiveToPastParticpleRules = new List<GrammarTransformation<DictionaryEntry, List<string>>>()
+        {
+            // irregular verbs (take, abide etc.)
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => IrregularVerbs.Instance.AllIrregularVerbs.Any(iv => iv.Infinitive == de.Word),
+                Transform = de => IrregularVerbs.Instance.AllIrregularVerbs.First(iv => iv.Infinitive == de.Word).PastParticipleForms
+            },
+            // stop -> stopped
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => ConsonantVowelConsonantEnding.IsMatch(de.Word) 
+                    && (Pronunciations.IsStressOnLastVowel(de.Pronunciation) || Pronunciations.CountNbOfSyllables(de.Pronunciation) == 1),
+                Transform = de => new List<string>(){de.Word + de.Word.Last() + "ed"}
+            },
+            // charge -> charged
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => de.Word.EndsWith("e"),
+                Transform = de => new List<string>(){de.Word + "d"}
+            },
+            // default rule -> add "ed"
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => true,
+                Transform = de => new List<string>(){de.Word + "ed"}
+            }
+        };
+        
         public static List<Tuple<string,string>> GerundiveExceptions = new List<Tuple<string, string>>()
         {
             new Tuple<string, string>("cancel", "cancelling"),
