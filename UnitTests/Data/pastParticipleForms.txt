@@ -1,28 +1,28 @@
-stop	stopped
-refer	referred
-visit	visited
-rob	robbed
-sit	sat
-begin	begun
-prefer	preferred
-listen	listened
-travel	traveled
-burn	burnt
-remain	remained
-play	played
-snow	snowed
-carry	carried
-marry	married
-kiss	kissed
-fix	fixed
-go	gone
-have	had
-be	been
-see	seen
-find	found
-live	lived
-talk	talked
-study	studied
-wait	waited
-pay	paid
-take	taken
+be	been	b/i/
+begin	begun	b/I/'g/I/n
+burn	burnt	b/[@]/rn
+carry	carried	'k/&/r/E/
+find	found	f/aI/nd
+fix	fixed	f/I/ks
+go	gone	g/oU/
+have	had	h/&/v
+kiss	kissed	k/I/s
+listen	listened	'l/I/s/@/n
+live	lived	l/aI/v
+marry	married	'm/&/r/i/
+pay	paid	p/eI/
+play	played	pl/eI/
+prefer	preferred	pr/I/'f/[@]/r
+refer	referred	r/I/'f/[@]/r
+remain	remained	r/I/'m/eI/n
+rob	robbed	r/A/b
+see	seen	s/i/
+sit	sat	s/I/t
+snow	snowed	sn/oU/
+stop	stopped	st/A/p
+study	studied	'st/@/d/i/
+take	taken	t/eI/k
+talk	talked	t/O/k
+travel	traveled	'tr/&/v/@/l
+visit	visited	'v/I/z/I/t
+wait	waited	w/eI/t
