@@ -10,7 +10,7 @@ happen	happens
 travel	travels
 cancel	cancels
 start	starts
-burn	bruns
+burn	burns
 remain	remains
 play	plays
 snow	snows
