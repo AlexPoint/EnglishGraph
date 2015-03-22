@@ -11,6 +11,8 @@ namespace UnitTests
     {
         private static readonly string PathToProject = Directory.GetCurrentDirectory() + "/../../../UnitTests/";
 
+        // Infinitive -> other forms --------------------------------
+
         [TestMethod]
         public void TestInfinitiveToGerundiveForms()
         {
@@ -35,6 +37,82 @@ namespace UnitTests
                 Assert.AreEqual(gerundive, result);
             }
         }
+
+        [TestMethod]
+        public void TestInfinitiveTo3RdPresentForms()
+        {
+            var conjugator = new VerbConjugator();
+
+            var pathToGerundiveFile = PathToProject + "Data/thirdPersonForms.txt";
+            var testData = File.ReadAllLines(pathToGerundiveFile)
+                .Select(line => line.Split('\t'))
+                .Where(p => p.Length == 2)
+                .Select(p => new Tuple<DictionaryEntry, string>(new DictionaryEntry()
+                {
+                    Word = p[0],
+                    PartOfSpeech = PartsOfSpeech.Verb
+                }, p[1]))
+                .ToList();
+            foreach (var tuple in testData)
+            {
+                var entry = tuple.Item1;
+                var result = tuple.Item2;
+                var thirdPersonForm = conjugator.GetVerbForm(entry, VerbConjugator.VerbForm.ThirdPersonSingularPresent).First();
+                Assert.AreEqual(thirdPersonForm, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestInfinitiveToSimplePastForms()
+        {
+            var conjugator = new VerbConjugator();
+
+            var pathToGerundiveFile = PathToProject + "Data/simplePastForms.txt";
+            var testData = File.ReadAllLines(pathToGerundiveFile)
+                .Select(line => line.Split('\t'))
+                .Where(p => p.Length == 2)
+                .Select(p => new Tuple<DictionaryEntry, string>(new DictionaryEntry()
+                {
+                    Word = p[0],
+                    PartOfSpeech = PartsOfSpeech.Verb
+                }, p[1]))
+                .ToList();
+            foreach (var tuple in testData)
+            {
+                var entry = tuple.Item1;
+                var result = tuple.Item2;
+                var simplePastForms = conjugator.GetVerbForm(entry, VerbConjugator.VerbForm.SimplePast);
+                Assert.IsTrue(simplePastForms.Contains(result), string.Format("{0} not contained in ({1})", result, string.Join("|", simplePastForms)));
+            }
+        }
+
+        [TestMethod]
+        public void TestInfinitiveToPastParticipleForms()
+        {
+            var conjugator = new VerbConjugator();
+
+            var pathToGerundiveFile = PathToProject + "Data/pastParticipleForms.txt";
+            var testData = File.ReadAllLines(pathToGerundiveFile)
+                .Select(line => line.Split('\t'))
+                .Where(p => p.Length == 2)
+                .Select(p => new Tuple<DictionaryEntry, string>(new DictionaryEntry()
+                {
+                    Word = p[0],
+                    PartOfSpeech = PartsOfSpeech.Verb
+                }, p[1]))
+                .ToList();
+            foreach (var tuple in testData)
+            {
+                var entry = tuple.Item1;
+                var result = tuple.Item2;
+                var pastParticipleForms = conjugator.GetVerbForm(entry, VerbConjugator.VerbForm.PastParticiple);
+                Assert.IsTrue(pastParticipleForms.Contains(result), string.Format("{0} not contained in ({1})", result, string.Join("|", pastParticipleForms)));
+            }
+        }
+
+
+
+        // Other forms --> infintive --------------------------------
 
         [TestMethod]
         public void TestGerundiveToInfinitiveForms()
