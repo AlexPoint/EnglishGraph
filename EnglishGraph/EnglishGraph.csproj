@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Conjunctions.cs" />
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
     <Compile Include="Models\IrregularVerbs.cs" />
@@ -71,6 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\irregular_verbs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\coordinating_conjunctions.txt" />
+    <Content Include="Resources\subordinating_conjunctions.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,11 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnglishGraph.Models;
 
 namespace Examples.Classes
 {
     public class Routines
     {
+
+        public static void LoadConjunctions(EnglishGraphContext db, bool includeMwes)
+        {
+            var conjunctions = Conjunctions.Instance;
+            
+            var coordinatingConjunctions = conjunctions.AllCoordinatingConjunctions
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.CoordinatingConjunction))
+                .ToList();
+            var subordinatingConjunctions = conjunctions.AllSubordinatingConjunctions
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.SubordinatingConjunction))
+                .ToList();
+            DbUtilities.GetOrCreate(coordinatingConjunctions, db);
+            DbUtilities.GetOrCreate(subordinatingConjunctions, db);
+        }
+
         public static void LoadGutembergPronunciations(EnglishGraphContext db, string pathToProject)
         {
             var parser = new GutembergParser();
@@ -43,9 +61,7 @@ namespace Examples.Classes
 
             Console.WriteLine("Found {0} entries / {1} words parsed on Gutemberg project", nbOfEntriesFound, wordsAndPronunciations.Count);
         }
-
-
-
+        
         public static void LoadWordnetEntries(EnglishGraphContext db, string pathToProject)
         {
             /* Lower cased words:

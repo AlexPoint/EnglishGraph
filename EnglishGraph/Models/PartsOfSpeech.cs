@@ -31,6 +31,12 @@ namespace EnglishGraph.Models
         public const byte Adverb = 40;
 
 
+        // Conjunctions -----------------------
+        public const byte Conjunction = 50;
+        public const byte CoordinatingConjunction = 51;
+        public const byte SubordinatingConjunction = 52;
+        
+
         public static string Abbrev(byte pos)
         {
             switch (pos)
@@ -53,6 +59,12 @@ namespace EnglishGraph.Models
                     return "adj.";
                 case Adverb:
                     return "adv.";
+                case Conjunction:
+                    return "conj.";
+                case CoordinatingConjunction:
+                    return "c. conj.";
+                case SubordinatingConjunction:
+                    return "s. conj.";
                 default:
                     return "unk.";
             }

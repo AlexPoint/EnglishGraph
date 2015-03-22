@@ -18,28 +18,31 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            /*var verbShortList = new List<string>()
+            /*/*var verbShortList = new List<string>()
             {
                 "stop", "refer", "visit", "rob", "sit", "begin", "prefer", "listen", "happen", "travel", "cancel", "start", "burn", "remain", "play", "snow",
                 "carry", "marry", "kiss", "fix", "watch", "crash", "go"
             };
             var allVerbs = db.DictionaryEntries
                 .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb && verbShortList.Contains(de.Word))
-                .ToList();*/
+                .ToList();#1#
 
             var conjugator = new VerbConjugator();
             /*foreach (var verb in allVerbs)
             {
                 Console.WriteLine("{0} --> {1}", verb.Word, string.Join("|", conjugator.GetVerbForm(verb, VerbConjugator.VerbForm.ThirdPersonSingularPresent)));
-            }*/
+            }#1#
             var infinitive = "carry";
             var verb = db.DictionaryEntries.First(de => de.Word == infinitive && de.PartOfSpeech == PartsOfSpeech.Verb);
             var simplePastForms = conjugator.GetVerbForm(verb, VerbConjugator.VerbForm.PastParticiple);
-            Console.WriteLine(string.Join("|", simplePastForms));
+            Console.WriteLine(string.Join("|", simplePastForms));*/
 
 
             // load wordnet entries
             //Routines.LoadWordnetEntries(db, PathToProject);
+
+            // load conjunction
+            Routines.LoadConjunctions(db, false);
 
             // load pronunciations
             //Routines.LoadGutembergPronunciations(db, PathToProject);

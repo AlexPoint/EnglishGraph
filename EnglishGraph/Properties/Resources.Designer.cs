@@ -61,6 +61,21 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to and
+        ///but
+        ///or
+        ///nor
+        ///for
+        ///yet
+        ///so.
+        /// </summary>
+        public static string coordinating_conjunctions {
+            get {
+                return ResourceManager.GetString("coordinating_conjunctions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to be	was/were	been
         ///abide	abided/abode	abided
         ///alight	alighted/alit	alighted/alit
@@ -84,6 +99,63 @@ namespace EnglishGraph.Properties {
         public static string irregular_verbs {
             get {
                 return ResourceManager.GetString("irregular_verbs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to after
+        ///although
+        ///as
+        ///as if
+        ///as long as
+        ///as much as
+        ///as soon as
+        ///as though
+        ///because
+        ///before
+        ///even if
+        ///even though
+        ///if
+        ///if only
+        ///if then
+        ///if when
+        ///in order that
+        ///inasmuch
+        ///just as
+        ///lest
+        ///now
+        ///now since
+        ///now that
+        ///now when
+        ///once
+        ///provided
+        ///provided that
+        ///rather than
+        ///since
+        ///so that
+        ///supposing
+        ///than
+        ///that
+        ///though
+        ///till
+        ///unless
+        ///until
+        ///when
+        ///whenever
+        ///where
+        ///where if
+        ///whereas
+        ///wherever
+        ///whether
+        ///which
+        ///while
+        ///who
+        ///whoever
+        ///why.
+        /// </summary>
+        public static string subordinating_conjunctions {
+            get {
+                return ResourceManager.GetString("subordinating_conjunctions", resourceCulture);
             }
         }
     }
