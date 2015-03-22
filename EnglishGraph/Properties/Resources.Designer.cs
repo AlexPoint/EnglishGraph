@@ -76,6 +76,76 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to a few
+        ///a little 
+        ///all 
+        ///another 
+        ///any
+        ///both 
+        ///each 
+        ///either 
+        ///enough 
+        ///every
+        ///few 
+        ///fewer 
+        ///less 
+        ///little 
+        ///many
+        ///more 
+        ///most 
+        ///much 
+        ///neither 
+        ///no 
+        ///other 
+        ///several 
+        ///some.
+        /// </summary>
+        public static string determiners {
+            get {
+                return ResourceManager.GetString("determiners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to a
+        ///an
+        ///the.
+        /// </summary>
+        public static string determiners_articles {
+            get {
+                return ResourceManager.GetString("determiners_articles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to this
+        ///that
+        ///these
+        ///those.
+        /// </summary>
+        public static string determiners_demonstratives {
+            get {
+                return ResourceManager.GetString("determiners_demonstratives", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to my
+        ///your
+        ///his
+        ///her
+        ///its
+        ///our
+        ///your
+        ///their.
+        /// </summary>
+        public static string determiners_possessives {
+            get {
+                return ResourceManager.GetString("determiners_possessives", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to be	was/were	been
         ///abide	abided/abode	abided
         ///alight	alighted/alit	alighted/alit

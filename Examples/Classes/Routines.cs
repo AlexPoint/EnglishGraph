@@ -10,6 +10,31 @@ namespace Examples.Classes
     public class Routines
     {
 
+        public static void LoadDeterminers(EnglishGraphContext db, bool includeMwes)
+        {
+            var determiners = Determiners.Instance;
+
+            var generalDeterminers = determiners.AllGeneralDeterminers
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.Determiner))
+                .ToList();
+            var articleDeterminers = determiners.AllArticleDeterminers
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.ArticleDeterminer))
+                .ToList();
+            var demonstrativeDeterminers = determiners.AllDemonstrativeDeterminers
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.DemonstrativeDeterminer))
+                .ToList();
+            var possessiveDeterminers = determiners.AllPossessiveDeterminers
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.PossessiveDeterminer))
+                .ToList();
+            DbUtilities.GetOrCreate(generalDeterminers, db);
+            DbUtilities.GetOrCreate(articleDeterminers, db);
+            DbUtilities.GetOrCreate(demonstrativeDeterminers, db);
+            DbUtilities.GetOrCreate(possessiveDeterminers, db);
+        }
         public static void LoadConjunctions(EnglishGraphContext db, bool includeMwes)
         {
             var conjunctions = Conjunctions.Instance;

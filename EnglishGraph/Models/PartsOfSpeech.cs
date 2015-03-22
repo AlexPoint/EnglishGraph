@@ -35,6 +35,13 @@ namespace EnglishGraph.Models
         public const byte Conjunction = 50;
         public const byte CoordinatingConjunction = 51;
         public const byte SubordinatingConjunction = 52;
+
+
+        // Determiners -----------------------
+        public const byte Determiner = 60;
+        public const byte ArticleDeterminer = 61;
+        public const byte DemonstrativeDeterminer = 62;
+        public const byte PossessiveDeterminer = 63;
         
 
         public static string Abbrev(byte pos)
@@ -65,6 +72,14 @@ namespace EnglishGraph.Models
                     return "c. conj.";
                 case SubordinatingConjunction:
                     return "s. conj.";
+                case Determiner:
+                    return "det.";
+                case ArticleDeterminer:
+                    return "art. det.";
+                case DemonstrativeDeterminer:
+                    return "dem. det.";
+                case PossessiveDeterminer:
+                    return "poss. det.";
                 default:
                     return "unk.";
             }

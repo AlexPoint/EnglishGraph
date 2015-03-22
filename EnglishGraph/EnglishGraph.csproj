@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Conjunctions.cs" />
+    <Compile Include="Models\Determiners.cs" />
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
     <Compile Include="Models\IrregularVerbs.cs" />
@@ -75,6 +76,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\coordinating_conjunctions.txt" />
+    <None Include="Resources\determiners_possessives.txt" />
+    <None Include="Resources\determiners_demonstratives.txt" />
+    <None Include="Resources\determiners_articles.txt" />
+    <None Include="Resources\determiners.txt" />
     <Content Include="Resources\subordinating_conjunctions.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

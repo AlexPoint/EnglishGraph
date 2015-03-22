@@ -121,6 +121,18 @@
   <data name="coordinating_conjunctions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\coordinating_conjunctions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="determiners" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\determiners.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="determiners_articles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\determiners_articles.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="determiners_demonstratives" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\determiners_demonstratives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="determiners_possessives" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\determiners_possessives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="irregular_verbs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\irregular_verbs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

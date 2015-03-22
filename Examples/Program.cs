@@ -42,7 +42,7 @@ namespace Examples
             //Routines.LoadWordnetEntries(db, PathToProject);
 
             // load conjunction
-            Routines.LoadConjunctions(db, false);
+            Routines.LoadDeterminers(db, false);
 
             // load pronunciations
             //Routines.LoadGutembergPronunciations(db, PathToProject);
