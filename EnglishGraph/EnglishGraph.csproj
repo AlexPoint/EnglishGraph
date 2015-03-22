@@ -50,6 +50,7 @@
     <Compile Include="Models\PartsOfSpeech.cs" />
     <Compile Include="Models\DictionaryEntry.cs" />
     <Compile Include="Models\Prepositions.cs" />
+    <Compile Include="Models\Pronouns.cs" />
     <Compile Include="Models\Pronunciations.cs" />
     <Compile Include="Models\Synset.cs" />
     <Compile Include="Models\SynsetDictionaryEntry.cs" />
@@ -77,6 +78,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\coordinating_conjunctions.txt" />
+    <None Include="Resources\relative_pronouns.txt" />
+    <None Include="Resources\interrogative_pronouns.txt" />
+    <None Include="Resources\indefinite_pronouns.txt" />
+    <None Include="Resources\subject_personal_pronouns.txt" />
+    <None Include="Resources\object_personal_pronouns.txt" />
+    <None Include="Resources\reflexive_personal_pronouns.txt" />
+    <None Include="Resources\possessive_pronouns.txt" />
     <None Include="Resources\prepositions.txt" />
     <None Include="Resources\determiners_possessives.txt" />
     <None Include="Resources\determiners_demonstratives.txt" />

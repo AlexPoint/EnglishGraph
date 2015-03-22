@@ -146,6 +146,56 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to all
+        ///another
+        ///any
+        ///anybody
+        ///anybody else
+        ///anyone
+        ///anyone else
+        ///anything
+        ///both
+        ///each
+        ///either
+        ///everybody
+        ///everyone
+        ///everyone else
+        ///everything
+        ///few
+        ///many
+        ///neither
+        ///no one
+        ///nobody
+        ///none
+        ///nothing
+        ///one
+        ///several
+        ///some
+        ///somebody
+        ///someone
+        ///something.
+        /// </summary>
+        public static string indefinite_pronouns {
+            get {
+                return ResourceManager.GetString("indefinite_pronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to what
+        ///whether
+        ///which
+        ///who
+        ///whom
+        ///whose.
+        /// </summary>
+        public static string interrogative_pronouns {
+            get {
+                return ResourceManager.GetString("interrogative_pronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to be	was/were	been
         ///abide	abided/abode	abided
         ///alight	alighted/alit	alighted/alit
@@ -169,6 +219,42 @@ namespace EnglishGraph.Properties {
         public static string irregular_verbs {
             get {
                 return ResourceManager.GetString("irregular_verbs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to me
+        ///us
+        ///you
+        ///thee
+        ///him
+        ///her
+        ///it
+        ///them
+        ///one
+        ///whom
+        ///who.
+        /// </summary>
+        public static string object_personal_pronouns {
+            get {
+                return ResourceManager.GetString("object_personal_pronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mine
+        ///ours
+        ///yours
+        ///his
+        ///hers
+        ///theirs
+        ///one&apos;s
+        ///your
+        ///whose.
+        /// </summary>
+        public static string possessive_pronouns {
+            get {
+                return ResourceManager.GetString("possessive_pronouns", resourceCulture);
             }
         }
         
@@ -247,6 +333,61 @@ namespace EnglishGraph.Properties {
         public static string prepositions {
             get {
                 return ResourceManager.GetString("prepositions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to myself
+        ///ourselves
+        ///ourself
+        ///yourself
+        ///thyself
+        ///yourselves
+        ///himself
+        ///hisself
+        ///herself
+        ///itself
+        ///themself
+        ///themselves
+        ///theirself
+        ///theirselves
+        ///oneself.
+        /// </summary>
+        public static string reflexive_personal_pronouns {
+            get {
+                return ResourceManager.GetString("reflexive_personal_pronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to that
+        ///which
+        ///who
+        ///whom
+        ///whose.
+        /// </summary>
+        public static string relative_pronouns {
+            get {
+                return ResourceManager.GetString("relative_pronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I
+        ///we
+        ///you
+        ///thou
+        ///ye
+        ///he
+        ///she
+        ///it
+        ///they
+        ///one
+        ///who.
+        /// </summary>
+        public static string subject_personal_pronouns {
+            get {
+                return ResourceManager.GetString("subject_personal_pronouns", resourceCulture);
             }
         }
         

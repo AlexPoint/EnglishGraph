@@ -10,6 +10,47 @@ namespace Examples.Classes
     public class Routines
     {
 
+        public static void LoadPronouns(EnglishGraphContext db, bool includeMwes)
+        {
+            var pronouns = Pronouns.Instance;
+
+            var subjPersPronouns = pronouns.AllSubjectPersonalPronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.SubjectPersonalPronoun))
+                .ToList();
+            var objPersPronouns = pronouns.AllObjectPersonalPronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.ObjectPersonalPronoun))
+                .ToList();
+            var reflPersPronouns = pronouns.AllReflexivePersonalPronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.ReflexivePersonalPronoun))
+                .ToList();
+            var possPronouns = pronouns.AllPossessivePronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.PossessivePronoun))
+                .ToList();
+            var indefPronouns = pronouns.AllIndefinitePronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.IndefinitePronoun))
+                .ToList();
+            var interPronouns = pronouns.AllInterrogativePronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.InterrogativePronoun))
+                .ToList();
+            var relPronouns = pronouns.AllRelativePronouns
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.RelativePronoun))
+                .ToList();
+            DbUtilities.GetOrCreate(subjPersPronouns, db);
+            DbUtilities.GetOrCreate(objPersPronouns, db);
+            DbUtilities.GetOrCreate(reflPersPronouns, db);
+            DbUtilities.GetOrCreate(possPronouns, db);
+            DbUtilities.GetOrCreate(indefPronouns, db);
+            DbUtilities.GetOrCreate(interPronouns, db);
+            DbUtilities.GetOrCreate(relPronouns, db);
+        }
+
         public static void LoadPrepositions(EnglishGraphContext db, bool includeMwes)
         {
             var prepositions = Prepositions.Instance;

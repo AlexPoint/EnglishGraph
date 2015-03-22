@@ -1,0 +1,28 @@
+all
+another
+any
+anybody
+anybody else
+anyone
+anyone else
+anything
+both
+each
+either
+everybody
+everyone
+everyone else
+everything
+few
+many
+neither
+no one
+nobody
+none
+nothing
+one
+several
+some
+somebody
+someone
+something

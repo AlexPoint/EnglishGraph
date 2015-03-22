@@ -46,6 +46,17 @@ namespace EnglishGraph.Models
 
         // Prepositions -----------------------
         public const byte Preposition = 70;
+
+
+        // Pronouns -----------------------
+        public const byte Pronoun = 80;
+        public const byte SubjectPersonalPronoun = 81;
+        public const byte ObjectPersonalPronoun = 82;
+        public const byte ReflexivePersonalPronoun = 83;
+        public const byte PossessivePronoun = 84;
+        public const byte InterrogativePronoun = 85;
+        public const byte IndefinitePronoun = 86;
+        public const byte RelativePronoun = 87;
         
 
         public static string Abbrev(byte pos)
@@ -86,6 +97,22 @@ namespace EnglishGraph.Models
                     return "poss. det.";
                 case Preposition:
                     return "prep.";
+                case Pronoun:
+                    return "pron.";
+                case SubjectPersonalPronoun:
+                    return "sub. pers. pron.";
+                case ObjectPersonalPronoun:
+                    return "obj. pers. pron.";
+                case ReflexivePersonalPronoun:
+                    return "ref. pers. pron.";
+                case PossessivePronoun:
+                    return "poss. pron.";
+                case IndefinitePronoun:
+                    return "indef. pron.";
+                case InterrogativePronoun:
+                    return "inter. pron.";
+                case RelativePronoun:
+                    return "rel. pron.";
                 default:
                     return "unk.";
             }

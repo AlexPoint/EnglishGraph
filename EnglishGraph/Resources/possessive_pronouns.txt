@@ -1,0 +1,9 @@
+mine
+ours
+yours
+his
+hers
+theirs
+one's
+your
+whose
