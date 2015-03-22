@@ -49,6 +49,7 @@
     <Compile Include="Models\IrregularVerbs.cs" />
     <Compile Include="Models\PartsOfSpeech.cs" />
     <Compile Include="Models\DictionaryEntry.cs" />
+    <Compile Include="Models\Prepositions.cs" />
     <Compile Include="Models\Pronunciations.cs" />
     <Compile Include="Models\Synset.cs" />
     <Compile Include="Models\SynsetDictionaryEntry.cs" />
@@ -76,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\coordinating_conjunctions.txt" />
+    <None Include="Resources\prepositions.txt" />
     <None Include="Resources\determiners_possessives.txt" />
     <None Include="Resources\determiners_demonstratives.txt" />
     <None Include="Resources\determiners_articles.txt" />

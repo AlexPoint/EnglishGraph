@@ -173,6 +173,84 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to a
+        ///abaft
+        ///abeam
+        ///aboard
+        ///about
+        ///above
+        ///absent
+        ///across
+        ///afore
+        ///after
+        ///against
+        ///along
+        ///alongside
+        ///amid
+        ///amidst
+        ///among
+        ///amongst
+        ///an
+        ///anenst
+        ///apropos
+        ///apud
+        ///around
+        ///as
+        ///aside
+        ///astride
+        ///at
+        ///athwart
+        ///atop
+        ///barring
+        ///before
+        ///behind
+        ///below
+        ///beneath
+        ///beside
+        ///besides
+        ///between
+        ///beyond
+        ///but
+        ///by
+        ///chez
+        ///circa
+        ///concerning
+        ///despite
+        ///down
+        ///during
+        ///except
+        ///excluding
+        ///failing
+        ///following
+        ///for
+        ///forenenst
+        ///from
+        ///given
+        ///in
+        ///including
+        ///inside
+        ///into
+        ///like
+        ///mid
+        ///midst
+        ///minus
+        ///modulo
+        ///near
+        ///next
+        ///notwithstanding
+        ///o&apos;
+        ///of
+        ///off
+        ///on
+        ///onto [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string prepositions {
+            get {
+                return ResourceManager.GetString("prepositions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to after
         ///although
         ///as

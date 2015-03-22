@@ -10,6 +10,17 @@ namespace Examples.Classes
     public class Routines
     {
 
+        public static void LoadPrepositions(EnglishGraphContext db, bool includeMwes)
+        {
+            var prepositions = Prepositions.Instance;
+
+            var allPrepositions = prepositions.AllPrepositions
+                .Where(s => includeMwes || !s.Contains(' '))
+                .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.Preposition))
+                .ToList();
+            DbUtilities.GetOrCreate(allPrepositions, db);
+        }
+
         public static void LoadDeterminers(EnglishGraphContext db, bool includeMwes)
         {
             var determiners = Determiners.Instance;
@@ -35,6 +46,7 @@ namespace Examples.Classes
             DbUtilities.GetOrCreate(demonstrativeDeterminers, db);
             DbUtilities.GetOrCreate(possessiveDeterminers, db);
         }
+
         public static void LoadConjunctions(EnglishGraphContext db, bool includeMwes)
         {
             var conjunctions = Conjunctions.Instance;

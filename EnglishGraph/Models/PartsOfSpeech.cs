@@ -44,6 +44,10 @@ namespace EnglishGraph.Models
         public const byte PossessiveDeterminer = 63;
         
 
+        // Prepositions -----------------------
+        public const byte Preposition = 70;
+        
+
         public static string Abbrev(byte pos)
         {
             switch (pos)
@@ -80,6 +84,8 @@ namespace EnglishGraph.Models
                     return "dem. det.";
                 case PossessiveDeterminer:
                     return "poss. det.";
+                case Preposition:
+                    return "prep.";
                 default:
                     return "unk.";
             }
