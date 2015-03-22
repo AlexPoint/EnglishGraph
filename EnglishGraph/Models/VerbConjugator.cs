@@ -41,7 +41,7 @@ namespace EnglishGraph.Models
                 case VerbForm.SimplePast:
                     return ApplyRules(verb, InfintiveToSimplePastRules);
                 case VerbForm.PastParticiple:
-                    return ApplyRules(verb, InfintiveToPastParticpleRules);
+                    return ApplyRules(verb, InfintiveToPastParticipleRules);
                 case VerbForm.Gerundive:
                     return new List<string>()
                     {
@@ -115,6 +115,12 @@ namespace EnglishGraph.Models
                 Condition = de => de.Word.EndsWith("e"),
                 Transform = de => new List<string>(){de.Word + "d"}
             },
+            // carry -> carried
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => endsWithConsonantPlusY.IsMatch(de.Word),
+                Transform = de => new List<string>(){de.Word.Remove(de.Word.Length - 1) + "ied"}
+            },
             // default rule -> add "ed"
             new GrammarTransformation<DictionaryEntry, List<string>>()
             {
@@ -122,7 +128,7 @@ namespace EnglishGraph.Models
                 Transform = de => new List<string>(){de.Word + "ed"}
             }
         };
-        private static readonly List<GrammarTransformation<DictionaryEntry, List<string>>> InfintiveToPastParticpleRules = new List<GrammarTransformation<DictionaryEntry, List<string>>>()
+        private static readonly List<GrammarTransformation<DictionaryEntry, List<string>>> InfintiveToPastParticipleRules = new List<GrammarTransformation<DictionaryEntry, List<string>>>()
         {
             // irregular verbs (take, abide etc.)
             new GrammarTransformation<DictionaryEntry, List<string>>()
@@ -142,6 +148,12 @@ namespace EnglishGraph.Models
             {
                 Condition = de => de.Word.EndsWith("e"),
                 Transform = de => new List<string>(){de.Word + "d"}
+            },
+            // carry -> carried
+            new GrammarTransformation<DictionaryEntry, List<string>>()
+            {
+                Condition = de => endsWithConsonantPlusY.IsMatch(de.Word),
+                Transform = de => new List<string>(){de.Word.Remove(de.Word.Length - 1) + "ied"}
             },
             // default rule -> add "ed"
             new GrammarTransformation<DictionaryEntry, List<string>>()

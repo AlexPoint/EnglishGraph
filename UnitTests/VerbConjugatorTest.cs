@@ -70,11 +70,12 @@ namespace UnitTests
             var pathToGerundiveFile = PathToProject + "Data/simplePastForms.txt";
             var testData = File.ReadAllLines(pathToGerundiveFile)
                 .Select(line => line.Split('\t'))
-                .Where(p => p.Length == 2)
+                .Where(p => p.Length == 3)
                 .Select(p => new Tuple<DictionaryEntry, string>(new DictionaryEntry()
                 {
                     Word = p[0],
-                    PartOfSpeech = PartsOfSpeech.Verb
+                    PartOfSpeech = PartsOfSpeech.Verb,
+                    Pronunciation = p[2]
                 }, p[1]))
                 .ToList();
             foreach (var tuple in testData)
@@ -94,11 +95,12 @@ namespace UnitTests
             var pathToGerundiveFile = PathToProject + "Data/pastParticipleForms.txt";
             var testData = File.ReadAllLines(pathToGerundiveFile)
                 .Select(line => line.Split('\t'))
-                .Where(p => p.Length == 2)
+                .Where(p => p.Length == 3)
                 .Select(p => new Tuple<DictionaryEntry, string>(new DictionaryEntry()
                 {
                     Word = p[0],
-                    PartOfSpeech = PartsOfSpeech.Verb
+                    PartOfSpeech = PartsOfSpeech.Verb,
+                    Pronunciation = p[2]
                 }, p[1]))
                 .ToList();
             foreach (var tuple in testData)
