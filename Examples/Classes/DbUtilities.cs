@@ -141,6 +141,39 @@ namespace Examples.Classes
         }
 
 
+        // DictionaryEntryRelationships -----------------------------------
+
+        private static readonly object DictionaryEntryRelationshipCreationLock = new object();
+        public static List<DictionaryEntryRelationship> GetOrCreate(List<DictionaryEntryRelationship> relationships,
+            EnglishGraphContext db)
+        {
+            var sourceIds = relationships.Select(rel => rel.Source.Id).ToList();
+            var targetids = relationships.Select(rel => rel.Target.Id).ToList();
+            var existingRelationships = db.DictionaryEntryRelationships
+                .Where(rel => sourceIds.Contains(rel.Source.Id) && targetids.Contains(rel.Target.Id))
+                .ToList()
+                .Where(rel => relationships.Any(ex => ex.Source.Id == rel.Source.Id && ex.Target.Id == rel.Target.Id))
+                .ToList();
+            var missingRelationships = relationships
+                .Where(rel => !existingRelationships.Any(ex => ex.Source.Id == rel.Id && ex.Target.Id == rel.Target.Id))
+                .ToList();
+            if (missingRelationships.Any())
+            {
+                lock (DictionaryEntryRelationshipCreationLock)
+                {
+                    missingRelationships = relationships
+                        .Where(rel => !existingRelationships.Any(ex => ex.Source.Id == rel.Id && ex.Target.Id == rel.Target.Id))
+                        .ToList();
+                    db.DictionaryEntryRelationships.AddRange(missingRelationships);
+                    db.SaveChanges();
+
+                    existingRelationships.AddRange(missingRelationships);
+                }
+            }
+
+            return existingRelationships;
+        }
+
         // Synsets --------------------------------------------------------
         
         public static List<DictionaryEntry> GetEntries(List<int> ids, EnglishGraphContext db)

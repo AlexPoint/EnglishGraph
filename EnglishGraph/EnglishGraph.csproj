@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Models\Conjunctions.cs" />
     <Compile Include="Models\Determiners.cs" />
+    <Compile Include="Models\DictionaryEntryRelationship.cs" />
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
     <Compile Include="Models\IrregularVerbs.cs" />

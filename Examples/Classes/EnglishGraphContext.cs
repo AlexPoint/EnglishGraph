@@ -22,6 +22,7 @@ namespace Examples.Classes
         public virtual DbSet<DictionaryEntry> DictionaryEntries { get; set; }
         public virtual DbSet<Synset> Synsets { get; set; }
         public virtual DbSet<SynsetDictionaryEntry> SynsetsAndDictionaryEntries { get; set; }
+        public virtual DbSet<DictionaryEntryRelationship> DictionaryEntryRelationships { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -32,6 +33,15 @@ namespace Examples.Classes
                 .HasMany(e => e.Synsets)
                 .WithRequired(sde => sde.DictionaryEntry)
                 .WillCascadeOnDelete(true);
+            modelBuilder.Entity<DictionaryEntry>()
+                .HasMany(de => de.DerivedRelationships)
+                .WithRequired(rel => rel.Source)
+                .WillCascadeOnDelete(true);
+            modelBuilder.Entity<DictionaryEntry>()
+                .HasMany(de => de.StemmedFromRelationships)
+                .WithRequired(rel => rel.Target)
+                //cannot add cascade delete condition here because of circular references
+                .WillCascadeOnDelete(false);
 
             // Synsets
             modelBuilder.Entity<Synset>()

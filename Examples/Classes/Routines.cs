@@ -10,6 +10,77 @@ namespace Examples.Classes
     public class Routines
     {
 
+        public static void LoadSimplePastForms(EnglishGraphContext db)
+        {
+            LoadVerbforms(db, PartsOfSpeech.VerbSimplePast, VerbConjugator.VerbForm.SimplePast, 
+                DictionaryEntryRelationshipTypes.SimplePast);
+        }
+        public static void LoadPastParticipleForms(EnglishGraphContext db)
+        {
+            LoadVerbforms(db, PartsOfSpeech.VerbPastParticiple, VerbConjugator.VerbForm.PastParticiple, 
+                DictionaryEntryRelationshipTypes.PastParticiple);
+        }
+        public static void LoadGerundiveForms(EnglishGraphContext db)
+        {
+            LoadVerbforms(db, PartsOfSpeech.Gerundive, VerbConjugator.VerbForm.Gerundive, 
+                DictionaryEntryRelationshipTypes.Gerundive);
+        }
+        public static void Load3rdPresentForms(EnglishGraphContext db)
+        {
+            LoadVerbforms(db, PartsOfSpeech.Verb3RdPersSingular, VerbConjugator.VerbForm.ThirdPersonSingularPresent, 
+                DictionaryEntryRelationshipTypes.ThirdPersonPresent);
+        }
+
+        private static void LoadVerbforms(EnglishGraphContext db, byte pos, VerbConjugator.VerbForm verbForm, byte relationshipType)
+        {
+            const int batchSize = 1000;
+            var infinitives = db.DictionaryEntries
+                .Where(de => de.PartOfSpeech == PartsOfSpeech.Verb)
+                .ToList();
+            Console.WriteLine("Found {0} infinitives in db", infinitives.Count);
+
+            var conjugator = new VerbConjugator();
+
+            // Add verb forms in dictionary entries table
+            var verbForms = infinitives
+                .SelectMany(inf => conjugator.GetVerbForm(inf, verbForm))
+                .Select(s => new Tuple<string, byte>(s, pos))
+                .ToList();
+            var thirdPresentEntries = verbForms
+                .Select((wp, i) => new { Index = i, Wp = wp })
+                .GroupBy(a => a.Index / batchSize)
+                .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Wp).ToList(), db))
+                .ToList();
+
+            // Then add relationships between entries
+            var relationships = new List<DictionaryEntryRelationship>();
+            foreach (var infinitive in infinitives)
+            {
+                var forms = conjugator.GetVerbForm(infinitive, verbForm);
+                var relatedEntries = forms
+                    .Select(f => thirdPresentEntries.FirstOrDefault(ent => ent.Word == f))
+                    .ToList();
+                if (relatedEntries.Count != forms.Count)
+                {
+                    Console.WriteLine("Missing entry from ({0}) in ({1})", string.Join("|", forms), string.Join("|", relatedEntries));
+                }
+                var newRelationships = relatedEntries
+                    .Select(ent => new DictionaryEntryRelationship()
+                    {
+                        Source = infinitive,
+                        Target = ent,
+                        Type = relationshipType
+                    });
+                relationships.AddRange(newRelationships);
+            }
+            var dictionaryEntryRelationships = relationships
+                .Select((wp, i) => new { Index = i, Wp = wp })
+                .GroupBy(a => a.Index / batchSize)
+                .SelectMany(grp => DbUtilities.GetOrCreate(grp.Select(a => a.Wp).ToList(), db))
+                .ToList();
+            Console.WriteLine("Created {0} relationships in db", dictionaryEntryRelationships.Count);
+        }
+
         public static void LoadPronouns(EnglishGraphContext db, bool includeMwes)
         {
             var pronouns = Pronouns.Instance;
