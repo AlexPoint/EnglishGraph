@@ -55,6 +55,7 @@
     <Compile Include="Classes\EnglishGraphContext.cs" />
     <Compile Include="Classes\GutembergParser.cs" />
     <Compile Include="Classes\Routines.cs" />
+    <Compile Include="Classes\Stats.cs" />
     <Compile Include="Classes\WordNetParser.cs" />
     <Compile Include="Migrations\201503131010448_InitialCreate.cs" />
     <Compile Include="Migrations\201503131010448_InitialCreate.Designer.cs">

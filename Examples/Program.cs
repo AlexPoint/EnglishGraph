@@ -42,7 +42,6 @@ namespace Examples
             //Routines.LoadWordnetEntries(db, PathToProject);
 
             // load conjunction
-            Routines.LoadPastParticipleForms(db);
 
             // load pronunciations
             //Routines.LoadGutembergPronunciations(db, PathToProject);
