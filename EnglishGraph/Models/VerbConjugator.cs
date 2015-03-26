@@ -69,9 +69,19 @@ namespace EnglishGraph.Models
         private static readonly List<string> thirdPersonIrregularVerbSuffixes = new List<string>() { "ss", "x", "ch", "sh", "o" };
         private static readonly Regex thirdPersonIrregularVerbSuffixesRegex = new Regex(string.Format("({0})$", string.Join("|", thirdPersonIrregularVerbSuffixes)));
         private static readonly Regex endsWithConsonantPlusY = new Regex(string.Format("({0})y$", string.Join("|", consonants)));
+        private static readonly List<Tuple<string,string>> thirdPersonExceptions = new List<Tuple<string, string>>()
+        {
+            new Tuple<string, string>("be", "is"),
+            new Tuple<string, string>("have", "has"),
+        };
 
         private static readonly List<GrammarTransformation<string,string>> InfinitiveToThirdPersonPresentRules = new List<GrammarTransformation<string,string>>()
         {
+            new GrammarTransformation<string,string>()
+            {
+                Condition = inf => thirdPersonExceptions.Any(ex => inf == ex.Item1),
+                Transform = inf => thirdPersonExceptions.First(ex => inf == ex.Item1).Item2
+            },
             new GrammarTransformation<string,string>()
             {
                 Condition = thirdPersonIrregularVerbSuffixesRegex.IsMatch,
