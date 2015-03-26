@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Input\sentences\wsj.train" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -103,9 +104,7 @@
       <Name>EnglishGraph</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Input\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201503131010448_InitialCreate.resx">
       <DependentUpon>201503131010448_InitialCreate.cs</DependentUpon>
@@ -131,6 +130,11 @@
     <EmbeddedResource Include="Migrations\201503231948465_AddRelationshipsBetweenDictionaryEntries.resx">
       <DependentUpon>201503231948465_AddRelationshipsBetweenDictionaryEntries.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Input\gutemberg_pronunciation.txt" />
+    <Content Include="Input\wordnet_lc_words_with_def.txt" />
+    <Content Include="Input\wordnet_uc_words_with_def.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

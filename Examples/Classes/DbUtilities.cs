@@ -140,6 +140,11 @@ namespace Examples.Classes
             return existingEntries;
         }
 
+        public static DictionaryEntry GetOrCreate(Tuple<string, byte> wordAndPos, EnglishGraphContext db)
+        {
+            return GetOrCreate(new List<Tuple<string, byte>>() {wordAndPos}, db).FirstOrDefault();
+        }
+
 
         // DictionaryEntryRelationships -----------------------------------
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EnglishGraph.Models;
 using Examples.Classes;
@@ -17,6 +18,65 @@ namespace Examples
         static void Main(string[] args)
         {
             var db = new EnglishGraphContext();
+
+            var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
+            var sentenceParser = new SentenceParser();
+            var posDetector = new PartOfSpeechDetector();
+
+            var words = db.DictionaryEntries.Select(de => de.Word).ToList();
+
+            var sentences = File.ReadLines(pathToSentenceFile);
+            foreach (var sentence in sentences)
+            {
+                var tokens = sentenceParser.Tokenize(sentence);
+
+                for(var i = 0; i < tokens.Count; i++)
+                {
+                    var token = tokens[i];
+                    var searchedTokens = new List<string>() {token};
+                    if (i == 0)
+                    {
+                        var lcToken = StringUtilities.LowerFirstLetter(token);
+                        searchedTokens.Add(lcToken);
+                    }
+                    if (Regex.IsMatch(token, "^\\p{P}+") && token.Length > 2)
+                    {
+                        var trimedToken = Regex.Replace(token, "^\\p{P}+", "");
+                        searchedTokens.Add(trimedToken);
+                    }
+                    if (Regex.IsMatch(token, "\\p{P}+$") && token.Length > 2)
+                    {
+                        var trimedToken = Regex.Replace(token, "\\p{P}+$", "");
+                        searchedTokens.Add(trimedToken);
+                    }
+                    
+                    var isInDictionary = words.Intersect(searchedTokens).Any();
+                    if (!isInDictionary)
+                    {
+                        var searchedEntries = searchedTokens
+                            .Select(tok => new Tuple<string, byte>(tok, posDetector.Detect(tok, i == 0, i == tokens.Count - 1)))
+                            .ToList();
+                        Console.WriteLine("----");
+                        Console.WriteLine("'{0}' in '{1}'", token, sentence);
+                        Console.WriteLine("Create:");
+                        for (var j = 0; j < searchedEntries.Count; j++)
+                        {
+                            Console.WriteLine("{0}. {1} {2}", j, searchedEntries[j].Item1, PartsOfSpeech.Abbrev(searchedEntries[j].Item2));
+                        }
+                        var key = Console.ReadKey();
+                        int selectedIndex;
+                        var success = int.TryParse(key.KeyChar.ToString(), out selectedIndex);
+                        if (success && selectedIndex < searchedTokens.Count)
+                        {
+                            Console.WriteLine();
+                            // add to dictionary with unknown POS
+                            var tokenToCreate = searchedEntries[selectedIndex];
+                            DbUtilities.GetOrCreate(tokenToCreate, db);
+                        }
+                    }
+                }
+            }
+
 
             /*/*var verbShortList = new List<string>()
             {
@@ -39,7 +99,7 @@ namespace Examples
 
 
             // load wordnet entries
-            //Routines.LoadWordnetEntries(db, PathToProject);
+            //Routines.LoadSimplePastForms(db);
 
             // load conjunction
 
