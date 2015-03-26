@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EnglishGraph.Models
@@ -17,13 +18,43 @@ namespace EnglishGraph.Models
             var parts = sentence.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
             // split tokens ending in 's
             var tokens = parts
-                .SelectMany(p =>
-                    p.EndsWith("'s")
-                        ? new List<string>() {p.Substring(0, p.Length - 2), p.Substring(p.Length - 2)}
-                        : new List<string>() {p})
+                .SelectMany(SplitToken)
                 .ToList();
 
             return tokens;
         }
+
+
+        // Tokenize rules 
+        private static readonly List<Regex> TokenizationRegexes = new List<Regex>()
+        {
+            // always tokenize ...
+            new Regex(@"(?=\.\.\.)"),
+            // tokenize 's|,|;|:|"|)|}|]|- suffixes
+            new Regex("(?<=('s|;|:|,|\\)|\"|\\}|!|\\?|\\]|-))$"),
+            // tokenize "|'{|(|[
+            new Regex("^(?=(\"|'|\\{|\\(|\\[))")
+        };
+
+        private const string AllPunctutionsExceptDotAndDashPattern = "([^\\P{P}\\.']+|\\.{2,})";
+        private List<string> SplitToken(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return new List<string>();
+            }
+
+            var result = new List<string>() { token };
+            foreach (var tokenizationRegex in TokenizationRegexes)
+            {
+                var tempTokens = result
+                    .SelectMany(tok => tokenizationRegex.Split(tok))
+                    .ToList();
+                result = tempTokens;
+            }
+
+            return result;
+        }
     }
+
 }

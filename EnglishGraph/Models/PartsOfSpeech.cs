@@ -57,6 +57,11 @@ namespace EnglishGraph.Models
         public const byte InterrogativePronoun = 85;
         public const byte IndefinitePronoun = 86;
         public const byte RelativePronoun = 87;
+
+        // Acronyms & abbreviations ------
+        // Are abbreviations a true part of speech?
+        public const byte Abbreviation = 90;
+
         
 
         public static string Abbrev(byte pos)
@@ -113,6 +118,8 @@ namespace EnglishGraph.Models
                     return "inter. pron.";
                 case RelativePronoun:
                     return "rel. pron.";
+                case Abbreviation:
+                    return "abbr.";
                 default:
                     return "unk.";
             }
