@@ -31,9 +31,9 @@ namespace EnglishGraph.Models
             // always tokenize ...
             new Regex(@"(?=\.\.\.)"),
             // tokenize 's|,|;|:|"|)|}|]|- suffixes
-            new Regex("(?<=('s|;|:|,|\\)|\"|\\}|!|\\?|\\]|-))$"),
+            new Regex("(?=('s|;|:|,|\\)|\"|\\}|!|\\?|\\]|-)$)"),
             // tokenize "|'{|(|[
-            new Regex("^(?=(\"|'|\\{|\\(|\\[))")
+            new Regex("(?<=^(\"|'|\\{|\\(|\\[))")
         };
 
         private const string AllPunctutionsExceptDotAndDashPattern = "([^\\P{P}\\.']+|\\.{2,})";

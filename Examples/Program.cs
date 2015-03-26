@@ -25,7 +25,7 @@ namespace Examples
             var counter = 0;
             var abbrevTokens = new List<string>();
             var sentences = File.ReadLines(pathToSentenceFile);
-            foreach (var sentence in sentences)
+            foreach (var sentence in sentences.Take(10))
             {
                 var tokens = sentenceParser.Tokenize(sentence);
 
