@@ -2,12 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EnglishGraph.Models
 {
     public static class StringUtilities
     {
+        public static bool IsFigure(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(input, "^[\\d\\.,\\s]+$");
+        }
+
+        public static bool IsPunctuation(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(input, "^\\p{P}+$");
+        }
+
         public static bool IsFirstLetterUpperCased(string input)
         {
             if (string.IsNullOrEmpty(input))

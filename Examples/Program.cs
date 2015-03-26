@@ -33,16 +33,24 @@ namespace Examples
                 for(var i = 0; i < tokens.Count; i++)
                 {
                     var token = tokens[i];
-                    var searchedTokens = new List<string>() {token};
-                    if (i == 0)
+                    // if figure/punctuation -> can ignore
+                    if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token))
                     {
-                        var lcToken = StringUtilities.LowerFirstLetter(token);
-                        searchedTokens.Add(lcToken);
+                        Console.WriteLine("----");
+                        Console.WriteLine("'{0}' ignored", token);
+                        continue;
                     }
+
+                    var searchedTokens = new List<string>() {token};
                     if (Regex.IsMatch(token, "^\\p{P}+") && token.Length > 2)
                     {
                         var trimedToken = Regex.Replace(token, "^\\p{P}+", "");
                         searchedTokens.Add(trimedToken);
+                    }
+                    if (i == 0)
+                    {
+                        var lcTokens = searchedTokens.Select(st => StringUtilities.LowerFirstLetter(st)).ToList();
+                        searchedTokens.AddRange(lcTokens);
                     }
                     if (Regex.IsMatch(token, "\\p{P}+$") && token.Length > 2)
                     {
@@ -71,7 +79,8 @@ namespace Examples
                             Console.WriteLine();
                             // add to dictionary with unknown POS
                             var tokenToCreate = searchedEntries[selectedIndex];
-                            DbUtilities.GetOrCreate(tokenToCreate, db);
+                            var entryCreated = DbUtilities.GetOrCreate(tokenToCreate, db);
+                            words.Add(entryCreated.Word);
                         }
                     }
                 }
@@ -99,7 +108,7 @@ namespace Examples
 
 
             // load wordnet entries
-            //Routines.LoadSimplePastForms(db);
+            //Routines.Load3rdPresentForms(db);
 
             // load conjunction
 
