@@ -9,6 +9,19 @@ namespace EnglishGraph.Models
 {
     public static class StringUtilities
     {
+        private static readonly List<string> CurrencySymbols = new List<string>()
+        {
+            "\\$", "€", "£"
+        };
+
+        private const string NumberPattern = "[\\d\\.,\\s]+";
+        private const string OnlyNumbersPattern = "^" + NumberPattern + "$";
+        private const string PercentagePattern = "^" + NumberPattern + "%$";
+
+        private static readonly string AmountPattern = string.Format("^({0})?{1}({2})?$", string.Join("|", CurrencySymbols),
+            NumberPattern, string.Join("|", CurrencySymbols));
+
+
         public static bool IsFigure(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -16,7 +29,9 @@ namespace EnglishGraph.Models
                 return false;
             }
 
-            return Regex.IsMatch(input, "^[\\d\\.,\\s]+$");
+            return Regex.IsMatch(input, OnlyNumbersPattern)
+                || Regex.IsMatch(input, PercentagePattern)
+                || Regex.IsMatch(input, AmountPattern);
         }
 
         public static bool IsPunctuation(string input)
@@ -27,6 +42,16 @@ namespace EnglishGraph.Models
             }
 
             return Regex.IsMatch(input, "^\\p{P}+$");
+        }
+
+        public static bool IsCompoundWord(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(input, "^(\\w+\\-)+\\w+$");
         }
 
         public static bool IsFirstLetterUpperCased(string input)

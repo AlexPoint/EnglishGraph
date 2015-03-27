@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EnglishGraph.Models;
 using Examples.Classes;
+using Examples.Migrations;
 
 namespace Examples
 {
@@ -22,25 +23,12 @@ namespace Examples
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
 
-            var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
+            RunUnknownWordDetection(db);
+
+            /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
             Console.WriteLine(testSentence);
-            Console.WriteLine(string.Join(" | ", testTokens));
-
-            var counter = 0;
-            var abbrevTokens = new List<string>();
-            var sentences = File.ReadLines(pathToSentenceFile);
-            foreach (var sentence in sentences.Take(1000))
-            {
-                //var tokens = sentenceParser.Tokenize(sentence);
-
-                //Console.WriteLine(string.Join(" | ", tokens));
-            }
-
-            /*foreach (var abbrevToken in abbrevTokens.Distinct())
-            {
-                Console.WriteLine(abbrevToken);
-            }*/
+            Console.WriteLine(string.Join(" | ", testTokens));*/
 
             // load entries
             //Routines.Load3rdPresentForms(db);
@@ -53,7 +41,7 @@ namespace Examples
         }
 
         
-        private void RunUnknownWordDetection(EnglishGraphContext db)
+        private static void RunUnknownWordDetection(EnglishGraphContext db)
         {
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
@@ -70,45 +58,43 @@ namespace Examples
                 {
                     var token = tokens[i];
                     // if figure/punctuation -> can ignore
-                    if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token))
+                    if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token)
+                        || StringUtilities.IsCompoundWord(token))
                     {
                         Console.WriteLine("----");
                         Console.WriteLine("'{0}' ignored", token);
                         continue;
                     }
-
-                    var searchedTokens = new List<string>() { token };
-                    if (Regex.IsMatch(token, "^\\p{P}+") && token.Length > 2)
-                    {
-                        var trimedToken = Regex.Replace(token, "^\\p{P}+", "");
-                        searchedTokens.Add(trimedToken);
-                    }
-                    if (i == 0)
-                    {
-                        var lcTokens = searchedTokens.Select(st => StringUtilities.LowerFirstLetter(st)).ToList();
-                        searchedTokens.AddRange(lcTokens);
-                    }
-                    if (Regex.IsMatch(token, "\\p{P}+$") && token.Length > 2)
-                    {
-                        var trimedToken = Regex.Replace(token, "\\p{P}+$", "");
-                        searchedTokens.Add(trimedToken);
-                    }
-
-                    var isInDictionary = words.Intersect(searchedTokens).Any();
+                    
+                    var isInDictionary = words.Any(w => w == token);
                     if (!isInDictionary)
                     {
-                        var searchedEntries = searchedTokens
-                            .Select(tok => new Tuple<string, byte>(tok, posDetector.Detect(tok, i == 0, i == tokens.Count - 1)))
-                            .ToList();
+                        // test if the word already exist with a different case
+                        var wordsWithDifferentCase = words.Where(w => string.Equals(w, token, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        if (wordsWithDifferentCase.Any())
+                        {
+                            if (i > 0)
+                            {
+                                Console.WriteLine("'{0}' not in dictionary but '{1}' exist", token, string.Join("|", wordsWithDifferentCase)); 
+                            }
+                            continue;
+                        }
+
+                        var searchedEntry = new Tuple<string, byte>(token, posDetector.Detect(token, i == 0, i == tokens.Count - 1));
                         Console.WriteLine("----");
                         Console.WriteLine("'{0}' in '{1}'", token, sentence);
-                        Console.WriteLine("Create:");
-                        for (var j = 0; j < searchedEntries.Count; j++)
-                        {
-                            Console.WriteLine("{0}. {1} {2}", j, searchedEntries[j].Item1, PartsOfSpeech.Abbrev(searchedEntries[j].Item2));
-                        }
+                        Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry.Item1, PartsOfSpeech.Abbrev(searchedEntry.Item2));
+                        
                         var key = Console.ReadKey();
-                        int selectedIndex;
+                        if (key.KeyChar == 'y')
+                        {
+                            Console.WriteLine();
+                            // add to dictionary with unknown POS
+                            var tokenToCreate = searchedEntry;
+                            var entryCreated = DbUtilities.GetOrCreate(tokenToCreate, db);
+                            words.Add(entryCreated.Word);
+                        }
+                        /*int selectedIndex;
                         var success = int.TryParse(key.KeyChar.ToString(), out selectedIndex);
                         if (success && selectedIndex < searchedTokens.Count)
                         {
@@ -117,7 +103,7 @@ namespace Examples
                             var tokenToCreate = searchedEntries[selectedIndex];
                             var entryCreated = DbUtilities.GetOrCreate(tokenToCreate, db);
                             words.Add(entryCreated.Word);
-                        }
+                        }*/
                     }
                 }
             }

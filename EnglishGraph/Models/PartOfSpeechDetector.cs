@@ -12,7 +12,7 @@ namespace EnglishGraph.Models
 
         public byte Detect(string token, bool isFirstTokenInSentence, bool isLastTokenInSentence)
         {
-            if (token.EndsWith(".") && !isLastTokenInSentence)
+            if ((token.EndsWith(".") && !isLastTokenInSentence) || Regex.IsMatch(token, "(^[A-Z]\\.)+$"))
             {
                 return PartsOfSpeech.Abbreviation;
             }
