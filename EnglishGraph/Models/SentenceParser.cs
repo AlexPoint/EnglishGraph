@@ -53,11 +53,11 @@ namespace EnglishGraph.Models
             // split before ':' if not followed directly by figure
             new Regex("((?=:\\D)|(?=:$))"),
 
-            // split before 's when at the end of a token
-            new Regex("(?=\\'s$)"),
+            // split before 's, 've, 'll when at the end of a token
+            new Regex("(?=\\'s$|\\'ve$|\\'ll$)"),
 
             // split after ' at the beginning of a token (and not 's)
-            new Regex("(?<=^\\')(?!s$)"),
+            new Regex("(?<=^\\')(?!s$|ll$|ve$)"),
             // split before ' at the end of a token
             new Regex("(?=\\'$)"),
 
@@ -86,10 +86,10 @@ namespace EnglishGraph.Models
                     .SelectMany(tok => tokenizationRegex.Split(tok))
                     .Where(p => !string.IsNullOrEmpty(p))
                     .ToList();
-                if (result.Count != tempTokens.Count)
+                /*if (result.Count != tempTokens.Count)
                 {
                     Console.WriteLine("{0} ==> {1}", string.Join("|", result), string.Join("|", tempTokens));
-                }
+                }*/
                 result = tempTokens;
             }
 
