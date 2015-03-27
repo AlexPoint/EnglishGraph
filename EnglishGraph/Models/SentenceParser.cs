@@ -21,15 +21,23 @@ namespace EnglishGraph.Models
                 .SelectMany(SplitToken)
                 .ToList();
 
+            // tokenize the last .
+            var lastTokenWithWordChar = tokens.Last(t => Regex.IsMatch(t, "\\w+"));
+            var indexOfLastTokenWithWordChar = tokens.LastIndexOf(lastTokenWithWordChar);
+            if (lastTokenWithWordChar.EndsWith("."))
+            {
+                tokens.Remove(lastTokenWithWordChar);
+                var lastTokenParts = Regex.Split(lastTokenWithWordChar, "(?=\\.$)");
+                tokens.InsertRange(indexOfLastTokenWithWordChar, lastTokenParts);
+            }
+
             return tokens;
         }
 
+        // TODO: regroup all those tokenization in a unique big) regex?
         // Tokenize rules 
         private static readonly List<Regex> TokenizationRegexes = new List<Regex>()
         {
-            // always tokenize ...
-            //new Regex("((?=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$)|(?<=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$|^'\\w{2,}|^\\-))"),
-
             // split before .{2,} if not preceded by '.'
             new Regex("(?<!\\.)(?=\\.{2,})"),
             // split after .{2,} if not followed by '.'
@@ -61,9 +69,7 @@ namespace EnglishGraph.Models
             // split before ;, (, ), [, ], {, }, ?, !, " in all cases - TODO: refine rule for ?, ! and " (ex: ???, !!! should be tokenized as one token only)
             new Regex("(?=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")"),
             // split after ;, (, ), [, ], {, }, ?, !, " in all cases - TODO: refine rule for ?, ! and " (ex: ???, !!! should be tokenized as one token only)
-            new Regex("(?<=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")"),
-
-            // TODO: additional rules: ' at the beginning of tokens
+            new Regex("(?<=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")")
         };
 
         private List<string> SplitToken(string token)
