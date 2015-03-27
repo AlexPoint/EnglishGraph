@@ -23,7 +23,7 @@ namespace Examples
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
 
-            RunUnknownWordDetection(db);
+            RunUnknownWordDetection(db, PartsOfSpeech.Abbreviation);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
@@ -41,7 +41,7 @@ namespace Examples
         }
 
         
-        private static void RunUnknownWordDetection(EnglishGraphContext db)
+        private static void RunUnknownWordDetection(EnglishGraphContext db, byte onlyEntriesOfPos)
         {
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
@@ -63,8 +63,8 @@ namespace Examples
                     if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token)
                         || StringUtilities.IsCompoundWord(token))
                     {
-                        Console.WriteLine("----");
-                        Console.WriteLine("'{0}' ignored", token);
+                        //Console.WriteLine("----");
+                        //Console.WriteLine("'{0}' ignored", token);
                         continue;
                     }
                     
@@ -77,37 +77,30 @@ namespace Examples
                         {
                             if (i > 0)
                             {
-                                Console.WriteLine("'{0}' not in dictionary but '{1}' exist", token, string.Join("|", wordsWithDifferentCase)); 
+                                //Console.WriteLine("'{0}' not in dictionary but '{1}' exist", token, string.Join("|", wordsWithDifferentCase)); 
                             }
                             continue;
                         }
 
                         var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, db.DictionaryEntries);
-                        Console.WriteLine("----");
-                        Console.WriteLine("'{0}' in '{1}'", token, sentence);
-                        Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry,
-                            searchedEntry.StemmedFromRelationships != null && searchedEntry.StemmedFromRelationships.Any() ? 
-                            string.Format("{0} of {1}", searchedEntry.StemmedFromRelationships.First().Type, searchedEntry.StemmedFromRelationships.First().Source.Word):
-                            "");
-                        
-                        var key = Console.ReadKey();
-                        if (key.KeyChar == 'y')
+                        if (searchedEntry.PartOfSpeech == onlyEntriesOfPos)
                         {
-                            Console.WriteLine();
-                            // add to dictionary
-                            var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
-                            words.Add(entryCreated.Word);
+                            Console.WriteLine("----");
+                            Console.WriteLine("'{0}' in '{1}'", token, sentence);
+                            Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry,
+                                searchedEntry.StemmedFromRelationships != null && searchedEntry.StemmedFromRelationships.Any() ?
+                                string.Format("{0} of {1}", searchedEntry.StemmedFromRelationships.First().Type, searchedEntry.StemmedFromRelationships.First().Source.Word) :
+                                "");
+
+                            var key = Console.ReadKey();
+                            if (key.KeyChar == 'y')
+                            {
+                                Console.WriteLine();
+                                // add to dictionary
+                                var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
+                                words.Add(entryCreated.Word);
+                            } 
                         }
-                        /*int selectedIndex;
-                        var success = int.TryParse(key.KeyChar.ToString(), out selectedIndex);
-                        if (success && selectedIndex < searchedTokens.Count)
-                        {
-                            Console.WriteLine();
-                            // add to dictionary with unknown POS
-                            var tokenToCreate = searchedEntries[selectedIndex];
-                            var entryCreated = DbUtilities.GetOrCreate(tokenToCreate, db);
-                            words.Add(entryCreated.Word);
-                        }*/
                     }
                 }
             }
