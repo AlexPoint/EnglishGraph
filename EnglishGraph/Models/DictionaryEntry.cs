@@ -15,6 +15,7 @@ namespace EnglishGraph.Models
         public List<SynsetDictionaryEntry> Synsets { get; set; }
         public string Pronunciation { get; set; }
 
+
         public List<DictionaryEntryRelationship> DerivedRelationships { get; set; }
         public List<DictionaryEntryRelationship> StemmedFromRelationships { get; set; }
 

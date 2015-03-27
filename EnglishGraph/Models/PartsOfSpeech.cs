@@ -21,7 +21,9 @@ namespace EnglishGraph.Models
         // Nouns ------------------------------
         public const byte Noun = 20;
         public const byte ProperNoun = 21;
-
+        public const byte NounPlural = 22;
+        public const byte ProperNounPlural = 23;
+        
 
         // Adjectives -------------------------
         public const byte Adjective = 30;
@@ -82,6 +84,10 @@ namespace EnglishGraph.Models
                     return "n.";
                 case ProperNoun:
                     return "pn.";
+                case NounPlural:
+                    return "n. pl.";
+                case ProperNounPlural:
+                    return "pn. pl.";
                 case Adjective:
                     return "adj.";
                 case Adverb:

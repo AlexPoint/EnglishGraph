@@ -85,7 +85,7 @@ namespace Examples.Classes
             return entries;
         }
 
-        private static readonly object WordCreationLock = new object();
+        private static readonly object DictionaryEntryCreationLock = new object();
         public static List<DictionaryEntry> GetOrCreate(List<Tuple<string, byte>> wordAndPos, EnglishGraphContext db,
             bool caseSensitive = true)
         {
@@ -104,7 +104,7 @@ namespace Examples.Classes
                 .ToList();
             if (missingWordAndPos.Any())
             {
-                lock (WordCreationLock)
+                lock (DictionaryEntryCreationLock)
                 {
                     existingEntries = db.DictionaryEntries
                         .Where(e => distinctWordNames.Contains(e.Word))
@@ -143,6 +143,35 @@ namespace Examples.Classes
         public static DictionaryEntry GetOrCreate(Tuple<string, byte> wordAndPos, EnglishGraphContext db)
         {
             return GetOrCreate(new List<Tuple<string, byte>>() {wordAndPos}, db).FirstOrDefault();
+        }
+        public static DictionaryEntry GetOrCreate(DictionaryEntry entry, EnglishGraphContext db)
+        {
+            var existingEntry = db.DictionaryEntries
+                .Where(de => de.Word == entry.Word && de.PartOfSpeech == entry.PartOfSpeech)
+                .ToList()
+                // case sensitive comparison after ToList
+                .FirstOrDefault(de => de.Word == entry.Word);
+            if (existingEntry == null)
+            {
+                lock (DictionaryEntryCreationLock)
+                {
+                    existingEntry = db.DictionaryEntries
+                        .Where(de => de.Word == entry.Word && de.PartOfSpeech == entry.PartOfSpeech)
+                        .ToList()
+                        // case sensitive comparison after ToList
+                        .FirstOrDefault(de => de.Word == entry.Word);
+
+                    if (existingEntry == null)
+                    {
+                        db.DictionaryEntries.Add(entry);
+                        db.SaveChanges();
+
+                        existingEntry = entry;
+                    }
+                }
+            }
+
+            return existingEntry;
         }
 
 

@@ -45,9 +45,11 @@ namespace Examples
         {
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
+
+            var entries = db.DictionaryEntries.ToList();
             var posDetector = new PartOfSpeechDetector();
 
-            var words = db.DictionaryEntries.Select(de => de.Word).ToList();
+            var words = entries.Select(de => de.Word).ToList();
 
             var sentences = File.ReadLines(pathToSentenceFile);
             foreach (var sentence in sentences)
@@ -80,18 +82,20 @@ namespace Examples
                             continue;
                         }
 
-                        var searchedEntry = new Tuple<string, byte>(token, posDetector.Detect(token, i == 0, i == tokens.Count - 1));
+                        var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, db.DictionaryEntries);
                         Console.WriteLine("----");
                         Console.WriteLine("'{0}' in '{1}'", token, sentence);
-                        Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry.Item1, PartsOfSpeech.Abbrev(searchedEntry.Item2));
+                        Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry,
+                            searchedEntry.StemmedFromRelationships != null && searchedEntry.StemmedFromRelationships.Any() ? 
+                            string.Format("{0} of {1}", searchedEntry.StemmedFromRelationships.First().Type, searchedEntry.StemmedFromRelationships.First().Source.Word):
+                            "");
                         
                         var key = Console.ReadKey();
                         if (key.KeyChar == 'y')
                         {
                             Console.WriteLine();
-                            // add to dictionary with unknown POS
-                            var tokenToCreate = searchedEntry;
-                            var entryCreated = DbUtilities.GetOrCreate(tokenToCreate, db);
+                            // add to dictionary
+                            var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
                             words.Add(entryCreated.Word);
                         }
                         /*int selectedIndex;

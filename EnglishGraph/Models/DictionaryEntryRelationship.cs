@@ -20,5 +20,8 @@ namespace EnglishGraph.Models
         public const byte SimplePast = 12;
         public const byte PastParticiple = 13;
         public const byte Gerundive = 14;
+
+        public const byte NounPlural = 22;
+        public const byte ProperNounPlural = 23;
     }
 }
