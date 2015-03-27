@@ -29,7 +29,41 @@ namespace EnglishGraph.Models
         {
             // always tokenize ...
             //new Regex("((?=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$)|(?<=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$|^'\\w{2,}|^\\-))"),
-            new Regex("((?=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$)|(?<=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$|^'\\w{2,}|^\\-))"),
+
+            // split before .{2,} if not preceded by '.'
+            new Regex("(?<!\\.)(?=\\.{2,})"),
+            // split after .{2,} if not followed by '.'
+            new Regex("(?<=\\.{2,})(?!\\.)"),
+            
+            // split after ',' if not followed directly by figure
+            new Regex("(?<=,)(?!\\d)"), 
+            // split before ',' if not followed directly by figure
+            new Regex("((?=,\\D)|(?=,$))"),
+            
+            // split after ':' if not followed directly by figure
+            new Regex("(?<=:)(?!\\d)"), 
+            // split before ':' if not followed directly by figure
+            new Regex("((?=:\\D)|(?=:$))"),
+
+            // split before 's when at the end of a token
+            new Regex("(?=\\'s$)"),
+
+            // split after ' at the beginning of a token (and not 's)
+            new Regex("(?<=^\\')(?!s$)"),
+            // split before ' at the end of a token
+            new Regex("(?=\\'$)"),
+
+            // split before - when at the end of a token and not preceded by -
+            new Regex("(?<!\\-)(?=\\-$)"),
+            // split after - when at the beginning of a token and not followed by -
+            new Regex("(?<=^\\-)(?!\\-)"),
+            
+            // split before ;, (, ), [, ], {, }, ?, !, " in all cases - TODO: refine rule for ?, ! and " (ex: ???, !!! should be tokenized as one token only)
+            new Regex("(?=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")"),
+            // split after ;, (, ), [, ], {, }, ?, !, " in all cases - TODO: refine rule for ?, ! and " (ex: ???, !!! should be tokenized as one token only)
+            new Regex("(?<=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")"),
+
+            // TODO: additional rules: ' at the beginning of tokens
         };
 
         private List<string> SplitToken(string token)
@@ -48,7 +82,7 @@ namespace EnglishGraph.Models
                     .ToList();
                 if (result.Count != tempTokens.Count)
                 {
-                    //Console.WriteLine("{0} ==> {1}", string.Join("|", result), string.Join("|", tempTokens));
+                    Console.WriteLine("{0} ==> {1}", string.Join("|", result), string.Join("|", tempTokens));
                 }
                 result = tempTokens;
             }

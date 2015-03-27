@@ -22,14 +22,19 @@ namespace Examples
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
 
+            /*var testSentence = "And there has been a drastic decline in the importance of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.";
+            var testTokens = sentenceParser.Tokenize(testSentence);
+            Console.WriteLine(testSentence);
+            Console.WriteLine(string.Join(" | ", testTokens));*/
+
             var counter = 0;
             var abbrevTokens = new List<string>();
             var sentences = File.ReadLines(pathToSentenceFile);
-            foreach (var sentence in sentences)
+            foreach (var sentence in sentences.Take(1000))
             {
                 var tokens = sentenceParser.Tokenize(sentence);
 
-                Console.WriteLine(string.Join(" | ", tokens));
+                //Console.WriteLine(string.Join(" | ", tokens));
             }
 
             /*foreach (var abbrevToken in abbrevTokens.Distinct())
