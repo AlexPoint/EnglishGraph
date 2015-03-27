@@ -25,17 +25,17 @@ namespace Examples
             var counter = 0;
             var abbrevTokens = new List<string>();
             var sentences = File.ReadLines(pathToSentenceFile);
-            foreach (var sentence in sentences.Take(10))
+            foreach (var sentence in sentences)
             {
                 var tokens = sentenceParser.Tokenize(sentence);
 
                 Console.WriteLine(string.Join(" | ", tokens));
             }
 
-            foreach (var abbrevToken in abbrevTokens.Distinct())
+            /*foreach (var abbrevToken in abbrevTokens.Distinct())
             {
                 Console.WriteLine(abbrevToken);
-            }
+            }*/
 
             // load entries
             //Routines.Load3rdPresentForms(db);

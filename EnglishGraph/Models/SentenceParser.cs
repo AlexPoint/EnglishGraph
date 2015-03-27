@@ -24,19 +24,14 @@ namespace EnglishGraph.Models
             return tokens;
         }
 
-
         // Tokenize rules 
         private static readonly List<Regex> TokenizationRegexes = new List<Regex>()
         {
             // always tokenize ...
-            new Regex(@"(?=\.\.\.)"),
-            // tokenize 's|,|;|:|"|)|}|]|- suffixes
-            new Regex("(?=('s|;|:|,|\\)|\"|\\}|!|\\?|\\]|-)$)"),
-            // tokenize "|'{|(|[
-            new Regex("(?<=^(\"|'|\\{|\\(|\\[))")
+            //new Regex("((?=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$)|(?<=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$|^'\\w{2,}|^\\-))"),
+            new Regex("((?=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$)|(?<=\\.{2,}|,+(\\D|$)|\"+|;|:|!+|\\?+|\\(|\\)|\\{|\\}|\\[|\\]|'s$|\\-$|^'\\w{2,}|^\\-))"),
         };
 
-        private const string AllPunctutionsExceptDotAndDashPattern = "([^\\P{P}\\.']+|\\.{2,})";
         private List<string> SplitToken(string token)
         {
             if (string.IsNullOrEmpty(token))
@@ -49,7 +44,12 @@ namespace EnglishGraph.Models
             {
                 var tempTokens = result
                     .SelectMany(tok => tokenizationRegex.Split(tok))
+                    .Where(p => !string.IsNullOrEmpty(p))
                     .ToList();
+                if (result.Count != tempTokens.Count)
+                {
+                    //Console.WriteLine("{0} ==> {1}", string.Join("|", result), string.Join("|", tempTokens));
+                }
                 result = tempTokens;
             }
 
