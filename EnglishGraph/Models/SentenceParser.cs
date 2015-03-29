@@ -22,13 +22,16 @@ namespace EnglishGraph.Models
                 .ToList();
 
             // tokenize the last .
-            var lastTokenWithWordChar = tokens.Last(t => Regex.IsMatch(t, "\\w+"));
-            var indexOfLastTokenWithWordChar = tokens.LastIndexOf(lastTokenWithWordChar);
-            if (lastTokenWithWordChar.EndsWith("."))
+            var lastTokenWithWordChar = tokens.LastOrDefault(t => Regex.IsMatch(t, "\\w+"));
+            if (lastTokenWithWordChar != null)
             {
-                tokens.Remove(lastTokenWithWordChar);
-                var lastTokenParts = Regex.Split(lastTokenWithWordChar, "(?=\\.$)");
-                tokens.InsertRange(indexOfLastTokenWithWordChar, lastTokenParts);
+                var indexOfLastTokenWithWordChar = tokens.LastIndexOf(lastTokenWithWordChar);
+                if (lastTokenWithWordChar.EndsWith("."))
+                {
+                    tokens.Remove(lastTokenWithWordChar);
+                    var lastTokenParts = Regex.Split(lastTokenWithWordChar, "(?=\\.$)");
+                    tokens.InsertRange(indexOfLastTokenWithWordChar, lastTokenParts);
+                } 
             }
 
             return tokens;

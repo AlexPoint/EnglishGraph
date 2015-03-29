@@ -23,7 +23,7 @@ namespace Examples
             var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
             var sentenceParser = new SentenceParser();
 
-            RunUnknownWordDetection(db, PartsOfSpeech.Abbreviation);
+            RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
@@ -87,7 +87,7 @@ namespace Examples
                         {
                             Console.WriteLine("----");
                             Console.WriteLine("'{0}' in '{1}'", token, sentence);
-                            Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry,
+                            /*Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry,
                                 searchedEntry.StemmedFromRelationships != null && searchedEntry.StemmedFromRelationships.Any() ?
                                 string.Format("{0} of {1}", searchedEntry.StemmedFromRelationships.First().Type, searchedEntry.StemmedFromRelationships.First().Source.Word) :
                                 "");
@@ -95,11 +95,11 @@ namespace Examples
                             var key = Console.ReadKey();
                             if (key.KeyChar == 'y')
                             {
-                                Console.WriteLine();
+                                Console.WriteLine();*/
                                 // add to dictionary
                                 var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
                                 words.Add(entryCreated.Word);
-                            } 
+                            /*} */
                         }
                     }
                 }

@@ -15,11 +15,20 @@ namespace EnglishGraph.Models
             // Abbreviations
             if ((token.EndsWith(".") && !isLastTokenInSentence) || Regex.IsMatch(token, "(^[A-Z]\\.)+$"))
             {
-                return new DictionaryEntry()
+                /*var trimmedToken = token.Trim('.');
+                var isTrimmedTokenInDb = dictionary.Any(de => de.Word == trimmedToken);
+                if (!isTrimmedTokenInDb)
+                {*/
+                    return new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Abbreviation
+                    };
+                /*}
+                else
                 {
-                    Word = token,
-                    PartOfSpeech = PartsOfSpeech.Abbreviation
-                };
+                    Console.WriteLine("Didn't created abbreviation '{0}' - '{1}' already in db", token, trimmedToken);
+                }*/
             }
 
             // Proper nouns - TODO: handle plural forms?
