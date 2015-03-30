@@ -12,6 +12,17 @@ namespace EnglishGraph.Models
 
         public DictionaryEntry Detect(string token, bool isFirstTokenInSentence, bool isLastTokenInSentence, DbSet<DictionaryEntry> dictionary)
         {
+            // Compound words
+            if (token.Contains("-"))
+            {
+                // stop detection right away (for now)
+                return new DictionaryEntry()
+                {
+                    Word = token,
+                    PartOfSpeech = PartsOfSpeech.Unknown
+                };
+            }
+
             // Abbreviations
             if ((token.EndsWith(".") && !isLastTokenInSentence) || Regex.IsMatch(token, "(^[A-Z]\\.)+$"))
             {
@@ -45,8 +56,17 @@ namespace EnglishGraph.Models
             // Plural in "es"
             if (token.EndsWith("es"))
             {
+                // lower case the first letter if necessary
+                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                {
+                    token = char.ToLower(token.First()) + token.Substring(1);
+                }
+
                 var singularForm = token.Substring(0, token.Length - 2);
                 var singularFormInDb = dictionary
+                    .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
+                    .ToList()
+                    // case sensitive search
                     .FirstOrDefault(ent => ent.Word == singularForm);
                 if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.Noun)
                 {
@@ -88,8 +108,17 @@ namespace EnglishGraph.Models
             // Plural in "s"
             if (token.EndsWith("s"))
             {
+                // lower case the first letter if necessary
+                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                {
+                    token = char.ToLower(token.First()) + token.Substring(1);
+                }
+
                 var singularForm = token.Substring(0, token.Length - 1);
                 var singularFormInDb = dictionary
+                    .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
+                    .ToList()
+                    // case sensitive search
                     .FirstOrDefault(ent => ent.Word == singularForm);
                 if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.Noun)
                 {
