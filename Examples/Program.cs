@@ -20,10 +20,51 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
+            var pathToToeknizeFile = PathToProject + "Input/sentences/wsj-tokenize.train";
             var sentenceParser = new SentenceParser();
 
-            RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
+            var validTokens = 0;
+            var missingTokenization = 0;
+            var unrelevantTokenization = 0;
+            var lines = File.ReadAllLines(pathToToeknizeFile);
+            foreach (var line in lines)
+            {
+                var tokens = line.Split(new[] {' ', '|'});
+                var computedTokens = sentenceParser.Tokenize(line.Replace("|", ""));
+
+                var j = 0;
+                for (var i = 0; i < tokens.Length; i++)
+                {
+                    var token = tokens[i];
+                    var computedToken = j < computedTokens.Count ? computedTokens[j] : "";
+                    if (token == computedToken)
+                    {
+                        validTokens++;
+                        j++;
+                    }
+                    else if (token.Contains(computedToken))
+                    {
+                        missingTokenization++;
+                        j++;
+                        i--;
+                    }
+                    else if (computedToken.Contains(token))
+                    {
+                        unrelevantTokenization++;
+                        // don't increase j
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error on line '{0}'", line);
+                    }
+                }
+            }
+
+            Console.WriteLine("{0} valid tokenizations", validTokens);
+            Console.WriteLine("{0} missing tokenizations", missingTokenization);
+            Console.WriteLine("{0} unrelevant tokenizations", unrelevantTokenization);
+
+            //RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
