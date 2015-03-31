@@ -21,14 +21,19 @@ namespace Examples
             var db = new EnglishGraphContext();
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/wsj-tokenize.train";
-            var sentenceParser = new SentenceParser();
 
+            var sentence = "The sole limited partner of the partnership is Westwood Brick Lime Inc., an indirect subsidiary of Westwood Group Inc.";
+            var sentenceParser = new SentenceParser();
+            var test = sentenceParser.Tokenize(sentence);
+
+            var nbOfSpaceTokens = 0;
             var validTokens = 0;
             var missingTokenization = 0;
             var unrelevantTokenization = 0;
             var lines = File.ReadAllLines(pathToToeknizeFile);
             foreach (var line in lines)
             {
+                nbOfSpaceTokens += line.Count(c => c == ' ') + 1;
                 var tokens = line.Split(new[] {' ', '|'});
                 var computedTokens = sentenceParser.Tokenize(line.Replace("|", ""));
 
@@ -36,7 +41,12 @@ namespace Examples
                 for (var i = 0; i < tokens.Length; i++)
                 {
                     var token = tokens[i];
-                    var computedToken = j < computedTokens.Count ? computedTokens[j] : "";
+                    if (j >= computedTokens.Count)
+                    {
+                        missingTokenization += token.Length - i;
+                        break;
+                    }
+                    var computedToken = computedTokens[j];
                     if (token == computedToken)
                     {
                         validTokens++;
@@ -46,12 +56,20 @@ namespace Examples
                     {
                         missingTokenization++;
                         j++;
-                        i--;
+                        // don't increase i
+                        if (i >= tokens.Length || (j < computedTokens.Count && tokens[i] != computedTokens[j]))
+                        {
+                            i--;
+                        }
                     }
                     else if (computedToken.Contains(token))
                     {
                         unrelevantTokenization++;
                         // don't increase j
+                        if (j < computedTokens.Count - 1 && computedTokens[j + 1] == tokens[i + 1])
+                        {
+                            j++;
+                        }
                     }
                     else
                     {
@@ -61,6 +79,7 @@ namespace Examples
             }
 
             Console.WriteLine("{0} valid tokenizations", validTokens);
+            Console.WriteLine("{0} space tokens", nbOfSpaceTokens);
             Console.WriteLine("{0} missing tokenizations", missingTokenization);
             Console.WriteLine("{0} unrelevant tokenizations", unrelevantTokenization);
 

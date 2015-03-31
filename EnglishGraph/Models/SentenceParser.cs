@@ -28,7 +28,7 @@ namespace EnglishGraph.Models
                 var indexOfLastTokenWithWordChar = tokens.LastIndexOf(lastTokenWithWordChar);
                 if (lastTokenWithWordChar.EndsWith("."))
                 {
-                    tokens.Remove(lastTokenWithWordChar);
+                    tokens.RemoveAt(indexOfLastTokenWithWordChar);
                     var lastTokenParts = Regex.Split(lastTokenWithWordChar, "(?=\\.$)");
                     tokens.InsertRange(indexOfLastTokenWithWordChar, lastTokenParts);
                 } 
