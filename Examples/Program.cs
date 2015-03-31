@@ -22,68 +22,10 @@ namespace Examples
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 
-            var sentence = "It’s Bravo Team|…";
             var sentenceParser = new SentenceParser();
-            var test = sentenceParser.Tokenize(sentence);
+            
 
-            var nbOfSpaceTokens = 0;
-            var validTokens = 0;
-            var missingTokenization = 0;
-            var unrelevantTokenization = 0;
-            var lines = File.ReadAllLines(pathToToeknizeFile);
-            foreach (var line in lines)
-            {
-                nbOfSpaceTokens += line.Count(c => c == ' ') + 1;
-                var tokens = line.Split(new[] {' ', '|'});
-                var computedTokens = sentenceParser.Tokenize(line.Replace("|", ""));
-
-                var j = 0;
-                for (var i = 0; i < tokens.Length; i++)
-                {
-                    var token = tokens[i];
-                    if (j >= computedTokens.Count)
-                    {
-                        missingTokenization += token.Length - i;
-                        break;
-                    }
-                    var computedToken = computedTokens[j];
-                    if (token == computedToken)
-                    {
-                        validTokens++;
-                        j++;
-                    }
-                    else if (token.Contains(computedToken))
-                    {
-                        missingTokenization++;
-                        j++;
-                        // don't increase i
-                        if (i >= tokens.Length || (j < computedTokens.Count && tokens[i] != computedTokens[j]))
-                        {
-                            i--;
-                        }
-                    }
-                    else if (computedToken.Contains(token))
-                    {
-                        unrelevantTokenization++;
-                        // don't increase j
-                        if (j < computedTokens.Count - 1 && computedTokens[j + 1] == tokens[i + 1])
-                        {
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error on line '{0}'", line);
-                    }
-                }
-            }
-
-            Console.WriteLine("{0} valid tokenizations", validTokens);
-            Console.WriteLine("{0} space tokens", nbOfSpaceTokens);
-            Console.WriteLine("{0} missing tokenizations", missingTokenization);
-            Console.WriteLine("{0} unrelevant tokenizations", unrelevantTokenization);
-
-            //RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
+            RunUnknownWordDetection(db, PartsOfSpeech.Adjective);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
@@ -142,7 +84,7 @@ namespace Examples
                             continue;
                         }
 
-                        var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, db.DictionaryEntries);
+                        var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, entries);
                         if (searchedEntry.PartOfSpeech == onlyEntriesOfPos)
                         {
                             Console.WriteLine("----");
