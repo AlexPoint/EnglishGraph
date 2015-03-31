@@ -46,6 +46,16 @@ namespace EnglishGraph.Models
             // split after .{2,} if not followed by '.'
             new Regex("(?<=\\.{2,})(?!\\.)"),
             
+            // split before !+ if not preceded by '!'
+            new Regex("(?<!!)(?=!+)"),
+            // split after !+ if not followed by '!'
+            new Regex("(?<=!+)(?!!)"),
+
+            // split before ?+ if not preceded by '?'
+            new Regex("(?<!\\?)(?=\\?+)"),
+            // split after ?+ if not followed by '?'
+            new Regex("(?<=\\?+)(?!\\?)"),
+            
             // split after ',' if not followed directly by figure
             new Regex("(?<=,)(?!\\d)"), 
             // split before ',' if not followed directly by figure
@@ -56,23 +66,25 @@ namespace EnglishGraph.Models
             // split before ':' if not followed directly by figure
             new Regex("((?=:\\D)|(?=:$))"),
 
-            // split before 's, 've, 'll when at the end of a token
-            new Regex("(?=\\'s$|\\'ve$|\\'ll$)"),
+            // split before 's, 'm, 've, 'll, 're, 'd when at the end of a token (’ == ')
+            new Regex("(?=\\'s$|\\'m$|\\'ve$|\\'ll$|\\'re$|\\'d$|’s$|’m$|’ve$|’ll$|’re$|’d$)", RegexOptions.IgnoreCase),
 
-            // split after ' at the beginning of a token (and not 's)
-            new Regex("(?<=^\\')(?!s$|ll$|ve$)"),
+            // split after ' at the beginning of a token (and not 's, 'm, 'll, 've, 're or 'd)
+            new Regex("(?<=^\\')(?!s$|m$|ll$|ve$|re$|d$)", RegexOptions.IgnoreCase),
+            new Regex("(?<=^’)(?!s$|m$|ll$|ve$|re$|d$)", RegexOptions.IgnoreCase),
             // split before ' at the end of a token
             new Regex("(?=\\'$)"),
+            new Regex("(?=’$)"),
 
             // split before - when at the end of a token and not preceded by -
             new Regex("(?<!\\-)(?=\\-$)"),
             // split after - when at the beginning of a token and not followed by -
             new Regex("(?<=^\\-)(?!\\-)"),
             
-            // split before ;, (, ), [, ], {, }, ?, !, " in all cases - TODO: refine rule for ?, ! and " (ex: ???, !!! should be tokenized as one token only)
-            new Regex("(?=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")"),
-            // split after ;, (, ), [, ], {, }, ?, !, " in all cases - TODO: refine rule for ?, ! and " (ex: ???, !!! should be tokenized as one token only)
-            new Regex("(?<=;|\\(|\\)|\\{|\\}|\\[|\\]|\\?|!|\")")
+            // split before ;, (, ), [, ], {, }, " in all cases
+            new Regex("(?=;|\\(|\\)|\\{|\\}|\\[|\\]|\"|…)"),
+            // split after ;, (, ), [, ], {, }, " in all cases
+            new Regex("(?<=;|\\(|\\)|\\{|\\}|\\[|\\]|\"|…)")
         };
 
         private List<string> SplitToken(string token)
