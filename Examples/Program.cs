@@ -20,9 +20,9 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            var pathToToeknizeFile = PathToProject + "Input/sentences/wsj-tokenize.train";
+            var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 
-            var sentence = "The sole limited partner of the partnership is Westwood Brick Lime Inc., an indirect subsidiary of Westwood Group Inc.";
+            var sentence = "It’s Bravo Team|…";
             var sentenceParser = new SentenceParser();
             var test = sentenceParser.Tokenize(sentence);
 
