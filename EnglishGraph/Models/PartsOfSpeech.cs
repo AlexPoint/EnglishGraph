@@ -16,6 +16,8 @@ namespace EnglishGraph.Models
         public const byte VerbSimplePast = 12;
         public const byte VerbPastParticiple = 13;
         public const byte Gerundive = 14;
+        public const byte Verb1stPersSingular = 15;
+        public const byte Verb2ndPersSingular = 16;
 
 
         // Nouns ------------------------------
@@ -63,8 +65,13 @@ namespace EnglishGraph.Models
         // Acronyms & abbreviations ------
         // Are abbreviations a true part of speech?
         public const byte Abbreviation = 90;
+        public const byte Contractions = 91;
 
-        
+
+        public static bool IsVerb(byte pos)
+        {
+            return 10 <= pos && pos < 20;
+        }
 
         public static string Abbrev(byte pos)
         {
@@ -80,6 +87,10 @@ namespace EnglishGraph.Models
                     return "vpp";
                 case Gerundive:
                     return "ger";
+                case Verb1stPersSingular:
+                    return "v1.";
+                case Verb2ndPersSingular:
+                    return "v2.";
                 case Noun:
                     return "n.";
                 case ProperNoun:
@@ -126,6 +137,8 @@ namespace EnglishGraph.Models
                     return "rel. pron.";
                 case Abbreviation:
                     return "abbr.";
+                case Contractions:
+                    return "cont.";
                 default:
                     return "unk.";
             }

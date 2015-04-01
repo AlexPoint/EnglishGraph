@@ -9,6 +9,45 @@ namespace Examples.Classes
 {
     public class Routines
     {
+        public static void LoadContractions(EnglishGraphContext db)
+        {
+            var pronouns = Contractions.Instance;
+
+            var contractions = pronouns.AllContractions
+                .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.Contractions))
+                .ToList();
+            var nonContractedForms = pronouns.AllContractions
+                .Select(tup => tup.Item2)
+                .ToList();
+
+            var contractionEntries = DbUtilities.GetOrCreate(contractions, db);
+            var nonContractedFormEntries = DbUtilities.GetEntries(nonContractedForms, db)
+                .Where(ent => PartsOfSpeech.IsVerb(ent.PartOfSpeech));
+
+            var relationships = pronouns.AllContractions
+                .Select(tup => new DictionaryEntryRelationship()
+                {
+                    Source = nonContractedFormEntries.First(ent => ent.Word == tup.Item2),
+                    Target = contractionEntries.First(ent => ent.Word == tup.Item1),
+                    Type = DictionaryEntryRelationshipTypes.ContractedFormOf
+                })
+                .ToList();
+            DbUtilities.GetOrCreate(relationships, db);
+        }
+
+        public static void LoadVerb1stAnd2ndForms(EnglishGraphContext db)
+        {
+            var firstForms = new List<string>() {"am"}
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.Verb1stPersSingular))
+                .ToList();
+            DbUtilities.GetOrCreate(firstForms, db);
+
+            var secondForms = new List<string>() {"are"}
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.Verb2ndPersSingular))
+                .ToList();
+            DbUtilities.GetOrCreate(secondForms, db);
+        }
+
 
         public static void LoadSimplePastForms(EnglishGraphContext db)
         {

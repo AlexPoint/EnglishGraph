@@ -46,8 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Conjunctions.cs" />
+    <Compile Include="Models\Contractions.cs" />
     <Compile Include="Models\Determiners.cs" />
     <Compile Include="Models\DictionaryEntryRelationship.cs" />
+    <Compile Include="Models\EnglishDictionary.cs" />
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
     <Compile Include="Models\IrregularVerbs.cs" />
@@ -84,6 +86,7 @@
     <None Include="Resources\irregular_verbs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\contractions.txt" />
     <Content Include="Resources\coordinating_conjunctions.txt" />
     <None Include="Resources\relative_pronouns.txt" />
     <None Include="Resources\interrogative_pronouns.txt" />

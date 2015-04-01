@@ -61,6 +61,20 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;m	am
+        ///&apos;re	are
+        ///&apos;s	is
+        ///&apos;s	has
+        ///&apos;d	would
+        ///&apos;ll	will.
+        /// </summary>
+        public static string contractions {
+            get {
+                return ResourceManager.GetString("contractions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to and
         ///but
         ///or

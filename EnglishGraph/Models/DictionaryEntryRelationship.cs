@@ -29,5 +29,7 @@ namespace EnglishGraph.Models
         public const byte NounToNoun = 26;
 
         public const byte AdjectiveToNoun = 30;
+
+        public const byte ContractedFormOf = 91;
     }
 }
