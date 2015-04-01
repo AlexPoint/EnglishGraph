@@ -20,6 +20,10 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
+            Routines.LoadVerb1stAnd2ndForms(db);
+
+            Routines.LoadContractions(db);
+
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 
             var sentenceParser = new SentenceParser();
@@ -49,9 +53,8 @@ namespace Examples
             var sentenceParser = new SentenceParser();
 
             var entries = db.DictionaryEntries.ToList();
+            var dictionary = new EnglishDictionary(entries);
             var posDetector = new PartOfSpeechDetector();
-
-            var words = entries.Select(de => de.Word).ToList();
 
             var sentences = File.ReadLines(pathToSentenceFile);
             foreach (var sentence in sentences)
@@ -70,21 +73,17 @@ namespace Examples
                         continue;
                     }
                     
-                    var isInDictionary = words.Any(w => w == token);
+                    var isInDictionary = dictionary.Contains(token);
                     if (!isInDictionary)
                     {
                         // test if the word already exist with a different case
-                        var wordsWithDifferentCase = words.Where(w => string.Equals(w, token, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                        if (wordsWithDifferentCase.Any())
+                        var hasWordWithDifferentCase = dictionary.Contains(token, StringComparison.InvariantCultureIgnoreCase);
+                        if (hasWordWithDifferentCase)
                         {
-                            if (i > 0)
-                            {
-                                //Console.WriteLine("'{0}' not in dictionary but '{1}' exist", token, string.Join("|", wordsWithDifferentCase)); 
-                            }
                             continue;
                         }
 
-                        var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, entries);
+                        var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, dictionary);
                         if (searchedEntry.PartOfSpeech == onlyEntriesOfPos)
                         {
                             Console.WriteLine("----");
@@ -100,7 +99,7 @@ namespace Examples
                                 Console.WriteLine();*/
                                 // add to dictionary
                                 var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
-                                words.Add(entryCreated.Word);
+                                dictionary.Add(entryCreated);
                             /*} */
                         }
                     }

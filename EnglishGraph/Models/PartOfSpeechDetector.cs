@@ -10,7 +10,7 @@ namespace EnglishGraph.Models
     public class PartOfSpeechDetector
     {
 
-        public DictionaryEntry Detect(string token, bool isFirstTokenInSentence, bool isLastTokenInSentence, List<DictionaryEntry> dictionary)
+        public DictionaryEntry Detect(string token, bool isFirstTokenInSentence, bool isLastTokenInSentence, EnglishDictionary dictionary)
         {
             // Compound words
             if (token.Contains("-"))
@@ -63,12 +63,13 @@ namespace EnglishGraph.Models
                 }
 
                 var singularForm = token.Substring(0, token.Length - 3) + 'y';
-                var singularFormInDb = dictionary
+                /*var singularFormInDb = dictionary
                     .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
                     .ToList()
                     // case sensitive search
-                    .FirstOrDefault(ent => ent.Word == singularForm);
-                if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.Noun)
+                    .FirstOrDefault(ent => ent.Word == singularForm);*/
+                DictionaryEntry singularFormInDb;
+                if (dictionary.TryGetEntry(singularForm, PartsOfSpeech.Noun, out singularFormInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -118,12 +119,13 @@ namespace EnglishGraph.Models
                 }
 
                 var singularForm = token.Substring(0, token.Length - 2);
-                var singularFormInDb = dictionary
+                /*var singularFormInDb = dictionary
                     .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
                     .ToList()
                     // case sensitive search
-                    .FirstOrDefault(ent => ent.Word == singularForm);
-                if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.Noun)
+                    .FirstOrDefault(ent => ent.Word == singularForm);*/
+                DictionaryEntry singularFormInDb;
+                if (dictionary.TryGetEntry(singularForm, PartsOfSpeech.Noun, out singularFormInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -173,12 +175,13 @@ namespace EnglishGraph.Models
                 }
 
                 var singularForm = token.Substring(0, token.Length - 1);
-                var singularFormInDb = dictionary
+                /*var singularFormInDb = dictionary
                     .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
                     .ToList()
                     // case sensitive search
-                    .FirstOrDefault(ent => ent.Word == singularForm);
-                if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.Noun)
+                    .FirstOrDefault(ent => ent.Word == singularForm);*/
+                DictionaryEntry singularFormInDb;
+                if (dictionary.TryGetEntry(singularForm, PartsOfSpeech.Noun, out singularFormInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -232,11 +235,12 @@ namespace EnglishGraph.Models
                 var adjective = lastChar == 'i'
                     ? token.Substring(0, token.Length - 5) + 'y'
                     : token.Substring(0, token.Length - 4);
-                var adjectiveInDb = dictionary
+                /*var adjectiveInDb = dictionary
                     .Where(ent => ent.Word == adjective && ent.PartOfSpeech == PartsOfSpeech.Adjective)
                     .ToList()
-                    .FirstOrDefault(ent => ent.Word == adjective);
-                if (adjectiveInDb != null)
+                    .FirstOrDefault(ent => ent.Word == adjective);*/
+                DictionaryEntry adjectiveInDb;
+                if (dictionary.TryGetEntry(adjective, PartsOfSpeech.Adjective, out adjectiveInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -269,11 +273,12 @@ namespace EnglishGraph.Models
 
                 // Extract adjective from noun; 1 expection, possibility -> possible
                 var adjective = token.Substring(0, token.Length - 5) + "le";
-                var adjectiveInDb = dictionary
+                /*var adjectiveInDb = dictionary
                     .Where(ent => ent.Word == adjective && ent.PartOfSpeech == PartsOfSpeech.Adjective)
                     .ToList()
-                    .FirstOrDefault(ent => ent.Word == adjective);
-                if (adjectiveInDb != null)
+                    .FirstOrDefault(ent => ent.Word == adjective);*/
+                DictionaryEntry adjectiveInDb;
+                if (dictionary.TryGetEntry(adjective, PartsOfSpeech.Adjective, out adjectiveInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -306,11 +311,12 @@ namespace EnglishGraph.Models
 
                 // Extract adjective from noun; 1 expection, arrangement -> arrange
                 var verb = token.Substring(0, token.Length - 4);
-                var verbInDb = dictionary
+                /*var verbInDb = dictionary
                     .Where(ent => ent.Word == verb && ent.PartOfSpeech == PartsOfSpeech.Verb)
                     .ToList()
-                    .FirstOrDefault(ent => ent.Word == verb);
-                if (verbInDb != null)
+                    .FirstOrDefault(ent => ent.Word == verb);*/
+                DictionaryEntry verbInDb;
+                if (dictionary.TryGetEntry(verb, PartsOfSpeech.Verb, out verbInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -343,11 +349,12 @@ namespace EnglishGraph.Models
 
                 // Extract noun from noun; 1 expection, partnership -> partner / neighbourhoud -> neighbour
                 var noun = token.Substring(0, token.Length - 4);
-                var nounIndDb = dictionary
+                /*var nounIndDb = dictionary
                     .Where(ent => ent.Word == noun && ent.PartOfSpeech == PartsOfSpeech.Noun)
                     .ToList()
-                    .FirstOrDefault(ent => ent.Word == noun);
-                if (nounIndDb != null)
+                    .FirstOrDefault(ent => ent.Word == noun);*/
+                DictionaryEntry nounInDb;
+                if (dictionary.TryGetEntry(noun, PartsOfSpeech.Noun, out nounInDb))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -358,7 +365,7 @@ namespace EnglishGraph.Models
                             new DictionaryEntryRelationship()
                             {
                                 Type = DictionaryEntryRelationshipTypes.NounToNoun,
-                                Source = nounIndDb
+                                Source = nounInDb
                             }
                         }
                     };
@@ -382,11 +389,12 @@ namespace EnglishGraph.Models
                 // TODO handle plurals - complexities
                 var adjective = token.Substring(0, token.Length - 3);
                 var potentialAdjectives = new List<string>() {adjective, adjective + "e"};
-                var adjectiveInDb = dictionary
+                /*var adjectiveInDb = dictionary
                     .Where(ent => potentialAdjectives.Contains(ent.Word) && ent.PartOfSpeech == PartsOfSpeech.Adjective)
                     .ToList()
-                    .FirstOrDefault(ent => potentialAdjectives.Contains(ent.Word));
-                if (adjectiveInDb != null)
+                    .FirstOrDefault(ent => potentialAdjectives.Contains(ent.Word));*/
+                DictionaryEntry adjectiveInDb = null;
+                if (potentialAdjectives.Any(adj => dictionary.TryGetEntry(adj, PartsOfSpeech.Adjective, out adjectiveInDb)))
                 {
                     var entry = new DictionaryEntry()
                     {
@@ -421,11 +429,12 @@ namespace EnglishGraph.Models
                 // One exception: tireless -> don't come from noun 'tire' (but from the verb) - TODO: handle later
                 // Extract noun from adjective
                 var noun = token.Substring(0, token.Length - 4);
-                var nounInDb = dictionary
+                /*var nounInDb = dictionary
                     .Where(ent => ent.Word == noun && ent.PartOfSpeech == PartsOfSpeech.Noun)
                     .ToList()
-                    .FirstOrDefault(ent => ent.Word == noun);
-                if (nounInDb != null)
+                    .FirstOrDefault(ent => ent.Word == noun);*/
+                DictionaryEntry nounInDb;
+                if (dictionary.TryGetEntry(noun, PartsOfSpeech.Noun, out nounInDb))
                 {
                     var entry = new DictionaryEntry()
                     {

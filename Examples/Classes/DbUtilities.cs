@@ -81,6 +81,9 @@ namespace Examples.Classes
         {
             var entries = db.DictionaryEntries
                 .Where(de => words.Contains(de.Word))
+                .ToList()
+                // case sensitive
+                .Where(de => words.Contains(de.Word))
                 .ToList();
             return entries;
         }
