@@ -25,7 +25,7 @@ namespace Examples
             var sentenceParser = new SentenceParser();
             
 
-            RunUnknownWordDetection(db, PartsOfSpeech.Adjective);
+            RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);

@@ -53,6 +53,61 @@ namespace EnglishGraph.Models
                 };
             }
 
+            // Plural in "ies"
+            if (token.EndsWith("ies"))
+            {
+                // lower case the first letter if necessary
+                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                {
+                    token = char.ToLower(token.First()) + token.Substring(1);
+                }
+
+                var singularForm = token.Substring(0, token.Length - 3) + 'y';
+                var singularFormInDb = dictionary
+                    .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
+                    .ToList()
+                    // case sensitive search
+                    .FirstOrDefault(ent => ent.Word == singularForm);
+                if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.Noun)
+                {
+                    var entry = new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.NounPlural,
+                        StemmedFromRelationships = new List<DictionaryEntryRelationship>()
+                        {
+                            new DictionaryEntryRelationship()
+                            {
+                                Type = DictionaryEntryRelationshipTypes.NounPlural,
+                                Source = singularFormInDb
+                            }
+                        }
+                    };
+                    return entry;
+                }
+                else if (singularFormInDb != null && singularFormInDb.PartOfSpeech == PartsOfSpeech.ProperNoun)
+                {
+                    var entry = new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.ProperNounPlural,
+                        StemmedFromRelationships = new List<DictionaryEntryRelationship>()
+                        {
+                            new DictionaryEntryRelationship()
+                            {
+                                Type = DictionaryEntryRelationshipTypes.ProperNounPlural,
+                                Source = singularFormInDb
+                            }
+                        }
+                    };
+                    return entry;
+                }
+                else
+                {
+                    Console.WriteLine("{0} not in db / {1} wasn't created", singularForm, token);
+                }
+            }
+
             // Plural in "es"
             if (token.EndsWith("es"))
             {
