@@ -9,7 +9,9 @@ namespace EnglishGraph.Models
     public class EnglishDictionary
     {
 
-        private Dictionary<DictionaryEntry, DictionaryEntry> entries;
+        private readonly Dictionary<DictionaryEntry, DictionaryEntry> entries;
+        private readonly HashSet<string> lowerCasedWords;
+        private readonly HashSet<string> words;
 
         public EnglishDictionary(IEnumerable<DictionaryEntry> initialEntries)
         {
@@ -18,6 +20,9 @@ namespace EnglishGraph.Models
             {
                 Add(initialEntry);
             }
+
+            lowerCasedWords = new HashSet<string>(initialEntries.Select(ent => ent.Word.ToLower()));
+            words = new HashSet<string>(initialEntries.Select(ent => ent.Word));
         }
 
         public bool TryGetEntry(string word, byte pos, out DictionaryEntry entry)
@@ -34,9 +39,13 @@ namespace EnglishGraph.Models
             });
         }
 
-        public bool Contains(string word, StringComparison stringComparison = StringComparison.InvariantCulture)
+        public bool Contains(string word)
         {
-            return entries.Any(ent => string.Equals(ent.Key.Word, word, stringComparison));
+            return words.Contains(word);
+        }
+        public bool ContainsIgnoreCase(string word)
+        {
+            return lowerCasedWords.Contains(word.ToLower());
         }
 
         public void Add(DictionaryEntry entry)

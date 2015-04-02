@@ -78,7 +78,7 @@ namespace Examples
                     if (!isInDictionary)
                     {
                         // test if the word already exist with a different case
-                        var hasWordWithDifferentCase = dictionary.Contains(token, StringComparison.InvariantCultureIgnoreCase);
+                        var hasWordWithDifferentCase = dictionary.ContainsIgnoreCase(token);
                         if (hasWordWithDifferentCase)
                         {
                             continue;
