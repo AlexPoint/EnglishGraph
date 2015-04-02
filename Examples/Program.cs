@@ -20,6 +20,7 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
+            Routines.LoadModals(db);
             Routines.LoadVerb1stAnd2ndForms(db);
 
             Routines.LoadContractions(db);

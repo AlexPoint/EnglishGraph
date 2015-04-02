@@ -35,6 +35,22 @@ namespace Examples.Classes
             DbUtilities.GetOrCreate(relationships, db);
         }
 
+        public static void LoadModals(EnglishGraphContext db)
+        {
+            var modals = Modals.Instance
+                .AllModals
+                .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.Modal))
+                .ToList();
+
+            // Delete modals already added as verb
+            var existingModalsAsVerb = DbUtilities.GetEntries(modals.Select(m => m.Item1).ToList(), db)
+                .Where(ent => PartsOfSpeech.IsVerb(ent.PartOfSpeech) && ent.PartOfSpeech != PartsOfSpeech.Modal)
+                .ToList();
+            db.DictionaryEntries.RemoveRange(existingModalsAsVerb);
+            db.SaveChanges();
+
+            DbUtilities.GetOrCreate(modals, db);
+        }
         public static void LoadVerb1stAnd2ndForms(EnglishGraphContext db)
         {
             var firstForms = new List<string>() {"am"}

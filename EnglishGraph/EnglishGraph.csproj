@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Models\Conjunctions.cs" />
     <Compile Include="Models\Contractions.cs" />
+    <Compile Include="Models\Modals.cs" />
     <Compile Include="Models\Determiners.cs" />
     <Compile Include="Models\DictionaryEntryRelationship.cs" />
     <Compile Include="Models\EnglishDictionary.cs" />
@@ -86,6 +87,7 @@
     <None Include="Resources\irregular_verbs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\modals.txt" />
     <Content Include="Resources\contractions.txt" />
     <Content Include="Resources\coordinating_conjunctions.txt" />
     <None Include="Resources\relative_pronouns.txt" />

@@ -18,6 +18,7 @@ namespace EnglishGraph.Models
         public const byte Gerundive = 14;
         public const byte Verb1stPersSingular = 15;
         public const byte Verb2ndPersSingular = 16;
+        public const byte Modal = 17;
 
 
         // Nouns ------------------------------
@@ -91,6 +92,8 @@ namespace EnglishGraph.Models
                     return "v1.";
                 case Verb2ndPersSingular:
                     return "v2.";
+                case Modal:
+                    return "mod.";
                 case Noun:
                     return "n.";
                 case ProperNoun:
