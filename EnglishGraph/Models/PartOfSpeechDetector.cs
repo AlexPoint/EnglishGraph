@@ -9,8 +9,18 @@ namespace EnglishGraph.Models
 {
     public class PartOfSpeechDetector
     {
-
-        public DictionaryEntry Detect(string token, bool isFirstTokenInSentence, bool isLastTokenInSentence, EnglishDictionary dictionary)
+        /// <summary>
+        /// Detects the POS of a dictionary entry.
+        /// Two options:
+        /// - the entry already exist in the dictionary --> return it
+        /// - the entry don't exist in the dictionary --> try to link it to existing entries (via suffixes/prefixes etc.)
+        /// </summary>
+        /// <param name="token">The token for the dictionary entry to find the POS</param>
+        /// <param name="isFirstTokenInSentence">Whether it's the first token in sentence (not always known)</param>
+        /// <param name="isLastTokenInSentence">Whether it's the last word token (not '.' typically) in sentence (not always known)</param>
+        /// <param name="dictionary">The known English word in the dictionary</param>
+        /// <returns>The dictionary entry (word + POS)</returns>
+        public DictionaryEntry DetectPos(string token, bool? isFirstTokenInSentence, bool? isLastTokenInSentence, EnglishDictionary dictionary)
         {
             // Compound words
             if (token.Contains("-"))
@@ -24,27 +34,18 @@ namespace EnglishGraph.Models
             }
 
             // Abbreviations
-            if ((token.EndsWith(".") && !isLastTokenInSentence) || Regex.IsMatch(token, "(^[A-Z]\\.)+$"))
+            if ((token.EndsWith(".") && isLastTokenInSentence.HasValue && !isLastTokenInSentence.Value) || Regex.IsMatch(token, "(^[A-Z]\\.)+$"))
             {
-                /*var trimmedToken = token.Trim('.');
-                var isTrimmedTokenInDb = dictionary.Any(de => de.Word == trimmedToken);
-                if (!isTrimmedTokenInDb)
-                {*/
-                    return new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Abbreviation
-                    };
-                /*}
-                else
+                return new DictionaryEntry()
                 {
-                    Console.WriteLine("Didn't created abbreviation '{0}' - '{1}' already in db", token, trimmedToken);
-                }*/
+                    Word = token,
+                    PartOfSpeech = PartsOfSpeech.Abbreviation
+                };
             }
 
             // Proper nouns - TODO: handle plural forms?
-            if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token) 
-                && !isFirstTokenInSentence)
+            if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token) 
+                && isFirstTokenInSentence.HasValue && !isFirstTokenInSentence.Value)
             {
                 return new DictionaryEntry()
                 {
@@ -57,17 +58,12 @@ namespace EnglishGraph.Models
             if (token.EndsWith("ies"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
 
                 var singularForm = token.Substring(0, token.Length - 3) + 'y';
-                /*var singularFormInDb = dictionary
-                    .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
-                    .ToList()
-                    // case sensitive search
-                    .FirstOrDefault(ent => ent.Word == singularForm);*/
                 DictionaryEntry singularFormInDb;
                 if (dictionary.TryGetEntry(singularForm, PartsOfSpeech.Noun, out singularFormInDb))
                 {
@@ -113,17 +109,12 @@ namespace EnglishGraph.Models
             if (token.EndsWith("es"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
 
                 var singularForm = token.Substring(0, token.Length - 2);
-                /*var singularFormInDb = dictionary
-                    .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
-                    .ToList()
-                    // case sensitive search
-                    .FirstOrDefault(ent => ent.Word == singularForm);*/
                 DictionaryEntry singularFormInDb;
                 if (dictionary.TryGetEntry(singularForm, PartsOfSpeech.Noun, out singularFormInDb))
                 {
@@ -169,17 +160,12 @@ namespace EnglishGraph.Models
             if (token.EndsWith("s"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
 
                 var singularForm = token.Substring(0, token.Length - 1);
-                /*var singularFormInDb = dictionary
-                    .Where(ent => ent.Word == singularForm && ent.PartOfSpeech == PartsOfSpeech.Noun)
-                    .ToList()
-                    // case sensitive search
-                    .FirstOrDefault(ent => ent.Word == singularForm);*/
                 DictionaryEntry singularFormInDb;
                 if (dictionary.TryGetEntry(singularForm, PartsOfSpeech.Noun, out singularFormInDb))
                 {
@@ -225,7 +211,7 @@ namespace EnglishGraph.Models
             if (token.EndsWith("ness"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
@@ -235,10 +221,6 @@ namespace EnglishGraph.Models
                 var adjective = lastChar == 'i'
                     ? token.Substring(0, token.Length - 5) + 'y'
                     : token.Substring(0, token.Length - 4);
-                /*var adjectiveInDb = dictionary
-                    .Where(ent => ent.Word == adjective && ent.PartOfSpeech == PartsOfSpeech.Adjective)
-                    .ToList()
-                    .FirstOrDefault(ent => ent.Word == adjective);*/
                 DictionaryEntry adjectiveInDb;
                 if (dictionary.TryGetEntry(adjective, PartsOfSpeech.Adjective, out adjectiveInDb))
                 {
@@ -266,17 +248,13 @@ namespace EnglishGraph.Models
             if (token.EndsWith("ility"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
 
                 // Extract adjective from noun; 1 expection, possibility -> possible
                 var adjective = token.Substring(0, token.Length - 5) + "le";
-                /*var adjectiveInDb = dictionary
-                    .Where(ent => ent.Word == adjective && ent.PartOfSpeech == PartsOfSpeech.Adjective)
-                    .ToList()
-                    .FirstOrDefault(ent => ent.Word == adjective);*/
                 DictionaryEntry adjectiveInDb;
                 if (dictionary.TryGetEntry(adjective, PartsOfSpeech.Adjective, out adjectiveInDb))
                 {
@@ -304,17 +282,13 @@ namespace EnglishGraph.Models
             if (token.EndsWith("ment"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
 
                 // Extract adjective from noun; 1 expection, arrangement -> arrange
                 var verb = token.Substring(0, token.Length - 4);
-                /*var verbInDb = dictionary
-                    .Where(ent => ent.Word == verb && ent.PartOfSpeech == PartsOfSpeech.Verb)
-                    .ToList()
-                    .FirstOrDefault(ent => ent.Word == verb);*/
                 DictionaryEntry verbInDb;
                 if (dictionary.TryGetEntry(verb, PartsOfSpeech.Verb, out verbInDb))
                 {
@@ -342,17 +316,13 @@ namespace EnglishGraph.Models
             if (token.EndsWith("ship") || token.EndsWith("hood"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
 
                 // Extract noun from noun; 1 expection, partnership -> partner / neighbourhoud -> neighbour
                 var noun = token.Substring(0, token.Length - 4);
-                /*var nounIndDb = dictionary
-                    .Where(ent => ent.Word == noun && ent.PartOfSpeech == PartsOfSpeech.Noun)
-                    .ToList()
-                    .FirstOrDefault(ent => ent.Word == noun);*/
                 DictionaryEntry nounInDb;
                 if (dictionary.TryGetEntry(noun, PartsOfSpeech.Noun, out nounInDb))
                 {
@@ -380,7 +350,7 @@ namespace EnglishGraph.Models
             if (token.EndsWith("ity"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
@@ -389,10 +359,6 @@ namespace EnglishGraph.Models
                 // TODO handle plurals - complexities
                 var adjective = token.Substring(0, token.Length - 3);
                 var potentialAdjectives = new List<string>() {adjective, adjective + "e"};
-                /*var adjectiveInDb = dictionary
-                    .Where(ent => potentialAdjectives.Contains(ent.Word) && ent.PartOfSpeech == PartsOfSpeech.Adjective)
-                    .ToList()
-                    .FirstOrDefault(ent => potentialAdjectives.Contains(ent.Word));*/
                 DictionaryEntry adjectiveInDb = null;
                 if (potentialAdjectives.Any(adj => dictionary.TryGetEntry(adj, PartsOfSpeech.Adjective, out adjectiveInDb)))
                 {
@@ -421,7 +387,7 @@ namespace EnglishGraph.Models
             if (token.EndsWith("less") || token.EndsWith("free"))
             {
                 // lower case the first letter if necessary
-                if (StringUtilities.IsFirstLetterUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
+                if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
                 {
                     token = char.ToLower(token.First()) + token.Substring(1);
                 }
@@ -429,10 +395,6 @@ namespace EnglishGraph.Models
                 // One exception: tireless -> don't come from noun 'tire' (but from the verb) - TODO: handle later
                 // Extract noun from adjective
                 var noun = token.Substring(0, token.Length - 4);
-                /*var nounInDb = dictionary
-                    .Where(ent => ent.Word == noun && ent.PartOfSpeech == PartsOfSpeech.Noun)
-                    .ToList()
-                    .FirstOrDefault(ent => ent.Word == noun);*/
                 DictionaryEntry nounInDb;
                 if (dictionary.TryGetEntry(noun, PartsOfSpeech.Noun, out nounInDb))
                 {

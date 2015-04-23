@@ -61,15 +61,20 @@ namespace Examples
             foreach (var sentence in sentences)
             {
                 var tokens = sentenceParser.Tokenize(sentence);
+                var lastWordToken = tokens.LastOrDefault(StringUtilities.IsWordToken);
+                var indexOfLastWordToken = lastWordToken != null ? tokens.LastIndexOf(lastWordToken) : -1;
 
                 for (var i = 0; i < tokens.Count; i++)
                 {
                     var token = tokens[i];
-                    // if figure/punctuation -> can ignore
-                    if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token)
-                        || StringUtilities.IsCompoundWord(token))
+                    if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token))
                     {
-                        //Console.WriteLine("----");
+                        // if figure/punctuation -> can ignore
+                        continue;
+                    }
+                    else if (StringUtilities.IsCompoundWord(token))
+                    {
+                        // if compound word, ignore for the moment
                         //Console.WriteLine("'{0}' ignored", token);
                         continue;
                     }
@@ -84,24 +89,15 @@ namespace Examples
                             continue;
                         }
 
-                        var searchedEntry = posDetector.Detect(token, i == 0, i == tokens.Count - 1, dictionary);
+                        var searchedEntry = posDetector.DetectPos(token, i == 0, i == indexOfLastWordToken, dictionary);
                         if (searchedEntry.PartOfSpeech == onlyEntriesOfPos)
                         {
                             Console.WriteLine("----");
                             Console.WriteLine("'{0}' in '{1}'", token, sentence);
-                            /*Console.WriteLine("Create: {0} {1} ('y' for yes)", searchedEntry,
-                                searchedEntry.StemmedFromRelationships != null && searchedEntry.StemmedFromRelationships.Any() ?
-                                string.Format("{0} of {1}", searchedEntry.StemmedFromRelationships.First().Type, searchedEntry.StemmedFromRelationships.First().Source.Word) :
-                                "");
-
-                            var key = Console.ReadKey();
-                            if (key.KeyChar == 'y')
-                            {
-                                Console.WriteLine();*/
-                                // add to dictionary
-                                var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
-                                dictionary.Add(entryCreated);
-                            /*} */
+                            
+                            // add to dictionary
+                            var entryCreated = DbUtilities.GetOrCreate(searchedEntry, db);
+                            dictionary.Add(entryCreated);
                         }
                     }
                 }
