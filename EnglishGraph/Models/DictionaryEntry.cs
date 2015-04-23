@@ -20,6 +20,13 @@ namespace EnglishGraph.Models
         public List<DictionaryEntryRelationship> StemmedFromRelationships { get; set; }
 
 
+        public DictionaryEntry()
+        {
+            this.Synsets = new List<SynsetDictionaryEntry>();
+            this.DerivedRelationships = new List<DictionaryEntryRelationship>();
+            this.StemmedFromRelationships = new List<DictionaryEntryRelationship>();
+        }
+
         public override string ToString()
         {
             return string.Format("{0} ({1})",  this.Word, PartsOfSpeech.Abbrev(this.PartOfSpeech));

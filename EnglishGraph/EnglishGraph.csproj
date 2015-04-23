@@ -54,9 +54,12 @@
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
     <Compile Include="Models\IrregularVerbs.cs" />
-    <Compile Include="Models\PartOfSpeechDetector.cs" />
+    <Compile Include="Models\PosDetection\PartOfSpeechDetector.cs" />
     <Compile Include="Models\PartsOfSpeech.cs" />
     <Compile Include="Models\DictionaryEntry.cs" />
+    <Compile Include="Models\PosDetection\PosDetectionRule.cs" />
+    <Compile Include="Models\PosDetection\SuffixBasedPosDetectionRule.cs" />
+    <Compile Include="Models\PosDetection\TokenAndPositionInSentence.cs" />
     <Compile Include="Models\Prepositions.cs" />
     <Compile Include="Models\Pronouns.cs" />
     <Compile Include="Models\Pronunciations.cs" />

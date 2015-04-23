@@ -1,0 +1,177 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace EnglishGraph.Models.PosDetection
+{
+    public class PartOfSpeechDetector
+    {
+        private static readonly List<PosDetectionRule> PosDetectionRules = new List<PosDetectionRule>()
+        {
+            // unknown POS for compound words - TODO: handle compound words
+            new PosDetectionRule()
+            {
+                MatchingCondition = a => a.Token.Contains("-"),
+                DictionaryEntryCreator = tok => new DictionaryEntry()
+                {
+                    Word = tok,
+                    PartOfSpeech = PartsOfSpeech.Unknown
+                }
+            },
+            // abbreviations - TODO: consolidate those conditions
+            new PosDetectionRule()
+            {
+                MatchingCondition = a => 
+                    (a.Token.EndsWith(".") && a.IsLastWordTokenInSentence.HasValue && !a.IsLastWordTokenInSentence.Value) 
+                    || Regex.IsMatch(a.Token, "(^[A-Z]\\.)+$"),
+                DictionaryEntryCreator = tok => new DictionaryEntry()
+                {
+                    Word = tok,
+                    PartOfSpeech = PartsOfSpeech.Abbreviation
+                }
+            },
+            // proper nouns
+            new PosDetectionRule()
+            {
+                MatchingCondition = a => 
+                    StringUtilities.IsFirstCharUpperCased(a.Token) && !StringUtilities.IsAllUpperCased(a.Token) 
+                    && a.IsFirstTokenInSentence.HasValue && !a.IsFirstTokenInSentence.Value,
+                DictionaryEntryCreator = tok => new DictionaryEntry()
+                {
+                    Word = tok,
+                    PartOfSpeech = PartsOfSpeech.ProperNoun
+                }
+            },
+
+            // Plural nouns from singular nouns
+            // "s" suffix; strangers -> stranger
+            new SuffixBasedPosDetectionRule("s", "", PartsOfSpeech.NounPlural, DictionaryEntryRelationshipTypes.NounPlural, PartsOfSpeech.Noun),
+            // "es" suffix; wishes -> wish
+            new SuffixBasedPosDetectionRule("es", "", PartsOfSpeech.NounPlural, DictionaryEntryRelationshipTypes.NounPlural, PartsOfSpeech.Noun),
+            // 'ies' suffix; difficulties -> difficulty
+            new SuffixBasedPosDetectionRule("ies", "y", PartsOfSpeech.NounPlural, DictionaryEntryRelationshipTypes.NounPlural, PartsOfSpeech.Noun),
+
+            // Plural nouns from singular nouns
+            // "s" suffix; strangers -> stranger
+            new SuffixBasedPosDetectionRule("s", "", PartsOfSpeech.ProperNounPlural, DictionaryEntryRelationshipTypes.ProperNounPlural, PartsOfSpeech.ProperNoun),
+            // "es" suffix; wishes -> wish
+            new SuffixBasedPosDetectionRule("es", "", PartsOfSpeech.ProperNounPlural, DictionaryEntryRelationshipTypes.ProperNounPlural, PartsOfSpeech.ProperNoun),
+            // 'ies' suffix; difficulties -> difficulty
+            new SuffixBasedPosDetectionRule("ies", "y", PartsOfSpeech.ProperNounPlural, DictionaryEntryRelationshipTypes.ProperNounPlural, PartsOfSpeech.ProperNoun),
+
+            // Nouns from adjectives
+            // 'iness' suffix; happiness -> happy
+            new SuffixBasedPosDetectionRule("iness", "y", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.AdjectiveToNoun, PartsOfSpeech.Adjective),
+            // 'ness' suffix; restlessness -> restless
+            new SuffixBasedPosDetectionRule("ness", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.AdjectiveToNoun, PartsOfSpeech.Adjective),
+            // 'ility' suffix; possibility -> possible
+            new SuffixBasedPosDetectionRule("ility", "le", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.AdjectiveToNoun, PartsOfSpeech.Adjective),
+            // 'ity' suffix; complexity -> complex
+            new SuffixBasedPosDetectionRule("ity", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.AdjectiveToNoun, PartsOfSpeech.Adjective),
+            // 'ity' suffix; immunity -> immune
+            new SuffixBasedPosDetectionRule("ity", "e", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.AdjectiveToNoun, PartsOfSpeech.Adjective),
+
+            // Adjectives from nouns
+            // 'less' suffix; homeless -> home (exception: tireless -> come from verb 'tire' and not noun 'tire' - TODO: handle later)
+            new SuffixBasedPosDetectionRule("less", "", PartsOfSpeech.Adjective, DictionaryEntryRelationshipTypes.NounToAdjective, PartsOfSpeech.Noun),
+            // 'free' suffix; sugarfree -> sugar
+            new SuffixBasedPosDetectionRule("free", "", PartsOfSpeech.Adjective, DictionaryEntryRelationshipTypes.NounToAdjective, PartsOfSpeech.Noun),
+            
+            // Nouns from verbs
+            // 'ment' suffix; judgement -> judge
+            new SuffixBasedPosDetectionRule("ment", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.InfinitiveToNoun, PartsOfSpeech.Verb),
+
+            // Nouns from nouns
+            // 'ship' suffix; relationship -> relation
+            new SuffixBasedPosDetectionRule("ship", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.NounToNoun, PartsOfSpeech.Noun),
+            // 'hood' suffix; brotherhood -> brother
+            new SuffixBasedPosDetectionRule("hood", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.NounToNoun, PartsOfSpeech.Noun),
+        };
+
+        /// <summary>
+        /// Detects the POSs of a dictionary entry.
+        /// Two options:
+        /// - the entry already exist in the dictionary --> return it
+        /// - the entry don't exist in the dictionary --> try to link it to existing entries (via suffixes/prefixes etc.)
+        /// </summary>
+        /// <param name="token">The token for the dictionary entry to find the POS</param>
+        /// <param name="isFirstTokenInSentence">Whether it's the first token in sentence (not always known)</param>
+        /// <param name="isLastTokenInSentence">Whether it's the last word token (not '.' typically) in sentence (not always known)</param>
+        /// <param name="dictionary">The known English word in the dictionary</param>
+        /// <returns>The dictionary entry (word + POS)</returns>
+        public List<DictionaryEntry> DetectPos(string token, bool? isFirstTokenInSentence, bool? isLastTokenInSentence, EnglishDictionary dictionary)
+        {
+            var tokensToSearch = new List<string>() { token };
+            // If we don't know where the token was in the sentence OR that it was at the first position
+            // AND that the first letter is capitalized,
+            // also look for the lower cased token
+            if ((!isFirstTokenInSentence.HasValue || isFirstTokenInSentence.Value) && StringUtilities.IsFirstCharUpperCased(token))
+            {
+                tokensToSearch.Add(StringUtilities.LowerFirstLetter(token));
+            }
+
+            // Find the entries already in the dictionary for those tokens
+            var existingEntries = new List<DictionaryEntry>();
+            foreach (var tokenToSearch in tokensToSearch)
+            {
+                List<DictionaryEntry> entriesInDictionary;
+                if (dictionary.TryGetEntries(tokenToSearch, out entriesInDictionary))
+                {
+                    existingEntries.AddRange(entriesInDictionary);
+                }
+            }
+
+            // Probably the most important assumption in this method:
+            // if we find at least one matching entity, we return it and don't try to detect others through our rules
+            // -> means that if a word already exist with a POS in the dictionary, we won't detect potential other POSs here
+            if (existingEntries.Any())
+            {
+                return existingEntries;
+            }
+            else
+            {
+                var validEntries = new List<DictionaryEntry>();
+
+                foreach (var tokenToSearch in tokensToSearch)
+                {
+                    // If our dictionary is complete, we should very rarely execute this code
+                    // (hence the little consideration for the performance)
+                    var entries = PosDetectionRules
+                        .Where(rule =>
+                                rule.MatchingCondition(new TokenAndPositionInSentence(tokenToSearch, isFirstTokenInSentence,
+                                    isLastTokenInSentence)))
+                        .Select(rule => rule.DictionaryEntryCreator(tokenToSearch))
+                        .ToList();
+
+                    foreach (var entry in entries)
+                    {
+                        // if the entry does not derived from another, return it as is
+                        if (!entry.StemmedFromRelationships.Any())
+                        {
+                            validEntries.Add(entry);
+                        }
+                        else
+                        {
+                            // Otherwise, check that at least one of the derivation rules is valid
+                            var validRelationships = entry.StemmedFromRelationships
+                                .Where(rel =>
+                                        this.DetectPos(rel.Source.Word, isFirstTokenInSentence, isLastTokenInSentence,
+                                            dictionary).Any(ent => ent.PartOfSpeech == rel.Source.PartOfSpeech))
+                                .ToList();
+                            if (validRelationships.Any())
+                            {
+                                entry.StemmedFromRelationships = validRelationships;
+                                validEntries.Add(entry);
+                            }
+                        }
+                    }
+                }
+                
+                return validEntries;
+            }
+        }
+    }
+}
