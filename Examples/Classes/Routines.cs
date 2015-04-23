@@ -10,6 +10,31 @@ namespace Examples.Classes
     public class Routines
     {
         
+        public static void LoadNegativeContractions(EnglishGraphContext db)
+        {
+            var negativeContractions = NegativeContractions.Instance;
+
+            var negContEntries = negativeContractions.AllNegativeContractions
+                .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.NegativeContraction))
+                .ToList();
+            var verbEntries = negativeContractions.AllNegativeContractions
+                .Select(tup => new Tuple<string, byte>(tup.Item2, PartsOfSpeech.Verb))
+                .ToList();
+
+            var negContEntities = DbUtilities.GetOrCreate(negContEntries, db);
+            var verbEntities = DbUtilities.GetOrCreate(verbEntries, db);
+
+            var relationships = negativeContractions.AllNegativeContractions
+                .Select(tup => new DictionaryEntryRelationship()
+                {
+                    Source = negContEntities.First(ent => ent.Word == tup.Item2),
+                    Target = verbEntities.First(ent => ent.Word == tup.Item1),
+                    Type = DictionaryEntryRelationshipTypes.NegativeContractionToVerb
+                })
+                .ToList();
+            DbUtilities.GetOrCreate(relationships, db);
+        }
+
         public static void LoadIrregularSuperlatives(EnglishGraphContext db)
         {
             var irregularSuperlatives = IrregularSuperlatives.Instance;
@@ -22,12 +47,12 @@ namespace Examples.Classes
                 .ToList();
 
             var adjectiveEntities = DbUtilities.GetOrCreate(adjectives, db);
-            var comparativeEntities = DbUtilities.GetOrCreate(superlatives, db);
+            var superlativeEntities = DbUtilities.GetOrCreate(superlatives, db);
 
             var relationships = irregularSuperlatives.AllIrregularSuperlatives
                 .Select(tup => new DictionaryEntryRelationship()
                 {
-                    Source = comparativeEntities.First(ent => ent.Word == tup.Item2),
+                    Source = superlativeEntities.First(ent => ent.Word == tup.Item2),
                     Target = adjectiveEntities.First(ent => ent.Word == tup.Item1),
                     Type = DictionaryEntryRelationshipTypes.SuperlativeToAdjective
                 })

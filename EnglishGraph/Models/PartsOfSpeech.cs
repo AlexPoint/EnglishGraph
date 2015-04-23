@@ -19,6 +19,7 @@ namespace EnglishGraph.Models
         public const byte Verb1stPersSingular = 15;
         public const byte Verb2ndPersSingular = 16;
         public const byte Modal = 17;
+        public const byte NegativeContraction = 18;
 
 
         // Nouns ------------------------------
@@ -96,6 +97,8 @@ namespace EnglishGraph.Models
                     return "v2.";
                 case Modal:
                     return "mod.";
+                case NegativeContraction:
+                    return "v. neg. cont.";
                 case Noun:
                     return "n.";
                 case ProperNoun:

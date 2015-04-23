@@ -21,6 +21,7 @@ namespace EnglishGraph.Models
         public const byte PastParticiple = 13;
         public const byte Gerundive = 14;
         public const byte InfinitiveToNoun = 15;
+        public const byte NegativeContractionToVerb = 18;
 
         public const byte NounPlural = 22;
         public const byte ProperNounPlural = 23;

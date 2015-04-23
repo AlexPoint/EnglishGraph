@@ -23,6 +23,7 @@ namespace Examples
 
             /*Routines.LoadIrregularComparatives(db);
             Routines.LoadIrregularSuperlatives(db);*/
+            Routines.LoadNegativeContractions(db);
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 

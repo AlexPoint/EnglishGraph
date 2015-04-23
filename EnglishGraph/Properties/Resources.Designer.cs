@@ -310,6 +310,36 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to aren&apos;t	are
+        ///isn&apos;t	is
+        ///wasn&apos;t	was
+        ///weren&apos;t	were
+        ///hasn&apos;t	has
+        ///haven&apos;t	have
+        ///hadn&apos;t	had
+        ///didn&apos;t	did
+        ///doesn&apos;t	does
+        ///don&apos;t	do
+        ///won&apos;t	will
+        ///can&apos;t	can
+        ///couldn&apos;t	could
+        ///wouldn&apos;t	would
+        ///mightn&apos;t	might
+        ///mustn&apos;t	must
+        ///needn&apos;t	need
+        ///oughtn&apos;t	ought
+        ///shan&apos;t	shall
+        ///shouldn&apos;t	should
+        ///mayn&apos;t	may
+        ///daren&apos;t	dare.
+        /// </summary>
+        public static string negative_contractions {
+            get {
+                return ResourceManager.GetString("negative_contractions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to me
         ///us
         ///you
