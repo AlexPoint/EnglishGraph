@@ -68,7 +68,9 @@ namespace Examples
                 for (var i = 0; i < tokens.Count; i++)
                 {
                     var token = tokens[i];
-                    if (StringUtilities.IsFigure(token) || StringUtilities.IsPunctuation(token))
+                    if (StringUtilities.IsFigure(token) 
+                        || StringUtilities.IsPunctuation(token)
+                        || StringUtilities.IsTime(token))
                     {
                         // if figure/punctuation -> can ignore
                         continue;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -17,13 +19,15 @@ namespace EnglishGraph.Models
         private const string NumberPattern = "[\\d\\.,\\s]+";
         private const string OnlyNumbersPattern = "^" + NumberPattern + "$";
         private const string PercentagePattern = "^" + NumberPattern + "%$";
+        private const string FractionPattern = "^\\d+/\\d+$";
+        private const string FractionPercentagePattern = "^\\d+/\\d+%$";
         private const string WordTokenPattern = "[a-zA-Z0-9]+";
 
         private static readonly string AmountPattern = string.Format("^({0})?{1}({2})?$", string.Join("|", CurrencySymbols),
             NumberPattern, string.Join("|", CurrencySymbols));
 
         /// <summary>
-        /// Whether a string if a number, percentage or amount (with currency)
+        /// Whether a string is a number, percentage or amount (with currency)
         /// </summary>
         public static bool IsFigure(string input)
         {
@@ -34,7 +38,25 @@ namespace EnglishGraph.Models
 
             return Regex.IsMatch(input, OnlyNumbersPattern)
                 || Regex.IsMatch(input, PercentagePattern)
+                || Regex.IsMatch(input, FractionPattern)
+                || Regex.IsMatch(input, FractionPercentagePattern)
                 || Regex.IsMatch(input, AmountPattern);
+        }
+
+        /// <summary>
+        /// Whether a string is a time
+        /// Supports only en-US time formats for the moment
+        /// </summary>
+        public static bool IsTime(string input)
+        {
+            TimeSpan time;
+            // TODO - pass the culture with the input
+            var success = TimeSpan.TryParse(input, new CultureInfo("en-US"), out time);
+            if (success)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
