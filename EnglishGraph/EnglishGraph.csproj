@@ -56,6 +56,7 @@
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
     <Compile Include="Models\IrregularVerbs.cs" />
+    <Compile Include="Models\PosDetection\DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule.cs" />
     <Compile Include="Models\PosDetection\PartOfSpeechDetector.cs" />
     <Compile Include="Models\PartsOfSpeech.cs" />
     <Compile Include="Models\DictionaryEntry.cs" />
