@@ -142,7 +142,16 @@
   <data name="interrogative_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\interrogative_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="irregular_comparatives" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\irregular_comparatives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="irregular_superlatives" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\irregular_superlatives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="irregular_verbs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\irregular_verbs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="irregular_verbs1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\irregular_verbs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="modals" type="System.Resources.ResXFileRef, System.Windows.Forms">

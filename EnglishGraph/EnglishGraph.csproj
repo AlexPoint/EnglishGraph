@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Conjunctions.cs" />
+    <Compile Include="Models\IrregularSuperlatives.cs" />
+    <Compile Include="Models\IrregularComparatives.cs" />
     <Compile Include="Models\Contractions.cs" />
     <Compile Include="Models\Modals.cs" />
     <Compile Include="Models\Determiners.cs" />
@@ -90,6 +92,8 @@
     <None Include="Resources\irregular_verbs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\irregular_superlatives.txt" />
+    <Content Include="Resources\irregular_comparatives.txt" />
     <Content Include="Resources\modals.txt" />
     <Content Include="Resources\contractions.txt" />
     <Content Include="Resources\coordinating_conjunctions.txt" />

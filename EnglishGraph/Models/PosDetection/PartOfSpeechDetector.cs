@@ -89,6 +89,19 @@ namespace EnglishGraph.Models.PosDetection
             new SuffixBasedPosDetectionRule("ship", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.NounToNoun, PartsOfSpeech.Noun),
             // 'hood' suffix; brotherhood -> brother
             new SuffixBasedPosDetectionRule("hood", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.NounToNoun, PartsOfSpeech.Noun),
+
+            // TODO: Missing doubled consonant termination : bigger, saddest
+            // Comparatives from adjectives
+            // 'er' suffix; harder -> hard
+            new SuffixBasedPosDetectionRule("er", "", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
+            // 'ier' suffix; happier -> happy
+            new SuffixBasedPosDetectionRule("ier", "y", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
+
+            // Superlatives from adjectives
+            // 'est' suffix; fastest -> fast
+            new SuffixBasedPosDetectionRule("est", "", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
+            // 'iest' suffix; happiest -> happy
+            new SuffixBasedPosDetectionRule("iest", "y", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
         };
 
         /// <summary>

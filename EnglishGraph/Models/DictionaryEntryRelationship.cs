@@ -25,6 +25,10 @@ namespace EnglishGraph.Models
         public const byte NounPlural = 22;
         public const byte ProperNounPlural = 23;
 
+        public const byte ComparativeToAdjective = 31;
+        public const byte SuperlativeToAdjective = 32;
+
+
         public const byte NounToAdjective = 25;
         public const byte NounToNoun = 26;
 

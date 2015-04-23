@@ -21,10 +21,11 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            Routines.LoadModals(db);
+            /*Routines.LoadModals(db);
             Routines.LoadVerb1stAnd2ndForms(db);
-
-            Routines.LoadContractions(db);
+            Routines.LoadContractions(db);*/
+            Routines.LoadIrregularComparatives(db);
+            Routines.LoadIrregularSuperlatives(db);
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 

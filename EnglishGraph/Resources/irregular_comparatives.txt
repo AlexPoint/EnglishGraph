@@ -1,0 +1,6 @@
+good	better
+bad	worse
+little	less
+much	more
+far	further
+far	farther

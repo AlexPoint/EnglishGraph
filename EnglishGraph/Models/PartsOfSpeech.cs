@@ -30,6 +30,8 @@ namespace EnglishGraph.Models
 
         // Adjectives -------------------------
         public const byte Adjective = 30;
+        public const byte Comparative = 31;
+        public const byte Superlative = 32;
 
 
         // Adverbs ----------------------------
@@ -104,6 +106,10 @@ namespace EnglishGraph.Models
                     return "pn. pl.";
                 case Adjective:
                     return "adj.";
+                case Comparative:
+                    return "adj. comp.";
+                case Superlative:
+                    return "adj. sup.";
                 case Adverb:
                     return "adv.";
                 case Conjunction:

@@ -1,0 +1,6 @@
+good	best
+bad	worst
+little	least
+much	most
+far	furthest
+far	farthest

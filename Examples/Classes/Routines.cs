@@ -9,6 +9,57 @@ namespace Examples.Classes
 {
     public class Routines
     {
+        
+        public static void LoadIrregularSuperlatives(EnglishGraphContext db)
+        {
+            var irregularSuperlatives = IrregularSuperlatives.Instance;
+
+            var adjectives = irregularSuperlatives.AllIrregularSuperlatives
+                .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.Adjective))
+                .ToList();
+            var superlatives = irregularSuperlatives.AllIrregularSuperlatives
+                .Select(tup => new Tuple<string, byte>(tup.Item2, PartsOfSpeech.Superlative))
+                .ToList();
+
+            var adjectiveEntities = DbUtilities.GetOrCreate(adjectives, db);
+            var comparativeEntities = DbUtilities.GetOrCreate(superlatives, db);
+
+            var relationships = irregularSuperlatives.AllIrregularSuperlatives
+                .Select(tup => new DictionaryEntryRelationship()
+                {
+                    Source = comparativeEntities.First(ent => ent.Word == tup.Item2),
+                    Target = adjectiveEntities.First(ent => ent.Word == tup.Item1),
+                    Type = DictionaryEntryRelationshipTypes.SuperlativeToAdjective
+                })
+                .ToList();
+            DbUtilities.GetOrCreate(relationships, db);
+        }
+
+        public static void LoadIrregularComparatives(EnglishGraphContext db)
+        {
+            var irregularComparatives = IrregularComparatives.Instance;
+
+            var adjectives = irregularComparatives.AllIrregularComparatives
+                .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.Adjective))
+                .ToList();
+            var comparatives = irregularComparatives.AllIrregularComparatives
+                .Select(tup => new Tuple<string, byte>(tup.Item2, PartsOfSpeech.Comparative))
+                .ToList();
+
+            var adjectiveEntities = DbUtilities.GetOrCreate(adjectives, db);
+            var comparativeEntities = DbUtilities.GetOrCreate(comparatives, db);
+
+            var relationships = irregularComparatives.AllIrregularComparatives
+                .Select(tup => new DictionaryEntryRelationship()
+                {
+                    Source = comparativeEntities.First(ent => ent.Word == tup.Item2),
+                    Target = adjectiveEntities.First(ent => ent.Word == tup.Item1),
+                    Type = DictionaryEntryRelationshipTypes.ComparativeToAdjective
+                })
+                .ToList();
+            DbUtilities.GetOrCreate(relationships, db);
+        }
+
         public static void LoadContractions(EnglishGraphContext db)
         {
             var pronouns = Contractions.Instance;
