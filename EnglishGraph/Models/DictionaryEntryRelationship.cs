@@ -36,5 +36,8 @@ namespace EnglishGraph.Models
         public const byte AdjectiveToNoun = 30;
 
         public const byte ContractedFormOf = 91;
+
+        // TODO: not sure this is the right approach (if yes, do the same for the suffix) 
+        public const byte Prefix = 92;
     }
 }

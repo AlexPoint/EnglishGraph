@@ -137,6 +137,54 @@ namespace EnglishGraph.Models.PosDetection
             new SuffixBasedPosDetectionRule("ed", "e", PartsOfSpeech.VerbPastParticiple, DictionaryEntryRelationshipTypes.PastParticiple, PartsOfSpeech.Verb),
             // 'ed' suffix + doubling ending consonant: tanned -> tan
             new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("ed", "", PartsOfSpeech.VerbPastParticiple, DictionaryEntryRelationshipTypes.PastParticiple, PartsOfSpeech.Verb),
+
+            // Prefixes
+            // 'anti' prefix
+            new PrefixBasedPosDetectionRule("anti", PartsOfSpeech.Adjective),
+            new PrefixBasedPosDetectionRule("anti", PartsOfSpeech.Noun),
+            // 'co' prefix
+            new PrefixBasedPosDetectionRule("co", PartsOfSpeech.Noun),
+            new PrefixBasedPosDetectionRule("co", PartsOfSpeech.Verb),
+            // 'dis' prefix
+            new PrefixBasedPosDetectionRule("dis", PartsOfSpeech.Verb),
+            // 'il' prefix
+            new PrefixBasedPosDetectionRule("il", PartsOfSpeech.Adjective),
+            // 'im' prefix
+            new PrefixBasedPosDetectionRule("im", PartsOfSpeech.Adjective),
+            // 'in' prefix
+            new PrefixBasedPosDetectionRule("in", PartsOfSpeech.Adjective),
+            // 'inter' prefix
+            new PrefixBasedPosDetectionRule("inter", PartsOfSpeech.Adjective),
+            // 'ir' prefix
+            new PrefixBasedPosDetectionRule("ir", PartsOfSpeech.Adjective),
+            // 'mis' prefix
+            new PrefixBasedPosDetectionRule("mis", PartsOfSpeech.Verb),
+            // 'over' prefix
+            new PrefixBasedPosDetectionRule("over", PartsOfSpeech.Verb),
+            // 'out' prefix
+            new PrefixBasedPosDetectionRule("out", PartsOfSpeech.Verb),
+            // 'post' prefix
+            new PrefixBasedPosDetectionRule("post", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("post", PartsOfSpeech.Noun),
+            // 'pre' prefix
+            new PrefixBasedPosDetectionRule("pre", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("pre", PartsOfSpeech.Noun),
+            // 'pro' prefix
+            new PrefixBasedPosDetectionRule("pro", PartsOfSpeech.Adjective),
+            new PrefixBasedPosDetectionRule("pro", PartsOfSpeech.Noun),
+            // 'sub' prefix
+            new PrefixBasedPosDetectionRule("sub", PartsOfSpeech.Adjective),
+            // 'super' prefix
+            new PrefixBasedPosDetectionRule("super", PartsOfSpeech.Adjective),
+            new PrefixBasedPosDetectionRule("super", PartsOfSpeech.Noun),
+            // 'trans' prefix
+            new PrefixBasedPosDetectionRule("trans", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("trans", PartsOfSpeech.Noun),
+            // 'un' prefix
+            new PrefixBasedPosDetectionRule("un", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("un", PartsOfSpeech.Adjective),
+            // 'under' prefix
+            new PrefixBasedPosDetectionRule("under", PartsOfSpeech.Verb),
         };
 
         /// <summary>
