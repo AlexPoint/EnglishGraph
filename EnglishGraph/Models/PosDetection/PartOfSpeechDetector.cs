@@ -213,6 +213,17 @@ namespace EnglishGraph.Models.PosDetection
                     }
                 };
             }
+            else if (StringUtilities.IsSymbol(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Punctuation
+                    }
+                };
+            }
             else if (StringUtilities.IsNumber(token))
             {
                 return new List<DictionaryEntry>()

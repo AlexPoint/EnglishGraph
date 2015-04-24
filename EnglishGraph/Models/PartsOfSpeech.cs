@@ -78,8 +78,9 @@ namespace EnglishGraph.Models
         public const byte Fraction = 103;
         public const byte Time = 104;
         public const byte Punctuation = 105;
-        public const byte Compound = 106;
-        public const byte CompoundSlash = 107;
+        public const byte Symbol = 106;
+        public const byte Compound = 107;
+        public const byte CompoundSlash = 108;
 
 
         public static bool IsVerb(byte pos)

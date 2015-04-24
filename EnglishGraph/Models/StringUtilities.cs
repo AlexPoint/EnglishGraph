@@ -90,6 +90,19 @@ namespace EnglishGraph.Models
         }
 
         /// <summary>
+        /// Whether a string contains only symbol characters
+        /// </summary>
+        public static bool IsSymbol(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(input, "^\\p{S}+$");
+        }
+
+        /// <summary>
         /// Whether a string is a compound word, ie if it contains a '-' inside the word.
         /// Ex:
         /// -test -> not compound
