@@ -222,10 +222,34 @@ namespace EnglishGraph.Models.PosDetection
                     }
                 };
             }
-            /*else if (token.Contains("/"))
+            else if (token.Contains("/"))
             {
-                
-            }*/
+                // If we get here, we know it's not a fraction
+                var parts = token.Split('/')
+                    .Select(p => DetectPos(p, isFirstTokenInSentence, isLastTokenInSentence, dictionary))
+                    .ToList();
+                if (parts.All(entries => entries.Any(ent => ent.PartOfSpeech != PartsOfSpeech.Unknown)))
+                {
+                    return new List<DictionaryEntry>()
+                    {
+                        // TODO: structure information to link to other entries from this compound entry
+                        new DictionaryEntry()
+                        {
+                            Word = token,
+                            PartOfSpeech = PartsOfSpeech.CompoundSlash
+                        }
+                    };
+                }
+                // otherwise, at least one of the entry cannot be detected -> the compound entry cannot be detected either
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Unknown
+                    }
+                };
+            }
 
             // If we get here, the word should in db (and if not, we can run the detection rules)
 

@@ -79,6 +79,7 @@ namespace EnglishGraph.Models
         public const byte Time = 104;
         public const byte Punctuation = 105;
         public const byte Compound = 106;
+        public const byte CompoundSlash = 107;
 
 
         public static bool IsVerb(byte pos)
@@ -174,6 +175,8 @@ namespace EnglishGraph.Models
                     return "punct.";
                 case Compound:
                     return "comp.";
+                case CompoundSlash:
+                    return "comp. /";
                 default:
                     return "unk.";
             }
