@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EnglishGraph.Models;
+using EnglishGraph.Models.Resources;
 
 namespace Examples.Classes
 {
@@ -12,12 +13,12 @@ namespace Examples.Classes
         
         public static void LoadNegativeContractions(EnglishGraphContext db)
         {
-            var negativeContractions = NegativeContractions.Instance;
+            var negativeContractions = NegativeContractions.AllContractions;
 
-            var negContEntries = negativeContractions.AllNegativeContractions
+            var negContEntries = negativeContractions
                 .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.NegativeContraction))
                 .ToList();
-            var verbs = negativeContractions.AllNegativeContractions
+            var verbs = negativeContractions
                 .Select(tup => tup.Item2)
                 .ToList();
 
@@ -27,7 +28,7 @@ namespace Examples.Classes
                     && ent.PartOfSpeech != PartsOfSpeech.VerbPastParticiple && ent.PartOfSpeech != PartsOfSpeech.Gerundive)
                 .ToList();
 
-            var relationships = negativeContractions.AllNegativeContractions
+            var relationships = negativeContractions
                 .Select(tup => new DictionaryEntryRelationship()
                 {
                     Source = negContEntities.First(ent => ent.Word == tup.Item1),
@@ -40,19 +41,19 @@ namespace Examples.Classes
 
         public static void LoadIrregularSuperlatives(EnglishGraphContext db)
         {
-            var irregularSuperlatives = IrregularSuperlatives.Instance;
+            var irregularSuperlatives = Superlatives.Exceptions;
 
-            var adjectives = irregularSuperlatives.AllIrregularSuperlatives
+            var adjectives = irregularSuperlatives
                 .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.Adjective))
                 .ToList();
-            var superlatives = irregularSuperlatives.AllIrregularSuperlatives
+            var superlatives = irregularSuperlatives
                 .Select(tup => new Tuple<string, byte>(tup.Item2, PartsOfSpeech.Superlative))
                 .ToList();
 
             var adjectiveEntities = DbUtilities.GetOrCreate(adjectives, db);
             var superlativeEntities = DbUtilities.GetOrCreate(superlatives, db);
 
-            var relationships = irregularSuperlatives.AllIrregularSuperlatives
+            var relationships = irregularSuperlatives
                 .Select(tup => new DictionaryEntryRelationship()
                 {
                     Source = superlativeEntities.First(ent => ent.Word == tup.Item2),
@@ -65,19 +66,19 @@ namespace Examples.Classes
 
         public static void LoadIrregularComparatives(EnglishGraphContext db)
         {
-            var irregularComparatives = IrregularComparatives.Instance;
+            var irregularComparatives = Comparatives.Exceptions;
 
-            var adjectives = irregularComparatives.AllIrregularComparatives
+            var adjectives = irregularComparatives
                 .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.Adjective))
                 .ToList();
-            var comparatives = irregularComparatives.AllIrregularComparatives
+            var comparatives = irregularComparatives
                 .Select(tup => new Tuple<string, byte>(tup.Item2, PartsOfSpeech.Comparative))
                 .ToList();
 
             var adjectiveEntities = DbUtilities.GetOrCreate(adjectives, db);
             var comparativeEntities = DbUtilities.GetOrCreate(comparatives, db);
 
-            var relationships = irregularComparatives.AllIrregularComparatives
+            var relationships = irregularComparatives
                 .Select(tup => new DictionaryEntryRelationship()
                 {
                     Source = comparativeEntities.First(ent => ent.Word == tup.Item2),
@@ -90,12 +91,12 @@ namespace Examples.Classes
 
         public static void LoadContractions(EnglishGraphContext db)
         {
-            var pronouns = Contractions.Instance;
+            var pronouns = Contractions.AllContractions;
 
-            var contractions = pronouns.AllContractions
+            var contractions = pronouns
                 .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.Contractions))
                 .ToList();
-            var nonContractedForms = pronouns.AllContractions
+            var nonContractedForms = pronouns
                 .Select(tup => tup.Item2)
                 .ToList();
 
@@ -103,7 +104,7 @@ namespace Examples.Classes
             var nonContractedFormEntries = DbUtilities.GetEntries(nonContractedForms, db)
                 .Where(ent => PartsOfSpeech.IsVerb(ent.PartOfSpeech));
 
-            var relationships = pronouns.AllContractions
+            var relationships = pronouns
                 .Select(tup => new DictionaryEntryRelationship()
                 {
                     Source = nonContractedFormEntries.First(ent => ent.Word == tup.Item2),
@@ -116,7 +117,7 @@ namespace Examples.Classes
 
         public static void LoadModals(EnglishGraphContext db)
         {
-            var modals = Modals.Instance
+            var modals = Modals
                 .AllModals
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.Modal))
                 .ToList();
@@ -217,33 +218,31 @@ namespace Examples.Classes
 
         public static void LoadPronouns(EnglishGraphContext db, bool includeMwes)
         {
-            var pronouns = Pronouns.Instance;
-
-            var subjPersPronouns = pronouns.AllSubjectPersonalPronouns
+            var subjPersPronouns = Pronouns.SubjectPersonal
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.SubjectPersonalPronoun))
                 .ToList();
-            var objPersPronouns = pronouns.AllObjectPersonalPronouns
+            var objPersPronouns = Pronouns.ObjectPersonal
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.ObjectPersonalPronoun))
                 .ToList();
-            var reflPersPronouns = pronouns.AllReflexivePersonalPronouns
+            var reflPersPronouns = Pronouns.ReflexivePersonal
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.ReflexivePersonalPronoun))
                 .ToList();
-            var possPronouns = pronouns.AllPossessivePronouns
+            var possPronouns = Pronouns.Possessive
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.PossessivePronoun))
                 .ToList();
-            var indefPronouns = pronouns.AllIndefinitePronouns
+            var indefPronouns = Pronouns.Indefinite
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.IndefinitePronoun))
                 .ToList();
-            var interPronouns = pronouns.AllInterrogativePronouns
+            var interPronouns = Pronouns.Interrogative
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.InterrogativePronoun))
                 .ToList();
-            var relPronouns = pronouns.AllRelativePronouns
+            var relPronouns = Pronouns.Relative
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string, byte>(s, PartsOfSpeech.RelativePronoun))
                 .ToList();
@@ -258,9 +257,7 @@ namespace Examples.Classes
 
         public static void LoadPrepositions(EnglishGraphContext db, bool includeMwes)
         {
-            var prepositions = Prepositions.Instance;
-
-            var allPrepositions = prepositions.AllPrepositions
+            var allPrepositions = Prepositions.AllPrepositions
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.Preposition))
                 .ToList();
@@ -269,21 +266,19 @@ namespace Examples.Classes
 
         public static void LoadDeterminers(EnglishGraphContext db, bool includeMwes)
         {
-            var determiners = Determiners.Instance;
-
-            var generalDeterminers = determiners.AllGeneralDeterminers
+            var generalDeterminers = Determiners.General
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.Determiner))
                 .ToList();
-            var articleDeterminers = determiners.AllArticleDeterminers
+            var articleDeterminers = Determiners.Articles
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.ArticleDeterminer))
                 .ToList();
-            var demonstrativeDeterminers = determiners.AllDemonstrativeDeterminers
+            var demonstrativeDeterminers = Determiners.Demonstrative
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.DemonstrativeDeterminer))
                 .ToList();
-            var possessiveDeterminers = determiners.AllPossessiveDeterminers
+            var possessiveDeterminers = Determiners.Possessive
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.PossessiveDeterminer))
                 .ToList();
@@ -295,13 +290,11 @@ namespace Examples.Classes
 
         public static void LoadConjunctions(EnglishGraphContext db, bool includeMwes)
         {
-            var conjunctions = Conjunctions.Instance;
-            
-            var coordinatingConjunctions = conjunctions.AllCoordinatingConjunctions
+            var coordinatingConjunctions = Conjunctions.Coordinating
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.CoordinatingConjunction))
                 .ToList();
-            var subordinatingConjunctions = conjunctions.AllSubordinatingConjunctions
+            var subordinatingConjunctions = Conjunctions.Subordinating
                 .Where(s => includeMwes || !s.Contains(' '))
                 .Select(s => new Tuple<string,byte>(s, PartsOfSpeech.SubordinatingConjunction))
                 .ToList();

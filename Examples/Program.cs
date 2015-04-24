@@ -21,17 +21,22 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            /*Routines.LoadIrregularComparatives(db);
-            Routines.LoadIrregularSuperlatives(db);
-            Routines.LoadNegativeContractions(db);*/
+            Routines.LoadIrregularComparatives(db);
+            Routines.LoadConjunctions(db, false);
             Routines.LoadContractions(db);
+            Routines.LoadDeterminers(db, false);
+            Routines.LoadModals(db);
+            Routines.LoadNegativeContractions(db);
+            Routines.LoadPrepositions(db, false);
+            Routines.LoadPronouns(db, false);
+            Routines.LoadIrregularSuperlatives(db);
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 
             var sentenceParser = new SentenceParser();
             
 
-            RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
+            //RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);

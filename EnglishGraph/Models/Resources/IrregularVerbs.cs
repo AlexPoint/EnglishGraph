@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnglishGraph.Models.Resources;
 
-namespace EnglishGraph.Models
+namespace EnglishGraph.Models.Resources
 {
     public class IrregularVerbs
     {
-
         private static IrregularVerbs instance;
 
         public static IrregularVerbs Instance

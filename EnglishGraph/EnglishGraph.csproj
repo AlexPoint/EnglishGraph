@@ -45,18 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Conjunctions.cs" />
-    <Compile Include="Models\NegativeContractions.cs" />
-    <Compile Include="Models\IrregularSuperlatives.cs" />
-    <Compile Include="Models\IrregularComparatives.cs" />
-    <Compile Include="Models\Contractions.cs" />
-    <Compile Include="Models\Modals.cs" />
-    <Compile Include="Models\Determiners.cs" />
+    <Compile Include="Models\Resources\NegativeContractions.cs" />
+    <Compile Include="Models\Resources\Superlatives.cs" />
+    <Compile Include="Models\Resources\Comparatives.cs" />
+    <Compile Include="Models\Resources\Contractions.cs" />
+    <Compile Include="Models\Resources\Modals.cs" />
+    <Compile Include="Models\Resources\Determiners.cs" />
     <Compile Include="Models\DictionaryEntryRelationship.cs" />
     <Compile Include="Models\EnglishDictionary.cs" />
     <Compile Include="Models\GrammarTransformation.cs" />
     <Compile Include="Models\IrregularVerb.cs" />
-    <Compile Include="Models\IrregularVerbs.cs" />
+    <Compile Include="Models\Resources\IrregularVerbs.cs" />
     <Compile Include="Models\PosDetection\DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule.cs" />
     <Compile Include="Models\PosDetection\PartOfSpeechDetector.cs" />
     <Compile Include="Models\PartsOfSpeech.cs" />
@@ -64,9 +63,12 @@
     <Compile Include="Models\PosDetection\PosDetectionRule.cs" />
     <Compile Include="Models\PosDetection\SuffixBasedPosDetectionRule.cs" />
     <Compile Include="Models\PosDetection\TokenAndPositionInSentence.cs" />
-    <Compile Include="Models\Prepositions.cs" />
-    <Compile Include="Models\Pronouns.cs" />
+    <Compile Include="Models\Resources\Prepositions.cs" />
+    <Compile Include="Models\Resources\Pronouns.cs" />
     <Compile Include="Models\Pronunciations.cs" />
+    <Compile Include="Models\Resources\TupleValuesResourceLoader.cs" />
+    <Compile Include="Models\Resources\SingleValuesResourceLoader.cs" />
+    <Compile Include="Models\Resources\Conjunctions.cs" />
     <Compile Include="Models\SentenceParser.cs" />
     <Compile Include="Models\StringUtilities.cs" />
     <Compile Include="Models\Synset.cs" />
@@ -88,6 +90,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -95,25 +98,26 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\negative_contractions.txt" />
-    <Content Include="Resources\irregular_superlatives.txt" />
-    <Content Include="Resources\irregular_comparatives.txt" />
+    <Content Include="Resources\superlatives_exceptions.txt" />
+    <Content Include="Resources\comparatives_exceptions.txt" />
     <Content Include="Resources\modals.txt" />
     <Content Include="Resources\contractions.txt" />
-    <Content Include="Resources\coordinating_conjunctions.txt" />
-    <None Include="Resources\relative_pronouns.txt" />
-    <None Include="Resources\interrogative_pronouns.txt" />
-    <None Include="Resources\indefinite_pronouns.txt" />
-    <None Include="Resources\subject_personal_pronouns.txt" />
-    <None Include="Resources\object_personal_pronouns.txt" />
-    <None Include="Resources\reflexive_personal_pronouns.txt" />
-    <None Include="Resources\possessive_pronouns.txt" />
+    <Content Include="Resources\conjunctions_coordinating.txt" />
+    <None Include="Resources\pronouns_relative.txt" />
+    <None Include="Resources\pronouns_interrogative.txt" />
+    <None Include="Resources\pronouns_indefinite.txt" />
+    <None Include="Resources\pronouns_subject_personal.txt" />
+    <None Include="Resources\pronouns_object_personal.txt" />
+    <None Include="Resources\pronouns_reflexive_personal.txt" />
+    <None Include="Resources\pronouns_possessive.txt" />
     <None Include="Resources\prepositions.txt" />
     <None Include="Resources\determiners_possessives.txt" />
     <None Include="Resources\determiners_demonstratives.txt" />
     <None Include="Resources\determiners_articles.txt" />
-    <None Include="Resources\determiners.txt" />
-    <Content Include="Resources\subordinating_conjunctions.txt" />
+    <None Include="Resources\determiners_general.txt" />
+    <Content Include="Resources\conjunctions_subordinating.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

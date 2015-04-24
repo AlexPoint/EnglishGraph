@@ -118,14 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="comparatives_exceptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\comparatives_exceptions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="conjunctions_coordinating" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\conjunctions_coordinating.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="conjunctions_subordinating" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\conjunctions_subordinating.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="contractions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\contractions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="coordinating_conjunctions" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\coordinating_conjunctions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="determiners" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\determiners.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="determiners_articles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\determiners_articles.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -133,25 +136,13 @@
   <data name="determiners_demonstratives" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\determiners_demonstratives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="determiners_general" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\determiners_general.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="determiners_possessives" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\determiners_possessives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="indefinite_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\indefinite_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="interrogative_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\interrogative_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="irregular_comparatives" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\irregular_comparatives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="irregular_superlatives" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\irregular_superlatives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="irregular_verbs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\irregular_verbs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="irregular_verbs1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\irregular_verbs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="modals" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -160,25 +151,31 @@
   <data name="negative_contractions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\negative_contractions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="object_personal_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\object_personal_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="possessive_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\possessive_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="prepositions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\prepositions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="reflexive_personal_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\reflexive_personal_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="pronouns_indefinite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_indefinite.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="relative_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\relative_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="pronouns_interrogative" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_interrogative.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="subject_personal_pronouns" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\subject_personal_pronouns.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="pronouns_object_personal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_object_personal.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="subordinating_conjunctions" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\subordinating_conjunctions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="pronouns_possessive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_possessive.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="pronouns_reflexive_personal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_reflexive_personal.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="pronouns_relative" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_relative.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="pronouns_subject_personal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pronouns_subject_personal.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="superlatives_exceptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\superlatives_exceptions.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

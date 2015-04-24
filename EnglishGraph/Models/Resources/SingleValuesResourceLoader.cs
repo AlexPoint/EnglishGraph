@@ -5,29 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnglishGraph.Models
+namespace EnglishGraph.Models.Resources
 {
-    public class Modals
+    /// <summary>
+    /// Class to load a resource file for which each line correspond to an element
+    /// </summary>
+    public class SingleValuesResourceLoader
     {
-        private static Modals instance;
+        /// <summary>
+        /// The elements in the resource file
+        /// </summary>
+        public List<string> Elements { get; private set; }
 
-        public static Modals Instance
+
+        public SingleValuesResourceLoader(string resourceString)
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new Modals();
-                }
-                return instance;
-            }
-        }
-
-        public List<string> AllModals { get; private set; }
-
-        private Modals()
-        {
-            this.AllModals = ReadAllLines(Properties.Resources.modals);
+            this.Elements = ReadAllLines(resourceString);
         }
 
         private List<string> ReadAllLines(string input)
