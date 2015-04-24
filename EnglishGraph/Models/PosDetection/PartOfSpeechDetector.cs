@@ -27,7 +27,7 @@ namespace EnglishGraph.Models.PosDetection
             {
                 MatchingCondition = a => Regex.IsMatch(a.Token, "^[a-zA-Z]+\\.$") 
                     || Regex.IsMatch(a.Token, "^([a-zA-Z]\\.)+[a-zA-Z]$")
-                    || Regex.IsMatch(a.Token, "^[A-Z][a-zA-Z]+[A-Z]$")
+                    || Regex.IsMatch(a.Token, "^[A-Z][a-zA-Z]*[A-Z]$")
                     || Regex.IsMatch(a.Token, "^[A-Z][A-Z\\&]+[A-Z]$"),
                 DictionaryEntryCreator = tok => new DictionaryEntry()
                 {
