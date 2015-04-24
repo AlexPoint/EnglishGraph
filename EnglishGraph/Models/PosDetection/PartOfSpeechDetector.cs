@@ -112,6 +112,31 @@ namespace EnglishGraph.Models.PosDetection
             new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("est", "", PartsOfSpeech.Superlative, DictionaryEntryRelationshipTypes.SuperlativeToAdjective, PartsOfSpeech.Adjective),
             // 'iest' suffix; happiest -> happy
             new SuffixBasedPosDetectionRule("iest", "y", PartsOfSpeech.Superlative, DictionaryEntryRelationshipTypes.SuperlativeToAdjective, PartsOfSpeech.Adjective),
+
+            // Gerundives from verbs
+            // 'ing' suffix; doing -> do
+            new SuffixBasedPosDetectionRule("ing", "", PartsOfSpeech.Gerundive, DictionaryEntryRelationshipTypes.Gerundive, PartsOfSpeech.Verb),
+            // 'ing' suffix; charging -> charge
+            new SuffixBasedPosDetectionRule("ing", "e", PartsOfSpeech.Gerundive, DictionaryEntryRelationshipTypes.Gerundive, PartsOfSpeech.Verb),
+            // 'ing' suffix + doubling ending consonant: running -> run
+            new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("int", "", PartsOfSpeech.Gerundive, DictionaryEntryRelationshipTypes.Gerundive, PartsOfSpeech.Verb),
+
+            // simple past forms from verbs
+            // 'ed' suffix; looked -> look
+            new SuffixBasedPosDetectionRule("ed", "", PartsOfSpeech.VerbSimplePast, DictionaryEntryRelationshipTypes.SimplePast, PartsOfSpeech.Verb),
+            // 'ed' suffix; charged -> charge
+            new SuffixBasedPosDetectionRule("ed", "e", PartsOfSpeech.VerbSimplePast, DictionaryEntryRelationshipTypes.SimplePast, PartsOfSpeech.Verb),
+            // 'ed' suffix + doubling ending consonant: tanned -> tan
+            new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("ed", "", PartsOfSpeech.VerbSimplePast, DictionaryEntryRelationshipTypes.SimplePast, PartsOfSpeech.Verb),
+
+            // TODO: exact duplicate of above: do otherwise?
+            // past participle forms from verbs
+            // 'ed' suffix; looked -> look
+            new SuffixBasedPosDetectionRule("ed", "", PartsOfSpeech.VerbPastParticiple, DictionaryEntryRelationshipTypes.PastParticiple, PartsOfSpeech.Verb),
+            // 'ed' suffix; charged -> charge
+            new SuffixBasedPosDetectionRule("ed", "e", PartsOfSpeech.VerbPastParticiple, DictionaryEntryRelationshipTypes.PastParticiple, PartsOfSpeech.Verb),
+            // 'ed' suffix + doubling ending consonant: tanned -> tan
+            new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("ed", "", PartsOfSpeech.VerbPastParticiple, DictionaryEntryRelationshipTypes.PastParticiple, PartsOfSpeech.Verb),
         };
 
         /// <summary>
