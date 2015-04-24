@@ -26,7 +26,7 @@ namespace EnglishGraph.Models.PosDetection
             {
                 MatchingCondition = a => 
                     (a.Token.EndsWith(".") && a.IsLastWordTokenInSentence.HasValue && !a.IsLastWordTokenInSentence.Value) 
-                    || Regex.IsMatch(a.Token, "(^[A-Z]\\.)+$"),
+                    || Regex.IsMatch(a.Token, "^([A-Z]\\.)+$"),
                 DictionaryEntryCreator = tok => new DictionaryEntry()
                 {
                     Word = tok,
@@ -209,6 +209,22 @@ namespace EnglishGraph.Models.PosDetection
             }
 
             // If we get here, the word should in db (and if not, we can run the detection rules)
+
+            // Special case when all caps, and the lower case form is in the dictionary
+            if (StringUtilities.IsAllUpperCased(token))
+            {
+                var lcTokens = new List<string>() {token.ToLower(), StringUtilities.UpperFirstLetter(token.ToLower())};
+                foreach (var lcToken in lcTokens)
+                {
+                    List<DictionaryEntry> lcEntries;
+                    var success = dictionary.TryGetEntries(lcToken, out lcEntries);
+                    if (success)
+                    {
+                        return lcEntries;
+                    }
+                }
+            }
+
             var tokensToSearch = new List<string>() { token };
             // If we don't know where the token was in the sentence OR that it was at the first position
             // AND that the first letter is capitalized,

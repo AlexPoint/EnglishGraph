@@ -11,20 +11,9 @@ namespace EnglishGraph.Models
 {
     public static class StringUtilities
     {
-        private static readonly List<string> CurrencySymbols = new List<string>()
-        {
-            "\\$", "€", "£"
-        };
-
-        private const string NumberPattern = "[\\d\\.,\\s]+";
-        private const string OnlyNumbersPattern = "^" + NumberPattern + "$";
-        private const string PercentagePattern = "^" + NumberPattern + "%$";
         private const string FractionPattern = "^\\d+/\\d+$";
-        private const string FractionPercentagePattern = "^\\d+/\\d+%$";
         private const string WordTokenPattern = "[a-zA-Z0-9]+";
 
-        private static readonly string AmountPattern = string.Format("^({0})?{1}({2})?$", string.Join("|", CurrencySymbols),
-            NumberPattern, string.Join("|", CurrencySymbols));
 
         /// <summary>
         /// Whether a string is a number (includes currencies, decimals, exponents, thousands)
@@ -152,6 +141,19 @@ namespace EnglishGraph.Models
             }
 
             return char.ToLower(input.First()) + input.Substring(1);
+        }
+
+        /// <summary>
+        /// Uppercased the first letter of a string
+        /// </summary>
+        public static string UpperFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            return char.ToUpper(input.First()) + input.Substring(1);
         }
 
         /// <summary>
