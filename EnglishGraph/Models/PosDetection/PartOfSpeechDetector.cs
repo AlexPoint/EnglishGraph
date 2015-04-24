@@ -22,12 +22,13 @@ namespace EnglishGraph.Models.PosDetection
                 }
             },
             // abbreviations - TODO: consolidate those conditions
-            // Ex: Dr., Mr. ... // R.I.P, p.m... // FAQ, PhD...
+            // Ex: Dr., Mr. ... // R.I.P, p.m... // FAQ, PhD... // AT&T, S&P...
             new PosDetectionRule()
             {
                 MatchingCondition = a => Regex.IsMatch(a.Token, "^[a-zA-Z]+\\.$") 
                     || Regex.IsMatch(a.Token, "^([a-zA-Z]\\.)+[a-zA-Z]$")
-                    || Regex.IsMatch(a.Token, "^[A-Z][a-zA-Z]+[A-Z]$"),
+                    || Regex.IsMatch(a.Token, "^[A-Z][a-zA-Z]+[A-Z]$")
+                    || Regex.IsMatch(a.Token, "^[A-Z][A-Z\\&]+[A-Z]$"),
                 DictionaryEntryCreator = tok => new DictionaryEntry()
                 {
                     Word = tok,
