@@ -94,6 +94,8 @@ namespace EnglishGraph.Models.PosDetection
             // Comparatives from adjectives
             // 'er' suffix; harder -> hard
             new SuffixBasedPosDetectionRule("er", "", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
+            // 'er' suffix; larger -> large
+            new SuffixBasedPosDetectionRule("er", "e", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
             // 'er' suffix + doubling ending consonant; bigger -> big
             new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("er", "", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
             // 'ier' suffix; happier -> happy
@@ -102,6 +104,8 @@ namespace EnglishGraph.Models.PosDetection
             // Superlatives from adjectives
             // 'est' suffix; fastest -> fast
             new SuffixBasedPosDetectionRule("est", "", PartsOfSpeech.Superlative, DictionaryEntryRelationshipTypes.SuperlativeToAdjective, PartsOfSpeech.Adjective),
+            // 'est' suffix; largest -> large
+            new SuffixBasedPosDetectionRule("est", "e", PartsOfSpeech.Superlative, DictionaryEntryRelationshipTypes.SuperlativeToAdjective, PartsOfSpeech.Adjective),
             // 'est' suffix + doubling ending consonant; biggest -> big
             new DeduplicateDoubleEndingConsonantSuffixBasedPosDetectionRule("est", "", PartsOfSpeech.Superlative, DictionaryEntryRelationshipTypes.SuperlativeToAdjective, PartsOfSpeech.Adjective),
             // 'iest' suffix; happiest -> happy
