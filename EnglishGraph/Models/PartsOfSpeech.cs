@@ -78,6 +78,7 @@ namespace EnglishGraph.Models
         public const byte Fraction = 103;
         public const byte Time = 104;
         public const byte Punctuation = 105;
+        public const byte Compound = 106;
 
 
         public static bool IsVerb(byte pos)
@@ -171,6 +172,8 @@ namespace EnglishGraph.Models
                     return "time";
                 case Punctuation:
                     return "punct.";
+                case Compound:
+                    return "comp.";
                 default:
                     return "unk.";
             }
