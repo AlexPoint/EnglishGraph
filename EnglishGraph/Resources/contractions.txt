@@ -2,5 +2,6 @@
 're	are
 's	is
 's	has
+'ve	have
 'd	would
 'll	will
