@@ -10,7 +10,31 @@ namespace Examples.Classes
 {
     public class Routines
     {
-        
+        public static void LoadIrregularPlurals(EnglishGraphContext db)
+        {
+            var exceptions = IrregularPlurals.AllIrregularPlurals;
+
+            var singularNouns = exceptions
+                .Select(tup => new Tuple<string, byte>(tup.Item1, PartsOfSpeech.Noun))
+                .ToList();
+            var pluralNouns = exceptions
+                .Select(tup => new Tuple<string,byte>(tup.Item2, PartsOfSpeech.NounPlural))
+                .ToList();
+
+            var singularEntities = DbUtilities.GetOrCreate(singularNouns, db);
+            var pluralEntities = DbUtilities.GetOrCreate(pluralNouns, db);
+
+            var relationships = exceptions
+                .Select(tup => new DictionaryEntryRelationship()
+                {
+                    Source = singularEntities.First(ent => ent.Word == tup.Item1),
+                    Target = pluralEntities.First(ent => ent.Word == tup.Item2),
+                    Type = DictionaryEntryRelationshipTypes.NounPlural
+                })
+                .ToList();
+            DbUtilities.GetOrCreate(relationships, db);
+        }
+
         public static void LoadNegativeContractions(EnglishGraphContext db)
         {
             var negativeContractions = NegativeContractions.AllContractions;

@@ -232,6 +232,46 @@ namespace EnglishGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to alumnus	alumni
+        ///analysis	analyses
+        ///antenna	antennae
+        ///antenna	antennas 
+        ///appendix	appendices
+        ///axis	axes
+        ///bacterium	bacteria
+        ///basis	bases
+        ///beau	beaux
+        ///bureau	bureaus
+        ///bureau	bureaux
+        ///cactus	cacti
+        ///child	children
+        ///corpus	corpora
+        ///crisis	crises
+        ///criterion	criteria
+        ///curriculum	curricula
+        ///datum	data
+        ///deer	deer
+        ///diagnosis	diagnoses
+        ///ellipsis	ellipses
+        ///fish	fish
+        ///focus	foci
+        ///focus	focuses
+        ///foot	feet
+        ///formula	formulae
+        ///formula	formulas
+        ///fungus	fungi
+        ///fungus	funguses 
+        ///genus	genera
+        ///goose	geese
+        ///hypothesis	hypotheses [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string irregular_noun_plurals {
+            get {
+                return ResourceManager.GetString("irregular_noun_plurals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to be	was/were	been
         ///abide	abided/abode	abided
         ///alight	alighted/alit	alighted/alit

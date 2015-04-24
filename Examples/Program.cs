@@ -30,6 +30,7 @@ namespace Examples
             Routines.LoadPrepositions(db, false);
             Routines.LoadPronouns(db, false);
             Routines.LoadIrregularSuperlatives(db);*/
+            Routines.LoadIrregularPlurals(db);
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 

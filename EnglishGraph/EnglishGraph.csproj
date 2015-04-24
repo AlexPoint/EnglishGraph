@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Resources\IrregularPlurals.cs" />
     <Compile Include="Models\Resources\NegativeContractions.cs" />
     <Compile Include="Models\Resources\Superlatives.cs" />
     <Compile Include="Models\Resources\Comparatives.cs" />
@@ -97,6 +98,7 @@
     <None Include="Resources\irregular_verbs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\irregular_noun_plurals.txt" />
     <Content Include="Resources\negative_contractions.txt" />
     <Content Include="Resources\superlatives_exceptions.txt" />
     <Content Include="Resources\comparatives_exceptions.txt" />

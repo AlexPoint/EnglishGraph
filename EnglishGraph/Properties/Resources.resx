@@ -142,6 +142,9 @@
   <data name="determiners_possessives" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\determiners_possessives.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="irregular_noun_plurals" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\irregular_noun_plurals.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="irregular_verbs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\irregular_verbs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
