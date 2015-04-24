@@ -22,11 +22,12 @@ namespace EnglishGraph.Models.PosDetection
                 }
             },
             // abbreviations - TODO: consolidate those conditions
+            // Ex: Dr., Mr. ... // R.I.P, p.m... // FAQ, PhD...
             new PosDetectionRule()
             {
-                MatchingCondition = a => 
-                    (a.Token.EndsWith(".") && a.IsLastWordTokenInSentence.HasValue && !a.IsLastWordTokenInSentence.Value) 
-                    || Regex.IsMatch(a.Token, "^([A-Z]\\.)+$"),
+                MatchingCondition = a => Regex.IsMatch(a.Token, "^[a-zA-Z]+\\.$") 
+                    || Regex.IsMatch(a.Token, "^([a-zA-Z]\\.)+[a-zA-Z]$")
+                    || Regex.IsMatch(a.Token, "^[A-Z][a-zA-Z]+[A-Z]$"),
                 DictionaryEntryCreator = tok => new DictionaryEntry()
                 {
                     Word = tok,
