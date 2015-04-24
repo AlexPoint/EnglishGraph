@@ -71,6 +71,14 @@ namespace EnglishGraph.Models
         public const byte Abbreviation = 90;
         public const byte Contractions = 91;
 
+        // Misc --------------------------
+        public const byte Number = 100;
+        public const byte Percentage = 101;
+        public const byte Amount = 102;
+        public const byte Fraction = 103;
+        public const byte Time = 104;
+        public const byte Punctuation = 105;
+
 
         public static bool IsVerb(byte pos)
         {
@@ -151,6 +159,18 @@ namespace EnglishGraph.Models
                     return "abbr.";
                 case Contractions:
                     return "cont.";
+                case Number:
+                    return "num.";
+                case Percentage:
+                    return "perc.";
+                case Amount:
+                    return "amou.";
+                case Fraction:
+                    return "frac.";
+                case Time:
+                    return "time";
+                case Punctuation:
+                    return "punct.";
                 default:
                     return "unk.";
             }

@@ -27,22 +27,50 @@ namespace EnglishGraph.Models
             NumberPattern, string.Join("|", CurrencySymbols));
 
         /// <summary>
-        /// Whether a string is a number, percentage or amount (with currency)
+        /// Whether a string is a number (includes currencies, decimals, exponents, thousands)
         /// </summary>
-        public static bool IsFigure(string input)
+        public static bool IsNumber(string input)
         {
-            if (string.IsNullOrEmpty(input))
-            {
-                return false;
-            }
-
-            return Regex.IsMatch(input, OnlyNumbersPattern)
-                || Regex.IsMatch(input, PercentagePattern)
-                || Regex.IsMatch(input, FractionPattern)
-                || Regex.IsMatch(input, FractionPercentagePattern)
-                || Regex.IsMatch(input, AmountPattern);
+            double number;
+            var success = double.TryParse(input, NumberStyles.Number, 
+                new CultureInfo("en-US"), out number);
+            return success;
         }
 
+        /// <summary>
+        /// Whether a string is a money amount,
+        /// ie a currency + a number
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsAmount(string input)
+        {
+            double number;
+            var success = double.TryParse(input, NumberStyles.Currency,
+                new CultureInfo("en-US"), out number);
+            return success;
+        }
+
+        /// <summary>
+        /// Whether a string is a percentage, 
+        /// ie if it finishes by '%' and the rest is a number/fraction
+        /// </summary>
+        public static bool IsPercentage(string input)
+        {
+            return !string.IsNullOrEmpty(input)
+                   && input.Last() == '%'
+                   && (IsNumber(input.Substring(0, input.Length - 1)) || IsFraction(input.Substring(0, input.Length - 1)));
+        }
+
+        /// <summary>
+        /// Whether a string is a fraction
+        /// Ex: 1/2
+        /// </summary>
+        public static bool IsFraction(string input)
+        {
+            return Regex.IsMatch(input, FractionPattern);
+        }
+        
         /// <summary>
         /// Whether a string is a time
         /// Supports only en-US time formats for the moment

@@ -125,6 +125,90 @@ namespace EnglishGraph.Models.PosDetection
         /// <returns>The dictionary entry (word + POS)</returns>
         public List<DictionaryEntry> DetectPos(string token, bool? isFirstTokenInSentence, bool? isLastTokenInSentence, EnglishDictionary dictionary)
         {
+            // First, detect if it's a special case (number etc.)
+            // In those cases, no need to go further (ie look in dictionary or apply detection rules)
+            if (StringUtilities.IsPunctuation(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Punctuation
+                    }
+                };
+            }
+            else if (StringUtilities.IsNumber(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Number
+                    }
+                };
+            }
+            else if (StringUtilities.IsTime(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Time
+                    }
+                };
+            }
+            else if (StringUtilities.IsFraction(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Fraction
+                    }
+                };
+            }
+            else if (StringUtilities.IsPercentage(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Percentage
+                    }
+                };
+            }
+            else if (StringUtilities.IsAmount(token))
+            {
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Amount
+                    }
+                };
+            }
+            else if (StringUtilities.IsCompoundWord(token))
+            {
+                // TODO: handle this case later
+                // if compound word, ignore for the moment
+                //Console.WriteLine("'{0}' ignored", token);
+                return new List<DictionaryEntry>()
+                {
+                    new DictionaryEntry()
+                    {
+                        Word = token,
+                        PartOfSpeech = PartsOfSpeech.Comparative
+                    }
+                };
+            }
+
+            // If we get here, the word should in db (and if not, we can run the detection rules)
             var tokensToSearch = new List<string>() { token };
             // If we don't know where the token was in the sentence OR that it was at the first position
             // AND that the first letter is capitalized,

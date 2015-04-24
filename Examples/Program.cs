@@ -21,7 +21,7 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
-            Routines.LoadIrregularComparatives(db);
+            /*Routines.LoadIrregularComparatives(db);
             Routines.LoadConjunctions(db, false);
             Routines.LoadContractions(db);
             Routines.LoadDeterminers(db, false);
@@ -29,14 +29,14 @@ namespace Examples
             Routines.LoadNegativeContractions(db);
             Routines.LoadPrepositions(db, false);
             Routines.LoadPronouns(db, false);
-            Routines.LoadIrregularSuperlatives(db);
+            Routines.LoadIrregularSuperlatives(db);*/
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 
             var sentenceParser = new SentenceParser();
             
 
-            //RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
+            RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
@@ -75,22 +75,9 @@ namespace Examples
                 for (var i = 0; i < tokens.Count; i++)
                 {
                     var token = tokens[i];
-                    if (StringUtilities.IsFigure(token) 
-                        || StringUtilities.IsPunctuation(token)
-                        || StringUtilities.IsTime(token))
-                    {
-                        // if figure/punctuation -> can ignore
-                        continue;
-                    }
-                    else if (StringUtilities.IsCompoundWord(token))
-                    {
-                        // if compound word, ignore for the moment
-                        //Console.WriteLine("'{0}' ignored", token);
-                        continue;
-                    }
-
-                    var correspondingEntries = posDetector.DetectPos(token, i == indexOfFirstWordToken, i == indexOfLastWordToken,
-                        dictionary);
+                    
+                    var correspondingEntries = posDetector
+                        .DetectPos(token, i == indexOfFirstWordToken, i == indexOfLastWordToken, dictionary);
                     if (!correspondingEntries.Any() ||
                         correspondingEntries.All(ent => ent.PartOfSpeech == PartsOfSpeech.Unknown))
                     {
