@@ -17,18 +17,21 @@ namespace Examples.Classes
             var negContEntries = negativeContractions.AllNegativeContractions
                 .Select(tup => new Tuple<string,byte>(tup.Item1, PartsOfSpeech.NegativeContraction))
                 .ToList();
-            var verbEntries = negativeContractions.AllNegativeContractions
-                .Select(tup => new Tuple<string, byte>(tup.Item2, PartsOfSpeech.Verb))
+            var verbs = negativeContractions.AllNegativeContractions
+                .Select(tup => tup.Item2)
                 .ToList();
 
             var negContEntities = DbUtilities.GetOrCreate(negContEntries, db);
-            var verbEntities = DbUtilities.GetOrCreate(verbEntries, db);
+            var verbEntities = DbUtilities.GetEntries(verbs, db)
+                .Where(ent => PartsOfSpeech.IsVerb(ent.PartOfSpeech) 
+                    && ent.PartOfSpeech != PartsOfSpeech.VerbPastParticiple && ent.PartOfSpeech != PartsOfSpeech.Gerundive)
+                .ToList();
 
             var relationships = negativeContractions.AllNegativeContractions
                 .Select(tup => new DictionaryEntryRelationship()
                 {
-                    Source = negContEntities.First(ent => ent.Word == tup.Item2),
-                    Target = verbEntities.First(ent => ent.Word == tup.Item1),
+                    Source = negContEntities.First(ent => ent.Word == tup.Item1),
+                    Target = verbEntities.First(ent => ent.Word == tup.Item2),
                     Type = DictionaryEntryRelationshipTypes.NegativeContractionToVerb
                 })
                 .ToList();
