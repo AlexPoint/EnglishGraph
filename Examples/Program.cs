@@ -29,8 +29,10 @@ namespace Examples
             Routines.LoadNegativeContractions(db);
             Routines.LoadPrepositions(db, false);
             Routines.LoadPronouns(db, false);
-            Routines.LoadIrregularSuperlatives(db);*/
-            Routines.LoadIrregularPlurals(db);
+            Routines.LoadIrregularSuperlatives(db);
+            Routines.LoadIrregularPlurals(db);*/
+            Routines.LoadMissingWords(db);
+            //Routines.LoadIrregularVerbs(db);
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
 

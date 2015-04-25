@@ -10,6 +10,80 @@ namespace Examples.Classes
 {
     public class Routines
     {
+
+        public static void LoadIrregularVerbs(EnglishGraphContext db)
+        {
+            var irregularVerbs = IrregularVerbs.Instance.AllIrregularVerbs;
+
+            var infinitives = irregularVerbs
+                .Select(tup => new Tuple<string, byte>(tup.Infinitive, PartsOfSpeech.Verb))
+                .ToList();
+            var pastForms = irregularVerbs
+                .SelectMany(tup => tup.SimplePastForms.Select(sp => new Tuple<string, byte>(sp, PartsOfSpeech.VerbSimplePast)))
+                .ToList();
+            var pastParticipleForms = irregularVerbs
+                .SelectMany(tup => tup.PastParticipleForms.Select(pp => new Tuple<string, byte>(pp, PartsOfSpeech.VerbPastParticiple)))
+                .ToList();
+
+            var infinitiveEntities = DbUtilities.GetOrCreate(infinitives, db);
+            var pastEntities = DbUtilities.GetOrCreate(pastForms, db);
+            var pastParticipleEntities = DbUtilities.GetOrCreate(pastParticipleForms, db);
+
+            // simple past relationships 
+            var spRels = new List<DictionaryEntryRelationship>();
+            foreach (var pastEntity in pastEntities)
+            {
+                var irregularVerb = irregularVerbs.First(iv => iv.SimplePastForms.Contains(pastEntity.Word));
+                var infinitiveEntity = infinitiveEntities
+                    .First(ent => ent.Word == irregularVerb.Infinitive);
+                var relationship = new DictionaryEntryRelationship()
+                {
+                    Source = infinitiveEntity,
+                    Target = pastEntity,
+                    Type = DictionaryEntryRelationshipTypes.SimplePast
+                };
+                spRels.Add(relationship);
+            }
+            DbUtilities.GetOrCreate(spRels, db);
+
+            // past participle relationships 
+            var ppRels = new List<DictionaryEntryRelationship>();
+            foreach (var pastParticipleEntity in pastParticipleEntities)
+            {
+                var irregularVerb = irregularVerbs.First(iv => iv.PastParticipleForms.Contains(pastParticipleEntity.Word));
+                var infinitiveEntity = infinitiveEntities
+                    .First(ent => ent.Word == irregularVerb.Infinitive);
+                var relationship = new DictionaryEntryRelationship()
+                {
+                    Source = infinitiveEntity,
+                    Target = pastParticipleEntity,
+                    Type = DictionaryEntryRelationshipTypes.PastParticiple
+                };
+                ppRels.Add(relationship);
+            }
+            DbUtilities.GetOrCreate(ppRels, db);
+        }
+
+        /// <summary>
+        /// Loads the words missing in wordnet that we couldn't find in any other list
+        /// </summary>
+        public static void LoadMissingWords(EnglishGraphContext db)
+        {
+            var entries = new List<Tuple<string, byte>>()
+            {
+                // Adverbs
+                new Tuple<string, byte>("how", PartsOfSpeech.Adverb),
+                new Tuple<string, byte>("anytime", PartsOfSpeech.Adverb),
+                // Pronouns
+                new Tuple<string, byte>("whichever", PartsOfSpeech.Pronoun),
+                new Tuple<string, byte>("others", PartsOfSpeech.Pronoun),
+                // Adjectives
+                new Tuple<string, byte>("whichever", PartsOfSpeech.Adjective),
+            };
+
+            DbUtilities.GetOrCreate(entries, db);
+        }
+
         public static void LoadIrregularPlurals(EnglishGraphContext db)
         {
             var exceptions = IrregularPlurals.AllIrregularPlurals;
