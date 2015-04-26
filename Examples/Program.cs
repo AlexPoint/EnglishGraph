@@ -21,6 +21,18 @@ namespace Examples
         {
             var db = new EnglishGraphContext();
 
+            var tokensToTest = new List<string>()
+            {
+                "Institute"
+                /*"reinvesting",
+                "restructurings",
+                "nonvoting"*/
+            };
+            foreach (var token in tokensToTest)
+            {
+                RunPosDetector(token, db);
+            }
+
             /*Routines.LoadIrregularComparatives(db);
             Routines.LoadConjunctions(db, false);
             Routines.LoadContractions(db);
@@ -56,6 +68,19 @@ namespace Examples
             Console.ReadLine();
         }
 
+        private static void RunPosDetector(string token, EnglishGraphContext db)
+        {
+            var entries = db.DictionaryEntries.ToList();
+            var dictionary = new EnglishDictionary(entries);
+            var posDetector = new PartOfSpeechDetector();
+            var correspondingEntries = posDetector
+                        .DetectPos(token, null, null, dictionary);
+            if (!correspondingEntries.Any() ||
+                correspondingEntries.All(ent => ent.PartOfSpeech == PartsOfSpeech.Unknown))
+            {
+                Console.WriteLine("Couldn't detect POS for '{0}'", token);
+            }
+        }
         
         private static void RunUnknownWordDetection(EnglishGraphContext db, byte onlyEntriesOfPos)
         {
@@ -82,9 +107,10 @@ namespace Examples
                     var correspondingEntries = posDetector
                         .DetectPos(token, i == indexOfFirstWordToken, i == indexOfLastWordToken, dictionary);
                     if (!correspondingEntries.Any() ||
-                        correspondingEntries.All(ent => ent.PartOfSpeech == PartsOfSpeech.Unknown))
+                        correspondingEntries.All(ent => ent.PartOfSpeech == PartsOfSpeech.ProperNoun))
                     {
-                        Console.WriteLine("Couldn't detect POS for '{0}'", token);
+                        Console.WriteLine("Proper nou detectde: '{0}'", token);
+                        //Console.WriteLine("Couldn't detect POS for '{0}'", token);
                     }
                     
                     /*var isInDictionary = dictionary.Contains(token);

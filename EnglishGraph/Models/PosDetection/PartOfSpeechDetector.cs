@@ -39,7 +39,8 @@ namespace EnglishGraph.Models.PosDetection
             new PosDetectionRule()
             {
                 MatchingCondition = a => 
-                    StringUtilities.IsFirstCharUpperCased(a.Token) && !StringUtilities.IsAllUpperCased(a.Token) 
+                    StringUtilities.IsFirstCharUpperCased(a.Token) 
+                    && !StringUtilities.IsAllUpperCased(a.Token) 
                     && a.IsFirstTokenInSentence.HasValue && !a.IsFirstTokenInSentence.Value,
                 DictionaryEntryCreator = tok => new DictionaryEntry()
                 {
@@ -185,6 +186,15 @@ namespace EnglishGraph.Models.PosDetection
             new PrefixBasedPosDetectionRule("un", PartsOfSpeech.Adjective),
             // 'under' prefix
             new PrefixBasedPosDetectionRule("under", PartsOfSpeech.Verb),
+
+            // rules below are added from experience
+            // 're' prefix; ex: reinvest -> invest
+            new PrefixBasedPosDetectionRule("re", PartsOfSpeech.Verb),
+            // 'non' prefix; ex: nonvoting -> voting
+            new PrefixBasedPosDetectionRule("non", PartsOfSpeech.Adjective),
+            new PrefixBasedPosDetectionRule("non", PartsOfSpeech.Verb),
+            // 'multi' prefix; ex:
+            new PrefixBasedPosDetectionRule("non", PartsOfSpeech.Verb),
         };
 
         /// <summary>
@@ -356,7 +366,7 @@ namespace EnglishGraph.Models.PosDetection
             // If we don't know where the token was in the sentence OR that it was at the first position
             // AND that the first letter is capitalized,
             // also look for the lower cased token
-            if ((!isFirstTokenInSentence.HasValue || isFirstTokenInSentence.Value) && StringUtilities.IsFirstCharUpperCased(token))
+            if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
             {
                 tokensToSearch.Add(StringUtilities.LowerFirstLetter(token));
             }
@@ -389,8 +399,8 @@ namespace EnglishGraph.Models.PosDetection
                     // (hence the little consideration for the performance)
                     var entries = PosDetectionRules
                         .Where(rule =>
-                                rule.MatchingCondition(new TokenAndPositionInSentence(tokenToSearch, isFirstTokenInSentence,
-                                    isLastTokenInSentence)))
+                                rule.MatchingCondition(
+                                new TokenAndPositionInSentence(tokenToSearch, isFirstTokenInSentence, isLastTokenInSentence)))
                         .Select(rule => rule.DictionaryEntryCreator(tokenToSearch))
                         .ToList();
 
