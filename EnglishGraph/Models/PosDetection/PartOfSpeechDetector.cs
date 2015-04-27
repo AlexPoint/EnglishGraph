@@ -40,8 +40,7 @@ namespace EnglishGraph.Models.PosDetection
             {
                 MatchingCondition = a => 
                     StringUtilities.IsFirstCharUpperCased(a.Token) 
-                    && !StringUtilities.IsAllUpperCased(a.Token) 
-                    && a.IsFirstTokenInSentence.HasValue && !a.IsFirstTokenInSentence.Value,
+                    && !StringUtilities.IsAllUpperCased(a.Token),
                 DictionaryEntryCreator = tok => new DictionaryEntry()
                 {
                     Word = tok,
@@ -363,9 +362,11 @@ namespace EnglishGraph.Models.PosDetection
             }
 
             var tokensToSearch = new List<string>() { token };
-            // If we don't know where the token was in the sentence OR that it was at the first position
-            // AND that the first letter is capitalized,
-            // also look for the lower cased token
+            // If the first letter is capitalized, and the word is not all upper cased,
+            // also look for the lower cased token.
+            // (being inside the sentence is not relevant because:
+            // - sentence are not necessarily well detected
+            // - several nouns can be used as proper nouns for brands: xxx Research Institute, etc.
             if (StringUtilities.IsFirstCharUpperCased(token) && !StringUtilities.IsAllUpperCased(token))
             {
                 tokensToSearch.Add(StringUtilities.LowerFirstLetter(token));
