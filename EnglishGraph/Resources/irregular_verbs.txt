@@ -245,7 +245,7 @@ overspend	overspent	overspent
 overspill	overspilled/overspilt	overspilled/overspilt
 overspin	overspun	overspun
 overspread	overspread	overspread
-overspring	oversprang/oversprung/	oversprung
+overspring	oversprang/oversprung	oversprang/oversprung
 overstand	overstood	overstood
 overstrew	overstrewed	overstrewn/overstrewed
 overstride	overstrode	overstridden
