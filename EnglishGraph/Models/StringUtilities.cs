@@ -13,7 +13,7 @@ namespace EnglishGraph.Models
     {
         private const string FractionPattern = "^\\d+/\\d+$";
         private const string WordTokenPattern = "[a-zA-Z0-9]+";
-
+        private const string CurrencyAndLetterPatterns = "[a-zA-Z]+(\\p{Sc})";
 
         /// <summary>
         /// Whether a string is a number (includes currencies, decimals, exponents, thousands)
@@ -37,7 +37,17 @@ namespace EnglishGraph.Models
             double number;
             var success = double.TryParse(input, NumberStyles.Currency,
                 new CultureInfo("en-US"), out number);
-            return success;
+
+            if (!success && Regex.IsMatch(input, CurrencyAndLetterPatterns))
+            {
+                // in this case, we have a precision in addition to the currency symbol; ex: US$1.6, C$5...
+                var cleanedInput = Regex.Replace(input, CurrencyAndLetterPatterns, m => m.Groups[1].Value);
+                return IsAmount(cleanedInput);
+            }
+            else
+            {
+                return success;
+            }
         }
 
         /// <summary>
