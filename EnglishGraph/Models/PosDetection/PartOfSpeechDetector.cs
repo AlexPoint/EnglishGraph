@@ -157,10 +157,13 @@ namespace EnglishGraph.Models.PosDetection
             new PrefixBasedPosDetectionRule("inter", PartsOfSpeech.Adjective),
             // 'ir' prefix
             new PrefixBasedPosDetectionRule("ir", PartsOfSpeech.Adjective),
-            // 'mis' prefix
+            // 'mis' prefix: ex: misguide -> guide; miscommunication -> communication
             new PrefixBasedPosDetectionRule("mis", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("mis", PartsOfSpeech.Noun),
             // 'over' prefix
-            new PrefixBasedPosDetectionRule("over", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("over", PartsOfSpeech.Verb), // overreact
+            new PrefixBasedPosDetectionRule("over", PartsOfSpeech.Verb), // overactive
+            new PosChangingPrefixBasedPosDetectionRule("over", PartsOfSpeech.Adjective, PartsOfSpeech.Noun), // overweight
             // 'out' prefix
             new PrefixBasedPosDetectionRule("out", PartsOfSpeech.Verb),
             // 'post' prefix
@@ -183,17 +186,25 @@ namespace EnglishGraph.Models.PosDetection
             // 'un' prefix
             new PrefixBasedPosDetectionRule("un", PartsOfSpeech.Verb),
             new PrefixBasedPosDetectionRule("un", PartsOfSpeech.Adjective),
-            // 'under' prefix
-            new PrefixBasedPosDetectionRule("under", PartsOfSpeech.Verb),
+            // 'under' prefix; ex: underachieve (v.) -> achieve (v.), underweight (adj.) -> weight (n.)
+            new PrefixBasedPosDetectionRule("under", PartsOfSpeech.Verb), // underreact
+            new PrefixBasedPosDetectionRule("under", PartsOfSpeech.Adjective), // underactive
+            new PosChangingPrefixBasedPosDetectionRule("under", PartsOfSpeech.Adjective, PartsOfSpeech.Noun), // underweight
 
             // rules below are added from experience
-            // 're' prefix; ex: reinvest -> invest
+            // 're' prefix; ex: reinvest (v.) -> invest (v.); recapitalization (n.) -> capitalization
             new PrefixBasedPosDetectionRule("re", PartsOfSpeech.Verb),
+            new PrefixBasedPosDetectionRule("re", PartsOfSpeech.Noun),
             // 'non' prefix; ex: nonvoting -> voting
             new PrefixBasedPosDetectionRule("non", PartsOfSpeech.Adjective),
             new PrefixBasedPosDetectionRule("non", PartsOfSpeech.Verb),
-            // 'multi' prefix; ex:
-            new PrefixBasedPosDetectionRule("non", PartsOfSpeech.Verb),
+            // 'multi' prefix; ex: multibillion (adj.) -> billion (n.); 
+            new PrefixBasedPosDetectionRule("multi", PartsOfSpeech.Verb),
+            new PosChangingPrefixBasedPosDetectionRule("multi", PartsOfSpeech.Adjective, PartsOfSpeech.Noun),
+            // 'counter' prefix;
+            new PrefixBasedPosDetectionRule("counter", PartsOfSpeech.Verb),//counterattack
+            new PrefixBasedPosDetectionRule("counter", PartsOfSpeech.Noun),//counterattack
+            new PrefixBasedPosDetectionRule("counter", PartsOfSpeech.Adjective),//counterproductive
         };
 
         /// <summary>

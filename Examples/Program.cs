@@ -43,7 +43,7 @@ namespace Examples
             Routines.LoadPronouns(db, false);
             Routines.LoadIrregularSuperlatives(db);
             Routines.LoadIrregularPlurals(db);*/
-            Routines.LoadMissingWords(db);
+            //Routines.LoadMissingWords(db);
             //Routines.LoadIrregularVerbs(db);
 
             var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
@@ -107,10 +107,10 @@ namespace Examples
                     var correspondingEntries = posDetector
                         .DetectPos(token, i == indexOfFirstWordToken, i == indexOfLastWordToken, dictionary);
                     if (!correspondingEntries.Any() ||
-                        correspondingEntries.All(ent => ent.PartOfSpeech == PartsOfSpeech.ProperNoun))
+                        correspondingEntries.All(ent => ent.PartOfSpeech == PartsOfSpeech.Unknown))
                     {
-                        Console.WriteLine("Proper nou detectde: '{0}'", token);
-                        //Console.WriteLine("Couldn't detect POS for '{0}'", token);
+                        //Console.WriteLine("Proper noun detected: '{0}'", token);
+                        Console.WriteLine("Couldn't detect POS for '{0}'", token);
                     }
                     
                     /*var isInDictionary = dictionary.Contains(token);
