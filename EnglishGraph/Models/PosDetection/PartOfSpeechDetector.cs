@@ -92,7 +92,10 @@ namespace EnglishGraph.Models.PosDetection
             // 'hood' suffix; brotherhood -> brother
             new SuffixBasedPosDetectionRule("hood", "", PartsOfSpeech.Noun, DictionaryEntryRelationshipTypes.NounToNoun, PartsOfSpeech.Noun),
 
-            // TODO: Missing doubled consonant termination : bigger, saddest
+            // Adverbs from adjectives
+            // 'ly' suffix; exceptionally -> exceptional
+            new SuffixBasedPosDetectionRule("ly", "", PartsOfSpeech.Adverb, DictionaryEntryRelationshipTypes.AdverbToAdjective, PartsOfSpeech.Adjective),
+
             // Comparatives from adjectives
             // 'er' suffix; harder -> hard
             new SuffixBasedPosDetectionRule("er", "", PartsOfSpeech.Comparative, DictionaryEntryRelationshipTypes.ComparativeToAdjective, PartsOfSpeech.Adjective),
