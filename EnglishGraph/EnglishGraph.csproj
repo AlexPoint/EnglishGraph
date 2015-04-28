@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\PosDetection\CompoundTokenClasificationRule.cs" />
+    <Compile Include="Models\PosDetection\PosChangingPrefixBasedPosDetectionRule.cs" />
     <Compile Include="Models\PosDetection\PrefixBasedPosDetectionRule.cs" />
     <Compile Include="Models\PosDetection\TokenClassificationRule.cs" />
     <Compile Include="Models\Resources\IrregularPlurals.cs" />
