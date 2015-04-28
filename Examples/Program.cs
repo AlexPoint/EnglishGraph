@@ -45,13 +45,9 @@ namespace Examples
             Routines.LoadIrregularPlurals(db);*/
             //Routines.LoadMissingWords(db);
             //Routines.LoadIrregularVerbs(db);
-
-            var pathToToeknizeFile = PathToProject + "Input/sentences/exceptions.train";
-
-            var sentenceParser = new SentenceParser();
             
 
-            RunUnknownWordDetection(db, PartsOfSpeech.NounPlural);
+            RunUnknownWordDetection(db, PartsOfSpeech.Unknown);
 
             /*var testSentence = "\"And there has been a drastic decline in the R.O.I. of unincorporated business assets -- thanks to industry consolidation and a decline in family farms.\"";
             var testTokens = sentenceParser.Tokenize(testSentence);
@@ -63,9 +59,86 @@ namespace Examples
 
             // load pronunciations
             //Routines.LoadGutembergPronunciations(db, PathToProject);
-            
+
+            var pathToSentenceFile = PathToProject + "Input/sentences/wsj.train";
+            var sentenceParser = new SentenceParser();
+
+            var entries = db.DictionaryEntries.ToList();
+            /*var dictionary = new EnglishDictionary(entries);
+            var posDetector = new PartOfSpeechDetector();*/
+
+            /*var patternsFrequency = new Dictionary<string, int>();
+            var sentences = File.ReadLines(pathToSentenceFile);
+            foreach (var sentence in sentences)
+            {
+                var tokens = sentenceParser.Tokenize(sentence);
+                foreach (var token in tokens)
+                {
+                    var patterns = MatchingRegexes(token);
+                    if (patterns.Any())
+                    {
+                        foreach (var pattern in patterns)
+                        {
+                            if (patternsFrequency.ContainsKey(pattern))
+                            {
+                                patternsFrequency[pattern]++;
+                            }
+                            else
+                            {
+                                patternsFrequency.Add(pattern, 1);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No pattern for '{0}'", token);
+                    }
+                }
+            }
+
+            foreach (var kvp in patternsFrequency.OrderByDescending(p => p.Value))
+            {
+                Console.WriteLine("{0} --> {1}", kvp.Key, kvp.Value);
+            }*/
+
             Console.WriteLine("OK");
             Console.ReadLine();
+        }
+
+        private static readonly List<string> CharacterClasses = new List<string>()
+        {
+            "\\p{L}","\\p{M}","\\p{Z}","\\p{S}","\\p{N}","\\p{P}","\\p{C}"
+        };
+        private static List<string> MatchingRegexes(string token)
+        {
+            var matchingPatterns = new List<string>();
+            if (string.IsNullOrEmpty(token))
+            {
+                return matchingPatterns;
+            }
+
+            foreach (var characterClass in CharacterClasses)
+            {
+                var match = Regex.Match(token, "^" + characterClass + "+");
+                if (match.Success)
+                {
+                    // ex: \p{P}{2}
+                    var beginningOfPattern = characterClass + "{" + match.Length + "}";
+                    var tokenRemains = token.Substring(match.Length);
+                    if (!string.IsNullOrEmpty(tokenRemains))
+                    {
+                        var endsOfPattern = MatchingRegexes(tokenRemains);
+                        var patterns = endsOfPattern.Select(s => beginningOfPattern + s).ToList();
+                        matchingPatterns.AddRange(patterns);
+                    }
+                    else
+                    {
+                        matchingPatterns.Add(beginningOfPattern);
+                    }
+                }
+            }
+
+            return matchingPatterns;
         }
 
         private static void RunPosDetector(string token, EnglishGraphContext db)

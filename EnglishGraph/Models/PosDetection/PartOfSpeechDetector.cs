@@ -210,6 +210,19 @@ namespace EnglishGraph.Models.PosDetection
             new PrefixBasedPosDetectionRule("counter", PartsOfSpeech.Adjective),//counterproductive
         };
 
+        private readonly static List<TokenClassificationRule> TokenClassificationRules = new List<TokenClassificationRule>()
+        {
+            new TokenClassificationRule(StringUtilities.IsPunctuation, PartsOfSpeech.Punctuation),
+            new TokenClassificationRule(StringUtilities.IsSymbol, PartsOfSpeech.Symbol),
+            new TokenClassificationRule(StringUtilities.IsNumber, PartsOfSpeech.Number),
+            new TokenClassificationRule(StringUtilities.IsTime, PartsOfSpeech.Time),
+            new TokenClassificationRule(StringUtilities.IsFraction, PartsOfSpeech.Fraction),
+            new TokenClassificationRule(StringUtilities.IsPercentage, PartsOfSpeech.Percentage),
+            new TokenClassificationRule(StringUtilities.IsAmount, PartsOfSpeech.Amount),
+            new TokenClassificationRule(s => s.Contains("-"), PartsOfSpeech.Compound),
+            new TokenClassificationRule(s => s.Contains("/"), PartsOfSpeech.CompoundSlash),
+        };
+
         /// <summary>
         /// Detects the POSs of a dictionary entry.
         /// Two options:
@@ -223,142 +236,36 @@ namespace EnglishGraph.Models.PosDetection
         /// <returns>The dictionary entry (word + POS)</returns>
         public List<DictionaryEntry> DetectPos(string token, bool? isFirstTokenInSentence, bool? isLastTokenInSentence, EnglishDictionary dictionary)
         {
-            // First, detect if it's a special case (number etc.)
-            // In those cases, no need to go further (ie look in dictionary or apply detection rules)
-            if (StringUtilities.IsPunctuation(token))
+            var specificEntries = TokenClassificationRules
+                .Where(rule => rule.IsMatch(token))
+                .Select(rule => rule.GetEntry(token))
+                .ToList();
+            // update POS of derived forms
+            foreach (var entry in specificEntries.Where(ent => ent.StemmedFromRelationships.Any()))
             {
-                return new List<DictionaryEntry>()
+                foreach (var relationship in entry.StemmedFromRelationships)
                 {
-                    new DictionaryEntry()
+                    var targetEntries = DetectPos(relationship.Target.Word, isFirstTokenInSentence,
+                        isLastTokenInSentence, dictionary);
+                    if (targetEntries.Any(e => e.PartOfSpeech != PartsOfSpeech.Unknown))
                     {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Punctuation
+                        relationship.Target.PartOfSpeech =
+                            targetEntries.First(e => e.PartOfSpeech != PartsOfSpeech.Unknown).PartOfSpeech;
                     }
-                };
-            }
-            else if (StringUtilities.IsSymbol(token))
-            {
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Punctuation
-                    }
-                };
-            }
-            else if (StringUtilities.IsNumber(token))
-            {
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Number
-                    }
-                };
-            }
-            else if (StringUtilities.IsTime(token))
-            {
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Time
-                    }
-                };
-            }
-            else if (StringUtilities.IsFraction(token))
-            {
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Fraction
-                    }
-                };
-            }
-            else if (StringUtilities.IsPercentage(token))
-            {
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Percentage
-                    }
-                };
-            }
-            else if (StringUtilities.IsAmount(token))
-            {
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Amount
-                    }
-                };
-            }
-            else if (token.Contains("-"))
-            {
-                var parts = token.Split('-')
-                    .Select(p => DetectPos(p, isFirstTokenInSentence, isLastTokenInSentence, dictionary))
-                    .ToList();
-                if (parts.All(entries => entries.Any(ent => ent.PartOfSpeech != PartsOfSpeech.Unknown)))
-                {
-                    return new List<DictionaryEntry>()
-                    {
-                        // TODO: structure information to link to other entries from this compound entry
-                        new DictionaryEntry()
-                        {
-                            Word = token,
-                            PartOfSpeech = PartsOfSpeech.Compound
-                        }
-                    };
                 }
-                // otherwise, at least one of the entry cannot be detected -> the compound entry cannot be detected either
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Unknown
-                    }
-                };
             }
-            else if (token.Contains("/"))
+            var relevantEntries = specificEntries
+                .Where(ent => !ent.StemmedFromRelationships.Any()
+                    || ent.StemmedFromRelationships.All(rel => rel.Target.PartOfSpeech != PartsOfSpeech.Unknown))
+                .ToList();
+            if (relevantEntries.Any())
             {
-                // If we get here, we know it's not a fraction
-                var parts = token.Split('/')
-                    .Select(p => DetectPos(p, isFirstTokenInSentence, isLastTokenInSentence, dictionary))
-                    .ToList();
-                if (parts.All(entries => entries.Any(ent => ent.PartOfSpeech != PartsOfSpeech.Unknown)))
-                {
-                    return new List<DictionaryEntry>()
-                    {
-                        // TODO: structure information to link to other entries from this compound entry
-                        new DictionaryEntry()
-                        {
-                            Word = token,
-                            PartOfSpeech = PartsOfSpeech.CompoundSlash
-                        }
-                    };
-                }
-                // otherwise, at least one of the entry cannot be detected -> the compound entry cannot be detected either
-                return new List<DictionaryEntry>()
-                {
-                    new DictionaryEntry()
-                    {
-                        Word = token,
-                        PartOfSpeech = PartsOfSpeech.Unknown
-                    }
-                };
+                return relevantEntries;
             }
-
-            // If we get here, the word should in db (and if not, we can run the detection rules)
+            
+            
+            // If we get here, the token was not recognized by any of the classification rules.
+            // Best case scenario, the word is in db and if it is not, we run the detection rules on this new ly encountered token
 
             // Special case when all caps, and the lower case form is in the dictionary
             if (StringUtilities.IsAllUpperCased(token))

@@ -41,5 +41,6 @@ namespace EnglishGraph.Models
 
         // TODO: not sure this is the right approach (if yes, do the same for the suffix) 
         public const byte Prefix = 92;
+        public const byte PartOf = 93;
     }
 }
